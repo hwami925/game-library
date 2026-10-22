@@ -4,7 +4,7 @@ const games = [
     name: "블루 아카이브",
     color: "#69BDF1",
     icon: "bluearchive-icon.png",
-    background: "bluearchive-bg.png"
+    background: "bluearchive-bg.jpg"
   },
   { name: "명조", color: "#545064" },
   { name: "엔드필드", color: "#D6A65C" },
