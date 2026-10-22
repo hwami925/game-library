@@ -110,3 +110,23 @@ footer {
     height: 135px;
   }
 }
+
+/* 배경 이미지 전환 */
+body {
+  transition: background-color 0.5s ease;
+}
+
+/* 게임 타일 이미지 */
+.game-card {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* 배경 위 텍스트 가독성 */
+main h2,
+main p {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
