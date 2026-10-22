@@ -48,42 +48,54 @@ const games = [
   description: "캐릭터 정보 · 팀 조합 · 육성",
   slug: "reverse1999"
 },
-  {
-    name: "스텔라소라",
-    color: "#8D9BEA",
-    description: "캐릭터 정보 · 편성 · 게임 가이드",
-    slug: "stellasora"
-  },
-  {
-    name: "몬길",
-    color: "#C78163",
-    description: "캐릭터 정보 · 전투 · 공략",
-    slug: "mongil"
-  },
-  {
-    name: "니케",
-    color: "#B96868",
-    description: "니케 정보 · 스쿼드 · 전투 공략",
-    slug: "nikke"
-  },
-  {
-    name: "홀로라이브 드림즈",
-    color: "#6BB8C6",
-    description: "캐릭터 정보 · 게임 가이드",
-    slug: "hololive-dreams"
-  },
-  {
-    name: "스타세이비어",
-    color: "#7C9FE8",
-    description: "캐릭터 정보 · 팀 편성 · 육성",
-    slug: "star-savior"
-  },
-  {
-    name: "림버스 컴퍼니",
-    color: "#A57A63",
-    description: "인격 · E.G.O · 덱 편성 · 공략",
-    slug: "limbus-company"
-  }
+{
+  name: "스텔라소라",
+  color: "#8D9BEA",
+  icon: "stellasora-icon.png",
+  background: "stellasora-bg.jpg",
+  description: "캐릭터 정보 · 편성 · 게임 가이드",
+  slug: "stellasora"
+},
+{
+  name: "몬길",
+  color: "#C78163",
+  icon: "mongil-icon.png",
+  background: "mongil-bg.jpg",
+  description: "캐릭터 정보 · 전투 · 공략",
+  slug: "mongil"
+},
+{
+  name: "니케",
+  color: "#B96868",
+  icon: "nikke-icon.png",
+  background: "nikke-bg.jpg",
+  description: "니케 정보 · 스쿼드 · 전투 공략",
+  slug: "nikke"
+},
+{
+  name: "홀로라이브 드림즈",
+  color: "#6BB8C6",
+  icon: "hololive-icon.png",
+  background: "hololive-bg.jpg",
+  description: "캐릭터 정보 · 게임 가이드",
+  slug: "hololive-dreams"
+},
+{
+  name: "스타세이비어",
+  color: "#7C9FE8",
+  icon: "starsavior-icon.png",
+  background: "starsavior-bg.jpg",
+  description: "캐릭터 정보 · 팀 편성 · 육성",
+  slug: "star-savior"
+},
+{
+  name: "림버스 컴퍼니",
+  color: "#A57A63",
+  icon: "limbus-icon.png",
+  background: "limbus-bg.jpg",
+  description: "인격 · E.G.O · 덱 편성 · 공략",
+  slug: "limbus-company"
+}
 ];
 
 const gameList = document.getElementById("game-list");
