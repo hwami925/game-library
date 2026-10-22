@@ -36,7 +36,7 @@ const games = [
   name: "트릭컬",
   color: "#F2B95D",
   icon: "trickcal-icon.png",
-  background: "trickcal-bg.jpg",
+  background: "trickcal-bg.png",
   description: "사도 정보 · 덱 편성 · 공략",
   slug: "trickcal"
 },
