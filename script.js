@@ -24,12 +24,14 @@ const games = [
   description: "오퍼레이터 · 전투 · 기지 및 공략",
   slug: "endfield"
 },
-  {
-    name: "이환",
-    color: "#E58AB9",
-    description: "캐릭터 정보 · 세계관 · 게임 가이드",
-    slug: "neverness"
-  },
+{
+  name: "이환",
+  color: "#E58AB9",
+  icon: "neverness-icon.png",
+  background: "neverness-bg.jpg",
+  description: "캐릭터 정보 · 세계관 · 게임 가이드",
+  slug: "neverness"
+},
   {
     name: "트릭컬",
     color: "#F2B95D",
