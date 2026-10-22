@@ -16,12 +16,14 @@ const games = [
   description: "캐릭터 정보 · 에코 · 파티 조합",
   slug: "wuthering-waves"
 },
-  {
-    name: "엔드필드",
-    color: "#D6A65C",
-    description: "오퍼레이터 · 전투 · 기지 및 공략",
-    slug: "endfield"
-  },
+{
+  name: "엔드필드",
+  color: "#D6A65C",
+  icon: "endfield-icon.png",
+  background: "endfield-bg.jpg",
+  description: "오퍼레이터 · 전투 · 기지 및 공략",
+  slug: "endfield"
+},
   {
     name: "이환",
     color: "#E58AB9",
