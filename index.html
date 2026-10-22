@@ -8,25 +8,62 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>GAME LIBRARY</h1>
-    <nav>
-      <span>게임 정보 라이브러리</span>
-    </nav>
-  </header>
 
-  <main>
-    <h2>게임을 선택해 주세요</h2>
-    <p>원하는 게임의 정보를 찾아보세요!</p>
+  <!-- 선택한 게임의 배경 -->
+  <div id="background-layer"></div>
 
-    <section id="game-list">
-      <!-- 게임 선택 카드가 들어갈 공간 -->
+  <div class="page-container">
+
+    <!-- 상단 -->
+    <header>
+      <h1>GAME LIBRARY</h1>
+      <nav>게임 정보 라이브러리</nav>
+    </header>
+
+    <!-- 선택한 게임 정보 -->
+    <main>
+      <section id="game-info">
+        <p id="game-number">01 / 12</p>
+
+        <h2 id="game-title">블루 아카이브</h2>
+
+        <p id="game-description">
+          학생 정보 · 학교 · 동아리 · 캐릭터별 상세 정보
+        </p>
+
+        <button id="enter-button" type="button">
+          입장하기 →
+        </button>
+      </section>
+    </main>
+
+    <!-- 하단 게임 선택 -->
+    <section id="game-selector">
+      <div class="selector-header">
+        <span>GAME SELECT</span>
+        <span id="selector-count">12 GAMES</span>
+      </div>
+
+      <div class="selector-controls">
+        <button id="prev-button" type="button" aria-label="이전 게임">
+          ‹
+        </button>
+
+        <div id="game-list">
+          <!-- 게임 아이콘이 자동으로 생성되는 공간 -->
+        </div>
+
+        <button id="next-button" type="button" aria-label="다음 게임">
+          ›
+        </button>
+      </div>
     </section>
-  </main>
 
-  <footer>
-    <p>Game Library</p>
-  </footer>
+    <footer>
+      <p>GAME LIBRARY</p>
+    </footer>
+
+  </div>
 
   <script src="script.js"></script>
 </body>
