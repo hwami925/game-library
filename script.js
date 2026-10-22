@@ -185,14 +185,12 @@ function changeGame(index) {
 
 // 이전 게임
 document.getElementById("prev-button").addEventListener("click", () => {
-  selectedGame = (selectedGame - 1 + games.length) % games.length;
-  updateSelection();
+  changeGame((selectedGame - 1 + games.length) % games.length);
 });
 
 // 다음 게임
 document.getElementById("next-button").addEventListener("click", () => {
-  selectedGame = (selectedGame + 1) % games.length;
-  updateSelection();
+  changeGame((selectedGame + 1) % games.length);
 });
 
 // 입장 버튼
