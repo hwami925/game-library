@@ -40,12 +40,14 @@ const games = [
   description: "사도 정보 · 덱 편성 · 공략",
   slug: "trickcal"
 },
-  {
-    name: "리버스 1999",
-    color: "#827E69",
-    description: "캐릭터 정보 · 팀 조합 · 육성",
-    slug: "reverse1999"
-  },
+{
+  name: "리버스 1999",
+  color: "#827E69",
+  icon: "reverse1999-icon.png",
+  background: "reverse1999-bg.jpg",
+  description: "캐릭터 정보 · 팀 조합 · 육성",
+  slug: "reverse1999"
+},
   {
     name: "스텔라소라",
     color: "#8D9BEA",
