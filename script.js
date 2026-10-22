@@ -8,12 +8,14 @@ const games = [
     description: "학생 정보 · 학교 · 동아리 · 캐릭터별 상세 정보",
     slug: "bluearchive"
   },
-  {
-    name: "명조",
-    color: "#545064",
-    description: "캐릭터 정보 · 에코 · 파티 조합",
-    slug: "wuthering-waves"
-  },
+{
+  name: "명조",
+  color: "#545064",
+  icon: "wuthering-icon.jpg",
+  background: "wuthering-bg.jpg",
+  description: "캐릭터 정보 · 에코 · 파티 조합",
+  slug: "wuthering-waves"
+},
   {
     name: "엔드필드",
     color: "#D6A65C",
