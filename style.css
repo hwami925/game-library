@@ -1,0 +1,112 @@
+
+/* 기본 설정 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Pretendard", "Malgun Gothic", sans-serif;
+  color: white;
+  background: linear-gradient(135deg, #19283e, #10141e);
+}
+
+/* 상단 메뉴 */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 6%;
+}
+
+header h1 {
+  font-size: 22px;
+  letter-spacing: 3px;
+  margin: 0;
+}
+
+nav {
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+/* 메인 영역 */
+main {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5% 8%;
+}
+
+main h2 {
+  font-size: clamp(32px, 5vw, 64px);
+  margin: 0 0 12px;
+}
+
+main p {
+  font-size: 17px;
+  opacity: 0.7;
+}
+
+/* 게임 선택 영역 */
+#game-list {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 30px 4px;
+  margin-top: 30px;
+  scrollbar-width: thin;
+}
+
+/* 게임 카드 */
+.game-card {
+  flex: 0 0 180px;
+  height: 180px;
+  border-radius: 14px;
+  background: #34445d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.game-card:hover {
+  transform: scale(1.06);
+  box-shadow: 0 12px 30px #0005;
+}
+
+.game-card.selected {
+  outline: 3px solid white;
+  outline-offset: 5px;
+}
+
+/* 하단 */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* 모바일 */
+@media (max-width: 600px) {
+  header {
+    padding: 20px;
+  }
+
+  header h1 {
+    font-size: 16px;
+  }
+
+  main {
+    padding: 30px 20px;
+  }
+
+  .game-card {
+    flex-basis: 135px;
+    height: 135px;
+  }
+}
