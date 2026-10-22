@@ -14,7 +14,9 @@ const games = [
   { name: "스텔라소라", color: "#8D9BEA" },
   { name: "몬길", color: "#C78163" },
   { name: "니케", color: "#B96868" },
-  { name: "홀로라이브 드림즈", color: "#6BB8C6" }
+  { name: "홀로라이브 드림즈", color: "#6BB8C6" },
+  { name: "스타세이비어", color: "#7C9FE8" },
+{ name: "림버스 컴퍼니", color: "#A57A63" }
 ];
 
 const gameList = document.getElementById("game-list");
