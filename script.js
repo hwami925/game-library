@@ -32,12 +32,14 @@ const games = [
   description: "캐릭터 정보 · 세계관 · 게임 가이드",
   slug: "neverness"
 },
-  {
-    name: "트릭컬",
-    color: "#F2B95D",
-    description: "사도 정보 · 덱 편성 · 공략",
-    slug: "trickcal"
-  },
+{
+  name: "트릭컬",
+  color: "#F2B95D",
+  icon: "trickcal-icon.png",
+  background: "trickcal-bg.jpg",
+  description: "사도 정보 · 덱 편성 · 공략",
+  slug: "trickcal"
+},
   {
     name: "리버스 1999",
     color: "#827E69",
