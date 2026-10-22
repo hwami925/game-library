@@ -20,7 +20,7 @@ const games = [
   name: "엔드필드",
   color: "#D6A65C",
   icon: "endfield-icon.png",
-  background: "endfield-bg.jpg",
+  background: "endfield-bg.png",
   description: "오퍼레이터 · 전투 · 기지 및 공략",
   slug: "endfield"
 },
