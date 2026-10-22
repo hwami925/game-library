@@ -102,10 +102,11 @@ games.forEach((game, index) => {
     card.style.backgroundColor = game.color;
   }
 
-  const selectGame = () => {
-    selectedGame = index;
-    updateSelection();
-  };
+
+const selectGame = () => {
+  changeGame(index);
+};
+
 
   card.addEventListener("click", selectGame);
   card.addEventListener("keydown", (event) => {
@@ -161,6 +162,25 @@ function updateSelection() {
     block: "nearest",
     inline: "nearest"
   });
+}
+
+let transitionTimer;
+
+function changeGame(index) {
+  if (index === selectedGame) return;
+
+  clearTimeout(transitionTimer);
+
+  backgroundLayer.classList.add("fade-out");
+  document.getElementById("game-info").classList.add("fade-out");
+
+  transitionTimer = setTimeout(() => {
+    selectedGame = index;
+    updateSelection();
+
+    backgroundLayer.classList.remove("fade-out");
+    document.getElementById("game-info").classList.remove("fade-out");
+  }, 300);
 }
 
 // 이전 게임
