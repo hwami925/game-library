@@ -431,35 +431,70 @@
 
   <script>
     // 학교별 기본 정보
-    const schools = {
-      schale: {
-        name: "샬레",
-        english: "SCHALE",
-        emblem: "schale.png",
-        description: "샬레의 소속 구성원과 관련 기록을 열람하는 서류철입니다.",
-        clubs: [
-          {
-            name: "샬레 기록",
-            english: "SCHALE RECORDS",
-            icon: "📁"
-          }
-        ]
-      },
-
-      abydos: {
-        name: "아비도스",
-        english: "ABYDOS",
-        emblem: "abydos.png",
-        description: "아비도스의 소속 동아리와 학생 기록을 열람하는 서류철입니다.",
-        clubs: [
-          {
-            name: "대책위원회",
-            english: "COUNTERMEASURES COMMITTEE",
-            icon: "🏜️"
-          }
-        ]
+const schools = {
+  schale: {
+    name: "샬레",
+    english: "SCHALE",
+    emblem: "schale.png",
+    description: "샬레의 소속 구성원과 관련 기록을 열람하는 서류철입니다.",
+    clubs: [
+      {
+        name: "샬레 기록",
+        english: "SCHALE RECORDS",
+        icon: "📁"
       }
-    };
+    ]
+  },
+
+  abydos: {
+    name: "아비도스",
+    english: "ABYDOS",
+    emblem: "abydos.png",
+    description: "아비도스의 소속 동아리와 학생 기록을 열람하는 서류철입니다.",
+    clubs: [
+      {
+        name: "대책위원회",
+        english: "COUNTERMEASURES COMMITTEE",
+        icon: "🏜️"
+      }
+    ]
+  }
+};
+
+// 나머지 학교는 동아리 데이터를 나중에 추가할 예정
+const additionalSchools = [
+  ["general-student-council", "총학생회", "GENERAL STUDENT COUNCIL"],
+  ["gehenna", "게헨나", "GEHENNA"],
+  ["millennium", "밀레니엄", "MILLENNIUM"],
+  ["trinity", "트리니티", "TRINITY"],
+  ["hyakkiyako", "백귀야행", "HYAKKIYAKO"],
+  ["shanhaijing", "산해경", "SHANHAIJING"],
+  ["red-winter", "붉은겨울", "RED WINTER"],
+  ["valkyrie", "발키리", "VALKYRIE"],
+  ["srt", "SRT", "SRT"],
+  ["arius", "아리우스", "ARIUS"],
+  ["highlander", "하이랜더", "HIGHLANDER"],
+  ["wild-hunt", "와일드헌트", "WILD HUNT"],
+  ["odysseia", "오디세이아", "ODYSSEIA"],
+  ["kronos", "크로노스", "KRONOS"],
+  ["others", "기타", "OTHERS"]
+];
+
+additionalSchools.forEach(([slug, name, english]) => {
+  schools[slug] = {
+    name,
+    english,
+    emblem: `${slug}.png`,
+    description: `${name}의 소속 동아리와 학생 기록을 열람하는 서류철입니다.`,
+    clubs: [
+      {
+        name: "동아리 정보 준비 중",
+        english: "COMING SOON",
+        icon: "📁"
+      }
+    ]
+  };
+});
 
     // URL에서 학교 이름 가져오기
     const params = new URLSearchParams(window.location.search);
