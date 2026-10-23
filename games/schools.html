@@ -552,9 +552,9 @@
         </span>
       `;
 
-      card.addEventListener("click", () => {
-        alert(`${school.name}의 동아리 목록은 다음 단계에서 제작할 예정이야!`);
-      });
+card.addEventListener("click", () => {
+  window.location.href = `clubs.html?school=${school.slug}`;
+});
 
       schoolGrid.appendChild(card);
     });
