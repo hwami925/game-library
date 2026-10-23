@@ -1,1 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>동아리 기록 | 게임창고</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      color: #284c68;
+      background:
+        radial-gradient(circle at 15% 20%, #ffffff 0, transparent 32%),
+        linear-gradient(135deg, #e9f8ff, #c9e8fb);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 24px 5%;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .back-button {
+      padding: 11px 19px;
+      border-radius: 12px;
+      background: white;
+      color: #347ba7;
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: 0 4px 15px #8fc7e344;
+    }
+
+    .page {
+      max-width: 1250px;
+      margin: 25px auto 80px;
+      padding: 0 22px;
+    }
+
+    .page-heading {
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: #6c9ec1;
+    }
+
+    h1 {
+      margin: 9px 0;
+      font-size: clamp(28px, 4vw, 43px);
+    }
+
+    .description {
+      color: #7293aa;
+    }
+
+    /* 펼쳐진 서류철 */
+
+    .folder {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1.12fr;
+      gap: 15px;
+      min-height: 620px;
+      padding: 35px;
+      border: 13px solid #79b9df;
+      border-radius: 17px;
+      background: #b9dcf3;
+      box-shadow:
+        0 22px 45px #5b9bc04d,
+        inset 0 0 0 3px #ffffff55;
+    }
+
+    .folder::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      bottom: 15px;
+      left: 47%;
+      width: 22px;
+      background: linear-gradient(
+        90deg,
+        #5f9bc555,
+        #ffffff88,
+        #5f9bc533
+      );
+      pointer-events: none;
+    }
+
+    .paper {
+      position: relative;
+      min-width: 0;
+      padding: 34px;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 34px,
+          #dcebf344 35px
+        ),
+        #fcfeff;
+      box-shadow: 3px 5px 12px #3e7b9d33;
+      border-radius: 4px;
+    }
+
+    .paper::before {
+      content: "";
+      position: absolute;
+      top: -15px;
+      left: 48%;
+      width: 27px;
+      height: 43px;
+      border: 5px solid #7d9db3;
+      border-bottom-color: transparent;
+      border-radius: 15px 15px 0 0;
+      transform: rotate(8deg);
+      opacity: .65;
+    }
+
+    /* 왼쪽 학교 소개 */
+
+    .school-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .school-label {
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #90a9bc;
+    }
+
+    .emblem-frame {
+      display: grid;
+      place-items: center;
+      width: min(78%, 270px);
+      aspect-ratio: 1;
+      margin: 42px auto 20px;
+      border: 2px solid #d7e7f0;
+      border-radius: 50%;
+      background: #f5fbff;
+    }
+
+    .emblem-frame img {
+      width: 76%;
+      height: 76%;
+      object-fit: contain;
+    }
+
+    .school-name-en {
+      margin: 5px 0;
+      font-family: Georgia, serif;
+      font-size: 37px;
+      letter-spacing: 3px;
+      color: #213f5b;
+    }
+
+    .school-name-ko {
+      margin: 3px 0 25px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .school-description {
+      width: 100%;
+      margin-top: 15px;
+      padding: 20px;
+      border-top: 1px solid #d6e6f0;
+      text-align: left;
+      line-height: 1.9;
+      font-size: 14px;
+      color: #6a859a;
+    }
+
+    /* 오른쪽 동아리 목록 */
+
+    .list-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #d9e9f3;
+    }
+
+    .list-heading h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #244762;
+    }
+
+    .list-heading span {
+      font-size: 11px;
+      font-weight: 800;
+      color: #91adc0;
+      letter-spacing: 1px;
+    }
+
+    .club-list {
+      display: grid;
+      gap: 13px;
+      margin-top: 25px;
+    }
+
+    .club-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d7e7f0;
+      border-radius: 8px;
+      background: #f8fcff;
+      color: #34516a;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 3px 6px #5e95b010;
+      transition: .2s;
+    }
+
+    .club-card:hover {
+      transform: translateX(5px);
+      border-color: #84c7ed;
+      background: #eaf7ff;
+      box-shadow: 0 6px 13px #7bb7d52b;
+    }
+
+    .club-icon {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 70px;
+      height: 62px;
+      border-radius: 5px;
+      background: linear-gradient(135deg, #dceefa, #a7d7f3);
+      font-size: 29px;
+    }
+
+    .club-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .club-name {
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .club-en {
+      margin-top: 6px;
+      font-size: 10px;
+      color: #8ba8ba;
+      letter-spacing: .5px;
+    }
+
+    .arrow {
+      font-size: 22px;
+      color: #8fb5cc;
+    }
+
+    /* 오른쪽 인덱스 탭 */
+
+    .index-tabs {
+      position: absolute;
+      top: 100px;
+      right: -42px;
+      display: grid;
+      gap: 5px;
+    }
+
+    .index-tab {
+      padding: 14px 10px;
+      border-radius: 0 8px 8px 0;
+      background: #a8d4ee;
+      color: #356a8b;
+      font-size: 12px;
+      font-weight: 800;
+      writing-mode: vertical-rl;
+      box-shadow: 3px 4px 7px #6395b344;
+    }
+
+    .index-tab.active {
+      background: #ffd6ba;
+      color: #9c694d;
+    }
+
+    .bottom-nav {
+      margin-top: 25px;
+    }
+
+    .bottom-nav a {
+      display: inline-block;
+      padding: 13px 19px;
+      border-radius: 10px;
+      background: white;
+      color: #417fa5;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (max-width: 800px) {
+      .folder {
+        grid-template-columns: 1fr;
+        padding: 18px;
+        border-width: 8px;
+      }
+
+      .folder::before {
+        display: none;
+      }
+
+      .paper {
+        padding: 23px;
+      }
+
+      .emblem-frame {
+        width: 180px;
+        margin: 20px auto;
+      }
+
+      .index-tabs {
+        right: -15px;
+      }
+
+      .index-tab {
+        padding: 10px 5px;
+        font-size: 10px;
+      }
+
+      .school-name-en {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="brand">📦 게임창고</div>
+    <a class="back-button" href="schools.html">← 학교 선택</a>
+  </header>
+
+  <main class="page">
+
+    <div class="page-heading">
+      <div class="eyebrow">SCHALE STUDENT DATABASE</div>
+      <h1>동아리 기록</h1>
+      <div class="description">
+        학교 서류철을 열어 소속 동아리 기록을 확인합니다.
+      </div>
+    </div>
+
+    <div class="folder">
+
+      <!-- 왼쪽 페이지 -->
+      <section class="paper school-info">
+
+        <div class="school-label">SCHOOL FILE / 001</div>
+
+        <div class="emblem-frame">
+          <img
+            id="schoolEmblem"
+            src="../images/bluearchive/schools/schale.png"
+            alt="학교 문양"
+          >
+        </div>
+
+        <div class="school-name-en" id="schoolEnglish">
+          SCHALE
+        </div>
+
+        <div class="school-name-ko" id="schoolKorean">
+          샬레
+        </div>
+
+        <div class="school-description" id="schoolDescription">
+          선택한 학교에 소속된 동아리와 학생들의 기록을
+          열람할 수 있습니다.
+          <br><br>
+          오른쪽 목록에서 원하는 동아리를 선택하세요.
+        </div>
+
+      </section>
+
+      <!-- 오른쪽 페이지 -->
+      <section class="paper">
+
+        <div class="list-heading">
+          <h2>CLUB LIST</h2>
+          <span id="schoolTag">SCHALE</span>
+        </div>
+
+        <div class="club-list" id="clubList"></div>
+
+      </section>
+
+      <div class="index-tabs">
+        <div class="index-tab active">동아리</div>
+        <div class="index-tab">학생</div>
+        <div class="index-tab">기록</div>
+      </div>
+
+    </div>
+
+    <div class="bottom-nav">
+      <a href="schools.html">← 학교 목록으로 돌아가기</a>
+    </div>
+
+  </main>
+
+  <script>
+    // 학교별 기본 정보
+    const schools = {
+      schale: {
+        name: "샬레",
+        english: "SCHALE",
+        emblem: "schale.png",
+        description: "샬레의 소속 구성원과 관련 기록을 열람하는 서류철입니다.",
+        clubs: [
+          {
+            name: "샬레 기록",
+            english: "SCHALE RECORDS",
+            icon: "📁"
+          }
+        ]
+      },
+
+      abydos: {
+        name: "아비도스",
+        english: "ABYDOS",
+        emblem: "abydos.png",
+        description: "아비도스의 소속 동아리와 학생 기록을 열람하는 서류철입니다.",
+        clubs: [
+          {
+            name: "대책위원회",
+            english: "COUNTERMEASURES COMMITTEE",
+            icon: "🏜️"
+          }
+        ]
+      }
+    };
+
+    // URL에서 학교 이름 가져오기
+    const params = new URLSearchParams(window.location.search);
+    const schoolId = params.get("school") || "schale";
+
+    const school = schools[schoolId] || schools.schale;
+
+    document.getElementById("schoolEmblem").src =
+      "../images/bluearchive/schools/" + school.emblem;
+
+    document.getElementById("schoolEnglish").textContent =
+      school.english;
+
+    document.getElementById("schoolKorean").textContent =
+      school.name;
+
+    document.getElementById("schoolDescription").textContent =
+      school.description;
+
+    document.getElementById("schoolTag").textContent =
+      school.english;
+
+    const clubList = document.getElementById("clubList");
+
+    school.clubs.forEach(club => {
+      const button = document.createElement("button");
+      button.className = "club-card";
+
+      button.innerHTML = `
+        <div class="club-icon">${club.icon}</div>
+
+        <div class="club-text">
+          <div class="club-name">${club.name}</div>
+          <div class="club-en">${club.english}</div>
+        </div>
+
+        <div class="arrow">›</div>
+      `;
+
+      button.addEventListener("click", () => {
+        alert("학생 명부 페이지는 다음 단계에서 제작할 예정이야!");
+      });
+
+      clubList.appendChild(button);
+    });
+  </script>
+
+</body>
+</html>
