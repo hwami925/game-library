@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>블루 아카이브 | 게임창고</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Pretendard", "Malgun Gothic", sans-serif;
+      color: #24364a;
+      background: #f1f8ff;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 6%;
+      background: white;
+      border-bottom: 1px solid #dbe8f5;
+    }
+
+    .site-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #24364a;
+      text-decoration: none;
+    }
+
+    .back-button {
+      color: #528fc4;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 55px 24px;
+    }
+
+    .page-title {
+      margin-bottom: 35px;
+    }
+
+    .page-title span {
+      color: #69bdf1;
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 13px;
+    }
+
+    .page-title h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      margin: 12px 0;
+    }
+
+    .page-title p {
+      color: #71869b;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+    }
+
+    .menu-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 30px;
+      min-height: 200px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid #dceaf7;
+      box-shadow: 0 8px 25px rgba(49, 110, 160, 0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(49, 110, 160, 0.14);
+    }
+
+    .menu-icon {
+      font-size: 35px;
+    }
+
+    .menu-card h2 {
+      margin: 0;
+      font-size: 23px;
+    }
+
+    .menu-card p {
+      margin: 0;
+      line-height: 1.6;
+      color: #7890a5;
+      font-size: 14px;
+    }
+
+    .menu-card.disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .menu-card.disabled:hover {
+      transform: none;
+      box-shadow: 0 8px 25px rgba(49, 110, 160, 0.06);
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 18px 22px;
+      }
+
+      main {
+        padding: 35px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a class="site-name" href="../index.html">
+      📦 게임창고
+    </a>
+
+    <a class="back-button" href="../index.html">
+      ← 게임 선택
+    </a>
+  </header>
+
+  <main>
+
+    <div class="page-title">
+      <span>BLUE ARCHIVE</span>
+      <h1>블루 아카이브</h1>
+      <p>원하는 정보를 선택해 주세요.</p>
+    </div>
+
+    <section class="menu-grid">
+
+      <a class="menu-card" href="schools.html">
+        <div class="menu-icon">🏫</div>
+        <h2>학생 도감</h2>
+        <p>
+          학교와 동아리별로 학생을 찾아보고
+          의상 및 상세 정보를 확인합니다.
+        </p>
+      </a>
+
+      <a class="menu-card" href="students.html">
+        <div class="menu-icon">🔍</div>
+        <h2>학생 검색</h2>
+        <p>
+          학생 이름을 검색해 원하는
+          캐릭터를 빠르게 찾아봅니다.
+        </p>
+      </a>
+
+      <div class="menu-card disabled">
+        <div class="menu-icon">⚔️</div>
+        <h2>총력전</h2>
+        <p>
+          보스별 특징과 추천 파티,
+          공략 정보를 정리할 예정입니다.
+        </p>
+      </div>
+
+      <div class="menu-card disabled">
+        <div class="menu-icon">📚</div>
+        <h2>게임 가이드</h2>
+        <p>
+          육성, 장비, 시스템 등
+          기본 정보를 정리할 예정입니다.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
