@@ -215,14 +215,19 @@ document.getElementById("next-button").addEventListener("click", () => {
   changeGame((selectedGame + 1) % games.length);
 });
 
-// 입장 버튼
+
+ // 입장 버튼
 enterButton.addEventListener("click", () => {
   const game = games[selectedGame];
-  const target = `games/${game.slug}.html`;
 
-  // 개별 게임 페이지는 추후 제작
+  // 블루 아카이브 페이지 연결
+  if (game.slug === "bluearchive") {
+    window.location.href = "games/bluearchive.html";
+    return;
+  }
+
+  // 다른 게임은 아직 제작 중
   alert(`${game.name} 페이지는 아직 제작 중이야!`);
-  console.log("예정된 페이지:", target);
 });
 
 // 최초 화면
