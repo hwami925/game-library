@@ -93,6 +93,8 @@
       backdrop-filter: blur(15px);
     }
 
+    /* 학생 검색 */
+
     .search-label {
       display: block;
       margin-bottom: 12px;
@@ -146,7 +148,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 25px;
     }
 
     .section-title h2 {
@@ -161,84 +163,208 @@
       letter-spacing: 1px;
     }
 
+    /* 학교 서류철 배치 */
+
     .school-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 26px 22px;
     }
 
+    /* 서류철 카드 */
+
     .school-card {
+      position: relative;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 24px;
-      min-height: 180px;
-      padding: 25px;
-      background: rgba(240, 249, 255, 0.9);
-      border: 1px solid #b8e2fa;
-      border-radius: 18px;
-      text-align: left;
-      font: inherit;
-      color: inherit;
+      align-items: center;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      padding: 17px 16px 20px;
+      border: 1px solid #78c9e9;
+      border-radius: 5px 13px 7px 7px;
+      background:
+        linear-gradient(
+          145deg,
+          transparent 0%,
+          transparent 37%,
+          rgba(255, 255, 255, 0.13) 37%,
+          rgba(255, 255, 255, 0.13) 58%,
+          transparent 58%
+        ),
+        linear-gradient(
+          35deg,
+          rgba(17, 120, 180, 0.12) 0%,
+          transparent 45%
+        ),
+        linear-gradient(
+          160deg,
+          #9bdcf1 0%,
+          #66c3e8 52%,
+          #a6e0f2 100%
+        );
+      box-shadow:
+        3px 5px 0 rgba(42, 127, 169, 0.15),
+        0 12px 22px rgba(41, 121, 170, 0.13);
       cursor: pointer;
+      font: inherit;
+      color: #285a79;
+      text-align: center;
+      isolation: isolate;
       transition:
         transform 0.25s,
-        box-shadow 0.25s,
-        border-color 0.25s;
+        box-shadow 0.25s;
     }
 
     .school-card:hover {
-      transform: translateY(-5px);
-      border-color: #54b4ed;
-      box-shadow: 0 15px 30px rgba(54, 145, 205, 0.15);
+      transform: translateY(-9px) rotate(-1deg);
+      box-shadow:
+        5px 8px 0 rgba(42, 127, 169, 0.13),
+        0 22px 30px rgba(41, 121, 170, 0.22);
     }
 
-    .school-icon {
+    .school-card:focus-visible {
+      outline: 3px solid #268dcc;
+      outline-offset: 5px;
+    }
+
+    /* 서류철 오른쪽 접힘 부분 */
+
+    .school-card::before {
+      content: "";
+      position: absolute;
+      top: 8%;
+      right: 0;
+      width: 8px;
+      height: 84%;
+      background: rgba(255, 255, 255, 0.5);
+      border-left: 1px solid rgba(34, 129, 178, 0.18);
+      z-index: -1;
+    }
+
+    /* 오른쪽 인덱스 탭 */
+
+    .folder-tab {
+      position: absolute;
+      right: -9px;
+      top: 43%;
+      width: 15px;
+      height: 36px;
+      border-radius: 0 4px 4px 0;
+      background: #f5ad7f;
+      box-shadow: 2px 3px 5px rgba(41, 121, 170, 0.12);
+    }
+
+    /* 상단 문서 라벨 */
+
+    .folder-label {
       display: grid;
       place-items: center;
-      width: 66px;
-      height: 66px;
-      border-radius: 15px;
-      background: #ddf2ff;
-      color: #268dcc;
-      font-size: 29px;
+      width: 85%;
+      min-height: 31px;
+      padding: 5px 8px;
+      border: 1px solid rgba(107, 136, 177, 0.25);
+      border-radius: 5px;
+      background: linear-gradient(110deg, #f6eafa, #fff7e6);
+      color: #535b87;
+      font-size: clamp(9px, 0.9vw, 12px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      box-shadow: 0 3px 7px rgba(44, 106, 148, 0.1);
+    }
+
+    /* 중앙 문양 영역 */
+
+    .folder-emblem-area {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 88%;
+      flex: 1;
+      min-height: 0;
+      margin: 8px 0;
+    }
+
+    .emblem-ring {
+      position: absolute;
+      width: 82%;
+      aspect-ratio: 1;
+      border: 2px solid rgba(45, 136, 179, 0.35);
+      border-radius: 50%;
+    }
+
+    .emblem-ring::before {
+      content: "";
+      position: absolute;
+      inset: 10%;
+      border: 1px solid rgba(45, 136, 179, 0.28);
+      border-radius: 50%;
+    }
+
+    .emblem-ring::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: -12%;
+      width: 124%;
+      height: 1px;
+      background: rgba(45, 136, 179, 0.35);
+    }
+
+    /* 실제 학교 문양이 들어갈 자리 */
+
+    .school-emblem {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 65%;
+      aspect-ratio: 1;
+      color: rgba(33, 110, 151, 0.55);
+      font-size: clamp(25px, 3vw, 43px);
       font-weight: 800;
     }
 
-    .school-info {
+    .school-emblem img {
       width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
-    .school-name {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 19px;
+    /* 하단 학교 이름 라벨 */
+
+    .folder-name {
+      display: grid;
+      place-items: center;
+      width: 83%;
+      min-height: 36px;
+      padding: 7px 5px;
+      border: 1px solid rgba(107, 136, 177, 0.25);
+      border-radius: 5px;
+      background: linear-gradient(110deg, #f6eafa, #fff7e6);
+      color: #43516e;
+      font-size: clamp(11px, 1.2vw, 15px);
       font-weight: 800;
+      box-shadow: 0 3px 7px rgba(44, 106, 148, 0.1);
     }
 
-    .school-description {
-      display: block;
-      color: #718da4;
-      font-size: 13px;
+    .folder-english {
+      margin-top: 10px;
+      color: rgba(30, 98, 139, 0.75);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      overflow-wrap: anywhere;
     }
 
-    .school-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      color: #5296c4;
-      font-size: 12px;
-      font-weight: 700;
-    }
+    /* 시스템 상태 */
 
     .status {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 9px;
-      margin-top: 25px;
+      margin-top: 35px;
       color: #5296c4;
       font-size: 11px;
       font-weight: 700;
@@ -253,13 +379,13 @@
       box-shadow: 0 0 10px #4cc1d8;
     }
 
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
       .school-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 650px) {
       header {
         padding: 18px 20px;
       }
@@ -273,15 +399,27 @@
       }
 
       .school-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 15px;
+      }
+
+      .folder-label {
+        font-size: 9px;
+      }
+
+      .folder-name {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .school-grid {
         grid-template-columns: 1fr;
       }
 
       .school-card {
-        min-height: 150px;
-      }
-
-      .section-title h2 {
-        font-size: 20px;
+        max-width: 260px;
+        margin: 0 auto;
       }
     }
   </style>
@@ -300,6 +438,7 @@
   </header>
 
   <main>
+
     <div class="system-label">
       SCHALE STUDENT DATABASE
     </div>
@@ -307,7 +446,7 @@
     <h1>학생기록부</h1>
 
     <p class="subtitle">
-      학교를 선택하여 소속 동아리와 학생 정보를 열람하세요.
+      학교별 서류철을 선택하여 소속 동아리와 학생 정보를 열람하세요.
     </p>
 
     <section class="database-panel">
@@ -347,26 +486,26 @@
   </main>
 
   <script>
-    // PPT 목차 순서를 기준으로 작성한 학교 및 분류 목록
-const schools = [
-  { name: "샬레", english: "SCHALE" },
-  { name: "총학생회", english: "GENERAL STUDENT COUNCIL" },
-  { name: "아비도스", english: "ABYDOS" },
-  { name: "게헨나", english: "GEHENNA" },
-  { name: "밀레니엄", english: "MILLENNIUM" },
-  { name: "트리니티", english: "TRINITY" },
-  { name: "백귀야행", english: "HYAKKIYAKO" },
-  { name: "산해경", english: "SHANHAIJING" },
-  { name: "붉은겨울", english: "RED WINTER" },
-  { name: "발키리", english: "VALKYRIE" },
-  { name: "SRT", english: "SRT" },
-  { name: "아리우스", english: "ARIUS" },
-  { name: "하이랜더", english: "HIGHLANDER" },
-  { name: "와일드헌트", english: "WILD HUNT" },
-  { name: "오디세이아", english: "ODYSSEIA" },
-  { name: "크로노스", english: "KRONOS" },
-  { name: "기타", english: "OTHERS" }
-];
+    // 학교 순서: 화미가 지정한 17개 항목
+    const schools = [
+      { name: "샬레", english: "SCHALE", slug: "schale" },
+      { name: "총학생회", english: "GENERAL STUDENT COUNCIL", slug: "general-student-council" },
+      { name: "아비도스", english: "ABYDOS", slug: "abydos" },
+      { name: "게헨나", english: "GEHENNA", slug: "gehenna" },
+      { name: "밀레니엄", english: "MILLENNIUM", slug: "millennium" },
+      { name: "트리니티", english: "TRINITY", slug: "trinity" },
+      { name: "백귀야행", english: "HYAKKIYAKO", slug: "hyakkiyako" },
+      { name: "산해경", english: "SHANHAIJING", slug: "shanhaijing" },
+      { name: "붉은겨울", english: "RED WINTER", slug: "red-winter" },
+      { name: "발키리", english: "VALKYRIE", slug: "valkyrie" },
+      { name: "SRT", english: "SRT", slug: "srt" },
+      { name: "아리우스", english: "ARIUS", slug: "arius" },
+      { name: "하이랜더", english: "HIGHLANDER", slug: "highlander" },
+      { name: "와일드헌트", english: "WILD HUNT", slug: "wild-hunt" },
+      { name: "오디세이아", english: "ODYSSEIA", slug: "odysseia" },
+      { name: "크로노스", english: "KRONOS", slug: "kronos" },
+      { name: "기타", english: "OTHERS", slug: "others" }
+    ];
 
     const schoolGrid = document.getElementById("school-grid");
     const schoolCount = document.getElementById("school-count");
@@ -375,24 +514,42 @@ const schools = [
 
     schoolCount.textContent = `${schools.length} RECORDS`;
 
-    schools.forEach((school, index) => {
+    schools.forEach((school) => {
       const card = document.createElement("button");
 
       card.type = "button";
       card.className = "school-card";
+      card.setAttribute("aria-label", `${school.name} 학생 기록 열람`);
+
+      // 학교별 문양 이미지 경로
+      const emblemPath = `../images/bluearchive/schools/${school.slug}.png`;
 
       card.innerHTML = `
-        <div class="school-icon">▤</div>
+        <span class="folder-tab"></span>
 
-        <div class="school-info">
-          <span class="school-name">${school.name}</span>
-          <span class="school-description">${school.english}</span>
-        </div>
+        <span class="folder-label">
+          STUDENT RECORD
+        </span>
 
-        <div class="school-bottom">
-          <span>FILE ${String(index + 1).padStart(2, "0")}</span>
-          <span>↗</span>
-        </div>
+        <span class="folder-emblem-area">
+          <span class="emblem-ring"></span>
+
+          <span class="school-emblem">
+            <img
+              src="${emblemPath}"
+              alt=""
+              onerror="this.style.display='none'; this.parentElement.textContent='✦';"
+            >
+          </span>
+        </span>
+
+        <span class="folder-name">
+          ${school.name}
+        </span>
+
+        <span class="folder-english">
+          ${school.english}
+        </span>
       `;
 
       card.addEventListener("click", () => {
