@@ -1,101 +1,100 @@
-
 const games = [
   {
     name: "블루 아카이브",
     color: "#69BDF1",
-    icon: "bluearchive-icon.png",
-    background: "bluearchive-bg.jpg",
+    icon: "images/main/bluearchive-icon.png",
+    background: "images/main/bluearchive-bg.jpg",
     description: "학생 정보 · 학교 · 동아리 · 캐릭터별 상세 정보",
     slug: "bluearchive"
   },
-{
-  name: "명조",
-  color: "#545064",
-  icon: "wuthering-icon.jpg",
-  background: "wuthering-bg.jpg",
-  description: "캐릭터 정보 · 에코 · 파티 조합",
-  slug: "wuthering-waves"
-},
-{
-  name: "엔드필드",
-  color: "#D6A65C",
-  icon: "endfield-icon.png",
-  background: "endfield-bg.png",
-  description: "오퍼레이터 · 전투 · 기지 및 공략",
-  slug: "endfield"
-},
-{
-  name: "이환",
-  color: "#E58AB9",
-  icon: "neverness-icon.png",
-  background: "neverness-bg.jpg",
-  description: "캐릭터 정보 · 세계관 · 게임 가이드",
-  slug: "neverness"
-},
-{
-  name: "트릭컬",
-  color: "#F2B95D",
-  icon: "trickcal-icon.png",
-  background: "trickcal-bg.png",
-  description: "사도 정보 · 덱 편성 · 공략",
-  slug: "trickcal"
-},
-{
-  name: "리버스 1999",
-  color: "#827E69",
-  icon: "reverse1999-icon.png",
-  background: "reverse1999-bg.jpg",
-  description: "캐릭터 정보 · 팀 조합 · 육성",
-  slug: "reverse1999"
-},
-{
-  name: "스텔라소라",
-  color: "#8D9BEA",
-  icon: "stellasora-icon.png",
-  background: "stellasora-bg.jpg",
-  description: "캐릭터 정보 · 편성 · 게임 가이드",
-  slug: "stellasora"
-},
-{
-  name: "몬길",
-  color: "#C78163",
-  icon: "mongil-icon.png",
-  background: "mongil-bg.jpg",
-  description: "캐릭터 정보 · 전투 · 공략",
-  slug: "mongil"
-},
-{
-  name: "니케",
-  color: "#B96868",
-  icon: "nikke-icon.png",
-  background: "nikke-bg.jpg",
-  description: "니케 정보 · 스쿼드 · 전투 공략",
-  slug: "nikke"
-},
-{
-  name: "홀로라이브 드림즈",
-  color: "#6BB8C6",
-  icon: "hololive-icon.png",
-  background: "hololive-bg.jpg",
-  description: "캐릭터 정보 · 게임 가이드",
-  slug: "hololive-dreams"
-},
-{
-  name: "스타세이비어",
-  color: "#7C9FE8",
-  icon: "starsavior-icon.png",
-  background: "starsavior-bg.jpg",
-  description: "캐릭터 정보 · 팀 편성 · 육성",
-  slug: "star-savior"
-},
-{
-  name: "림버스 컴퍼니",
-  color: "#A57A63",
-  icon: "limbus-icon.png",
-  background: "limbus-bg.jpg",
-  description: "인격 · E.G.O · 덱 편성 · 공략",
-  slug: "limbus-company"
-}
+  {
+    name: "명조",
+    color: "#545064",
+    icon: "images/main/wuthering-icon.jpg",
+    background: "images/main/wuthering-bg.jpg",
+    description: "캐릭터 정보 · 에코 · 파티 조합",
+    slug: "wuthering-waves"
+  },
+  {
+    name: "엔드필드",
+    color: "#D6A65C",
+    icon: "images/main/endfield-icon.png",
+    background: "images/main/endfield-bg.png",
+    description: "오퍼레이터 · 전투 · 기지 및 공략",
+    slug: "endfield"
+  },
+  {
+    name: "이환",
+    color: "#E58AB9",
+    icon: "images/main/neverness-icon.png",
+    background: "images/main/neverness-bg.jpg",
+    description: "캐릭터 정보 · 세계관 · 게임 가이드",
+    slug: "neverness"
+  },
+  {
+    name: "트릭컬",
+    color: "#F2B95D",
+    icon: "images/main/trickcal-icon.png",
+    background: "images/main/trickcal-bg.png",
+    description: "사도 정보 · 덱 편성 · 공략",
+    slug: "trickcal"
+  },
+  {
+    name: "리버스 1999",
+    color: "#827E69",
+    icon: "images/main/reverse1999-icon.png",
+    background: "images/main/reverse1999-bg.jpg",
+    description: "캐릭터 정보 · 팀 조합 · 육성",
+    slug: "reverse1999"
+  },
+  {
+    name: "스텔라소라",
+    color: "#8D9BEA",
+    icon: "images/main/stellasora-icon.png",
+    background: "images/main/stellasora-bg.jpg",
+    description: "캐릭터 정보 · 편성 · 게임 가이드",
+    slug: "stellasora"
+  },
+  {
+    name: "몬길",
+    color: "#C78163",
+    icon: "images/main/mongil-icon.png",
+    background: "images/main/mongil-bg.jpg",
+    description: "캐릭터 정보 · 전투 · 공략",
+    slug: "mongil"
+  },
+  {
+    name: "니케",
+    color: "#B96868",
+    icon: "images/main/nikke-icon.png",
+    background: "images/main/nikke-bg.jpg",
+    description: "니케 정보 · 스쿼드 · 전투 공략",
+    slug: "nikke"
+  },
+  {
+    name: "홀로라이브 드림즈",
+    color: "#6BB8C6",
+    icon: "images/main/hololive-icon.png",
+    background: "images/main/hololive-bg.jpg",
+    description: "캐릭터 정보 · 게임 가이드",
+    slug: "hololive-dreams"
+  },
+  {
+    name: "스타세이비어",
+    color: "#7C9FE8",
+    icon: "images/main/starsavior-icon.png",
+    background: "images/main/starsavior-bg.jpg",
+    description: "캐릭터 정보 · 팀 편성 · 육성",
+    slug: "star-savior"
+  },
+  {
+    name: "림버스 컴퍼니",
+    color: "#A57A63",
+    icon: "images/main/limbus-icon.png",
+    background: "images/main/limbus-bg.jpg",
+    description: "인격 · E.G.O · 덱 편성 · 공략",
+    slug: "limbus-company"
+  }
 ];
 
 const gameList = document.getElementById("game-list");
@@ -124,13 +123,12 @@ games.forEach((game, index) => {
     card.style.backgroundColor = game.color;
   }
 
-
-const selectGame = () => {
-  changeGame(index);
-};
-
+  const selectGame = () => {
+    changeGame(index);
+  };
 
   card.addEventListener("click", selectGame);
+
   card.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -188,6 +186,7 @@ function updateSelection() {
 
 let transitionTimer;
 
+// 게임 변경
 function changeGame(index) {
   if (index === selectedGame) return;
 
@@ -215,18 +214,15 @@ document.getElementById("next-button").addEventListener("click", () => {
   changeGame((selectedGame + 1) % games.length);
 });
 
-
- // 입장 버튼
+// 입장 버튼
 enterButton.addEventListener("click", () => {
   const game = games[selectedGame];
 
-  // 블루 아카이브 페이지 연결
   if (game.slug === "bluearchive") {
     window.location.href = "games/bluearchive.html";
     return;
   }
 
-  // 다른 게임은 아직 제작 중
   alert(`${game.name} 페이지는 아직 제작 중이야!`);
 });
 
