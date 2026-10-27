@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생 명부 | 게임창고</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      color: #284c68;
+      background:
+        radial-gradient(circle at 15% 20%, #ffffff 0, transparent 32%),
+        linear-gradient(135deg, #e9f8ff, #c9e8fb);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 24px 5%;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .back-button {
+      padding: 11px 19px;
+      border-radius: 12px;
+      background: white;
+      color: #347ba7;
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: 0 4px 15px #8fc7e344;
+    }
+
+    .page {
+      max-width: 1250px;
+      margin: 25px auto 80px;
+      padding: 0 22px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: #6c9ec1;
+    }
+
+    h1 {
+      margin: 9px 0;
+      font-size: clamp(28px, 4vw, 43px);
+    }
+
+    .description {
+      margin-bottom: 30px;
+      color: #7293aa;
+      line-height: 1.7;
+    }
+
+    /* 서류철 */
+
+    .folder {
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.75fr 1.4fr;
+      gap: 15px;
+      min-height: 650px;
+      padding: 35px;
+      border: 13px solid #79b9df;
+      border-radius: 17px;
+      background: #b9dcf3;
+      box-shadow:
+        0 22px 45px #5b9bc04d,
+        inset 0 0 0 3px #ffffff55;
+    }
+
+    .folder::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      bottom: 15px;
+      left: 36%;
+      width: 20px;
+      background: linear-gradient(
+        90deg,
+        #5f9bc555,
+        #ffffff88,
+        #5f9bc533
+      );
+      pointer-events: none;
+    }
+
+    .paper {
+      position: relative;
+      min-width: 0;
+      padding: 30px;
+      border-radius: 4px;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 34px,
+          #dcebf344 35px
+        ),
+        #fcfeff;
+      box-shadow: 3px 5px 12px #3e7b9d33;
+    }
+
+    /* 왼쪽 안내 페이지 */
+
+    .school-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .file-label {
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #90a9bc;
+    }
+
+    .emblem-frame {
+      display: grid;
+      place-items: center;
+      width: min(80%, 210px);
+      aspect-ratio: 1;
+      margin: 45px auto 20px;
+      border: 2px solid #d7e7f0;
+      border-radius: 50%;
+      background: #f5fbff;
+    }
+
+    .emblem-frame img {
+      width: 76%;
+      height: 76%;
+      object-fit: contain;
+    }
+
+    .school-name {
+      margin: 10px 0;
+      font-family: Georgia, serif;
+      font-size: 30px;
+      letter-spacing: 2px;
+      color: #213f5b;
+    }
+
+    .club-name {
+      margin: 5px 0;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .info-box {
+      width: 100%;
+      margin-top: 35px;
+      padding: 22px 0;
+      border-top: 1px solid #d6e6f0;
+      text-align: left;
+      line-height: 2;
+      font-size: 14px;
+      color: #6a859a;
+    }
+
+    /* 오른쪽 학생 명부 */
+
+    .list-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 17px;
+      border-bottom: 2px solid #d9e9f3;
+    }
+
+    .list-heading h2 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .count {
+      font-size: 12px;
+      font-weight: 800;
+      color: #8eacc0;
+    }
+
+    .search-box {
+      width: 100%;
+      margin: 20px 0 25px;
+      padding: 13px 16px;
+      border: 1px solid #d2e5f1;
+      border-radius: 8px;
+      background: #f7fcff;
+      outline: none;
+      font: inherit;
+      color: #34516a;
+    }
+
+    .search-box:focus {
+      border-color: #73bee9;
+      box-shadow: 0 0 0 3px #9bdcff44;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px 15px;
+    }
+
+    /* 학생 카드 */
+
+    .student-card {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid #d7e5ef;
+      border-radius: 7px;
+      background: #ffffff;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 4px 10px #6b9eb422;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .student-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px #6b9eb444;
+    }
+
+    .photo-frame {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 4px;
+      background: linear-gradient(145deg, #e4f5ff, #b9def2);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .placeholder {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      color: #87b6d1;
+    }
+
+    .placeholder svg {
+      width: 65%;
+      max-width: 100px;
+      fill: currentColor;
+    }
+
+    .student-name {
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: 900;
+      color: #2d4d67;
+    }
+
+    .student-en {
+      margin-top: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #93aabb;
+      letter-spacing: .5px;
+    }
+
+    .student-id {
+      margin-top: 12px;
+      padding-top: 9px;
+      border-top: 1px dashed #dce8f0;
+      font-size: 10px;
+      color: #91a9b8;
+    }
+
+    .empty-message {
+      display: none;
+      padding: 45px 10px;
+      text-align: center;
+      color: #8aa5b7;
+    }
+
+    /* 인덱스 */
+
+    .index-tabs {
+      position: absolute;
+      top: 100px;
+      right: -42px;
+      display: grid;
+      gap: 5px;
+    }
+
+    .index-tab {
+      padding: 14px 10px;
+      border-radius: 0 8px 8px 0;
+      background: #a8d4ee;
+      color: #356a8b;
+      font-size: 12px;
+      font-weight: 800;
+      writing-mode: vertical-rl;
+      box-shadow: 3px 4px 7px #6395b344;
+    }
+
+    .index-tab.active {
+      background: #ffd6ba;
+      color: #9c694d;
+    }
+
+    .bottom-nav {
+      margin-top: 25px;
+    }
+
+    .bottom-nav a {
+      display: inline-block;
+      padding: 13px 19px;
+      border-radius: 10px;
+      background: white;
+      color: #417fa5;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (max-width: 950px) {
+      .student-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      header {
+        padding: 20px;
+      }
+
+      .folder {
+        grid-template-columns: 1fr;
+        padding: 17px;
+        border-width: 8px;
+      }
+
+      .folder::before {
+        display: none;
+      }
+
+      .paper {
+        padding: 22px;
+      }
+
+      .emblem-frame {
+        width: 160px;
+        margin: 20px auto;
+      }
+
+      .student-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .index-tabs {
+        right: -15px;
+      }
+
+      .index-tab {
+        padding: 10px 5px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .student-grid {
+        gap: 10px;
+      }
+
+      .student-card {
+        padding: 7px;
+      }
+
+      .student-name {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="brand">📦 게임창고</div>
+    <a class="back-button" href="clubs.html?school=abydos">
+      ← 동아리 선택
+    </a>
+  </header>
+
+  <main class="page">
+
+    <div class="eyebrow">SCHALE STUDENT DATABASE</div>
+    <h1>학생 명부</h1>
+    <p class="description">
+      아비도스 고등학교 · 대책위원회 소속 학생들의 기록입니다.
+    </p>
+
+    <div class="folder">
+
+      <!-- 왼쪽 학교 정보 -->
+      <section class="paper school-info">
+
+        <div class="file-label">STUDENT FILE / ABYDOS</div>
+
+        <div class="emblem-frame">
+          <img
+            src="../images/bluearchive/schools/abydos.png"
+            alt="아비도스 문양"
+          >
+        </div>
+
+        <div class="school-name">ABYDOS</div>
+        <div class="club-name">대책위원회</div>
+
+        <div class="info-box">
+          <strong>소속 학교</strong><br>
+          아비도스 고등학교<br><br>
+
+          <strong>소속 동아리</strong><br>
+          대책위원회<br><br>
+
+          <strong>등록 학생</strong><br>
+          5명
+        </div>
+
+      </section>
+
+      <!-- 오른쪽 학생 명부 -->
+      <section class="paper">
+
+        <div class="list-heading">
+          <h2>STUDENT LIST</h2>
+          <span class="count" id="studentCount">05 RECORDS</span>
+        </div>
+
+        <input
+          type="search"
+          id="studentSearch"
+          class="search-box"
+          placeholder="🔎 학생 이름 검색..."
+          aria-label="학생 이름 검색"
+        >
+
+        <div class="student-grid" id="studentGrid"></div>
+
+        <div class="empty-message" id="emptyMessage">
+          검색 결과가 없습니다.
+        </div>
+
+      </section>
+
+      <div class="index-tabs">
+        <div class="index-tab">동아리</div>
+        <div class="index-tab active">학생</div>
+        <div class="index-tab">기록</div>
+      </div>
+
+    </div>
+
+    <div class="bottom-nav">
+      <a href="clubs.html?school=abydos">
+        ← 대책위원회 목록으로
+      </a>
+    </div>
+
+  </main>
+
+  <script>
+    const students = [
+      {
+        name: "시로코",
+        english: "SHIROKO",
+        slug: "shiroko"
+      },
+      {
+        name: "호시노",
+        english: "HOSHINO",
+        slug: "hoshino"
+      },
+      {
+        name: "세리카",
+        english: "SERIKA",
+        slug: "serika"
+      },
+      {
+        name: "노노미",
+        english: "NONOMI",
+        slug: "nonomi"
+      },
+      {
+        name: "아야네",
+        english: "AYANE",
+        slug: "ayane"
+      }
+    ];
+
+    const studentGrid = document.getElementById("studentGrid");
+    const studentSearch = document.getElementById("studentSearch");
+    const studentCount = document.getElementById("studentCount");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    const placeholderSVG = `
+      <div class="placeholder">
+        <svg viewBox="0 0 100 120" aria-hidden="true">
+          <circle cx="50" cy="34" r="23"/>
+          <path d="M8 116 C8 78, 27 69, 50 69 C73 69, 92 78, 92 116 Z"/>
+        </svg>
+      </div>
+    `;
+
+    function renderStudents(keyword = "") {
+      studentGrid.innerHTML = "";
+
+      const filtered = students.filter(student =>
+        student.name.includes(keyword) ||
+        student.english.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      filtered.forEach((student, index) => {
+        const card = document.createElement("button");
+        card.className = "student-card";
+
+        const imagePath =
+          `../images/bluearchive/students/abydos/${student.slug}.png`;
+
+        card.innerHTML = `
+          <div class="photo-frame">
+            <img
+              src="${imagePath}"
+              alt="${student.name} SD 일러스트"
+              onerror="this.outerHTML = \`${placeholderSVG}\`"
+            >
+          </div>
+
+          <div class="student-name">${student.name}</div>
+          <div class="student-en">${student.english}</div>
+
+          <div class="student-id">
+            ABYDOS / ${String(index + 1).padStart(3, "0")}
+          </div>
+        `;
+
+        card.addEventListener("click", () => {
+          alert(`${student.name}의 이격 선택 화면은 다음 단계에서 제작할 예정이야!`);
+        });
+
+        studentGrid.appendChild(card);
+      });
+
+      studentCount.textContent =
+        `${String(filtered.length).padStart(2, "0")} RECORDS`;
+
+      emptyMessage.style.display =
+        filtered.length === 0 ? "block" : "none";
+    }
+
+    studentSearch.addEventListener("input", e => {
+      renderStudents(e.target.value.trim());
+    });
+
+    renderStudents();
+  </script>
+
+</body>
+</html>
