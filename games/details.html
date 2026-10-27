@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생 상세 기록부 | SCHALE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      background: #d9eaf5;
+      color: #173d5c;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 35px 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .system-name {
+      color: #628fb0;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+
+    .back-button {
+      padding: 11px 20px;
+      border: 1px solid #b5d1e3;
+      border-radius: 8px;
+      background: white;
+      color: #245c82;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* 학생 기록부 */
+    .folder {
+      min-height: 760px;
+      padding: 35px 42px;
+      border: 12px solid #83b8dc;
+      border-radius: 18px;
+      background: #fffefb;
+      box-shadow: 0 15px 35px rgba(34, 79, 115, 0.17);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid #d9e7ef;
+    }
+
+    .school-logo {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .header p {
+      margin: 7px 0 0;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #8aabc3;
+    }
+
+    .record-number {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: bold;
+      color: #8aabc3;
+      letter-spacing: 2px;
+    }
+
+    /* 좌측 캐릭터 / 우측 정보 */
+    .content {
+      display: grid;
+      grid-template-columns: 42% 58%;
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .character-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .sd-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 460px;
+      border: 2px dashed #b8d7ea;
+      border-radius: 12px;
+      background: #f3f9fd;
+      overflow: hidden;
+    }
+
+    .sd-area img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .sd-placeholder {
+      padding: 25px;
+      text-align: center;
+      color: #8baec7;
+    }
+
+    .sd-placeholder strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .sd-placeholder span {
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .character-caption {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .character-caption strong {
+      display: block;
+      font-size: 23px;
+    }
+
+    .character-caption span {
+      display: block;
+      margin-top: 7px;
+      font-size: 12px;
+      color: #8baec7;
+      letter-spacing: 2px;
+    }
+
+    /* 우측 정보 */
+    .info-panel {
+      min-width: 0;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #9ac6e3;
+      font-size: 17px;
+    }
+
+    .basic-info {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .info-item {
+      padding: 13px 15px;
+      border: 1px solid #d7e7f1;
+      border-radius: 8px;
+      background: #f7fbfd;
+    }
+
+    .info-item .label {
+      display: block;
+      margin-bottom: 7px;
+      color: #8baec7;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .info-item .value {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .combat-info {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .combat-item {
+      padding: 15px 8px;
+      border: 1px solid #d7e7f1;
+      border-radius: 8px;
+      background: #f7fbfd;
+      text-align: center;
+    }
+
+    .combat-item .label {
+      display: block;
+      margin-bottom: 8px;
+      color: #8baec7;
+      font-size: 11px;
+    }
+
+    .combat-item .value {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .skill-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .skill {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      min-height: 75px;
+      padding: 12px 15px;
+      border: 1px solid #d7e7f1;
+      border-radius: 8px;
+      background: #f7fbfd;
+    }
+
+    .skill-icon {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background: #dceefa;
+      color: #6697b9;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .skill-text strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .skill-text p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #7898ad;
+    }
+
+    .footer-note {
+      margin-top: 30px;
+      padding-top: 18px;
+      border-top: 1px solid #d9e7ef;
+      text-align: center;
+      color: #8aa7b9;
+      font-size: 12px;
+    }
+
+    @media (max-width: 850px) {
+      .page {
+        padding: 15px;
+      }
+
+      .folder {
+        padding: 22px 16px;
+        border-width: 7px;
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .sd-area {
+        height: 360px;
+      }
+
+      .record-number {
+        display: none;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .school-logo {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .combat-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .topbar {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <div class="topbar">
+      <div class="system-name">SCHALE / STUDENT RECORD</div>
+      <a class="back-button" id="back-button" href="variants.html?student=hoshino">
+        ← 의상 선택
+      </a>
+    </div>
+
+    <section class="folder">
+
+      <header class="header">
+        <img
+          class="school-logo"
+          src="../images/bluearchive/schools/abydos.png"
+          alt="아비도스 교표"
+        >
+
+        <div>
+          <h1 id="student-name">호시노</h1>
+          <p id="student-english">HOSHINO / DEFAULT</p>
+        </div>
+
+        <div class="record-number">SCHALE ARCHIVE</div>
+      </header>
+
+      <div class="content">
+
+        <!-- 왼쪽: 화미 SD 일러스트 -->
+        <div class="character-panel">
+
+          <div class="sd-area" id="sd-area">
+            <div class="sd-placeholder">
+              <strong>SD ILLUSTRATION</strong>
+              <span>
+                화미의 SD 일러스트가<br>
+                이곳에 들어갈 예정입니다.
+              </span>
+            </div>
+          </div>
+
+          <div class="character-caption">
+            <strong id="character-caption">호시노</strong>
+            <span id="variant-caption">DEFAULT</span>
+          </div>
+
+        </div>
+
+        <!-- 오른쪽: 학생 정보 -->
+        <div class="info-panel">
+
+          <h2 class="section-title">01 / 기본 정보</h2>
+
+          <div class="basic-info">
+            <div class="info-item">
+              <span class="label">소속 학교</span>
+              <span class="value">아비도스 고등학교</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">소속 동아리</span>
+              <span class="value">대책위원회</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">학생 이름</span>
+              <span class="value" id="info-name">호시노</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">의상</span>
+              <span class="value" id="info-variant">기본</span>
+            </div>
+          </div>
+
+          <h2 class="section-title">02 / 전투 정보</h2>
+
+          <div class="combat-info">
+            <div class="combat-item">
+              <span class="label">포지션</span>
+              <span class="value">준비 중</span>
+            </div>
+
+            <div class="combat-item">
+              <span class="label">공격 타입</span>
+              <span class="value">준비 중</span>
+            </div>
+
+            <div class="combat-item">
+              <span class="label">방어 타입</span>
+              <span class="value">준비 중</span>
+            </div>
+
+            <div class="combat-item">
+              <span class="label">전투 위치</span>
+              <span class="value">준비 중</span>
+            </div>
+
+            <div class="combat-item">
+              <span class="label">장비 1</span>
+              <span class="value">준비 중</span>
+            </div>
+
+            <div class="combat-item">
+              <span class="label">장비 2 / 3</span>
+              <span class="value">준비 중</span>
+            </div>
+          </div>
+
+          <h2 class="section-title">03 / 스킬 정보</h2>
+
+          <div class="skill-list">
+
+            <div class="skill">
+              <div class="skill-icon">EX</div>
+              <div class="skill-text">
+                <strong>EX 스킬</strong>
+                <p>스킬 이름과 1레벨 효과를 입력할 예정입니다.</p>
+              </div>
+            </div>
+
+            <div class="skill">
+              <div class="skill-icon">기본</div>
+              <div class="skill-text">
+                <strong>기본 스킬</strong>
+                <p>스킬 이름과 1레벨 효과를 입력할 예정입니다.</p>
+              </div>
+            </div>
+
+            <div class="skill">
+              <div class="skill-icon">강화</div>
+              <div class="skill-text">
+                <strong>강화 스킬</strong>
+                <p>스킬 이름과 1레벨 효과를 입력할 예정입니다.</p>
+              </div>
+            </div>
+
+            <div class="skill">
+              <div class="skill-icon">서브</div>
+              <div class="skill-text">
+                <strong>서브 스킬</strong>
+                <p>스킬 이름과 1레벨 효과를 입력할 예정입니다.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="footer-note">
+        SCHALE STUDENT INFORMATION SYSTEM
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    const students = {
+      hoshino: {
+        name: "호시노",
+        english: "HOSHINO",
+        variants: {
+          default: "기본",
+          swimsuit: "수영복",
+          armed: "무장"
+        }
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const studentId = params.get("student") || "hoshino";
+    const variantId = params.get("variant") || "default";
+
+    const student = students[studentId] || students.hoshino;
+    const variantName = student.variants[variantId] || "기본";
+
+    document.getElementById("student-name").textContent =
+      variantId === "default"
+        ? student.name
+        : `${student.name}(${variantName})`;
+
+    document.getElementById("student-english").textContent =
+      `${student.english} / ${variantId.toUpperCase()}`;
+
+    document.getElementById("character-caption").textContent =
+      student.name;
+
+    document.getElementById("variant-caption").textContent =
+      variantId.toUpperCase();
+
+    document.getElementById("info-name").textContent =
+      student.name;
+
+    document.getElementById("info-variant").textContent =
+      variantName;
+
+    document.getElementById("back-button").href =
+      `variants.html?student=${studentId}`;
+
+    // SD 일러스트를 추가하면 자동으로 표시
+    const sdImagePath =
+      `../images/bluearchive/sd/${studentId}/${variantId}.png`;
+
+    const image = new Image();
+    image.src = sdImagePath;
+    image.alt = `${student.name} ${variantName} SD 일러스트`;
+
+    image.onload = () => {
+      const sdArea = document.getElementById("sd-area");
+      sdArea.innerHTML = "";
+      sdArea.appendChild(image);
+    };
+  </script>
+</body>
+</html>
