@@ -635,13 +635,46 @@
       preview.appendChild(sdImage);
     };
 
-    // 상세 기록부는 다음 단계에서 연결
-    document.querySelectorAll(".outfit-character").forEach(button => {
-      button.addEventListener("click", () => {
-        const variant = button.dataset.variant;
-        console.log("선택한 의상:", variant);
-      });
-    });
+// 상세 기록부 열기
+const recordOverlay = document.getElementById("record-overlay");
+const recordClose = document.getElementById("record-close");
+
+const variantNames = {
+  default: "호시노",
+  swimsuit: "호시노(수영복)",
+  armed: "호시노(무장)"
+};
+
+document.querySelectorAll(".outfit-character").forEach(button => {
+  button.addEventListener("click", () => {
+    const variant = button.dataset.variant;
+
+    document.getElementById("record-title").textContent =
+      variantNames[variant] || "호시노";
+
+    recordOverlay.classList.add("open");
+    recordClose.focus();
+  });
+});
+
+// 닫기 버튼
+recordClose.addEventListener("click", () => {
+  recordOverlay.classList.remove("open");
+});
+
+// 팝업 바깥 클릭
+recordOverlay.addEventListener("click", event => {
+  if (event.target === recordOverlay) {
+    recordOverlay.classList.remove("open");
+  }
+});
+
+// ESC 키
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    recordOverlay.classList.remove("open");
+  }
+});
   </script>
 
 </body>
