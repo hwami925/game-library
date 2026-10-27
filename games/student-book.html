@@ -137,6 +137,58 @@
         font-size: 17px;
       }
     }
+    /* 의상 선택 */
+.variant-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex: 1;
+  gap: 10px;
+  min-height: 0;
+}
+
+.variant-character {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+  cursor: pointer;
+}
+
+.variant-character img {
+  display: block;
+  width: 100%;
+  height: 75%;
+  object-fit: contain;
+  object-position: center bottom;
+  transition: transform 0.25s ease;
+}
+
+.variant-character:hover img {
+  transform: translateY(-8px) scale(1.05);
+}
+
+.variant-character strong {
+  margin-top: 12px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.variant-character span {
+  margin-top: 5px;
+  color: #8baec7;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.variant-hint {
+  text-align: center;
+  color: #8baec7;
+  font-size: 12px;
+}
   </style>
 </head>
 
@@ -198,24 +250,58 @@
         <div class="page-content">
           <h2>의상 선택</h2>
 
-          <div class="character-preview">
-            호시노 기본 / 수영복 / 무장
-          </div>
+<!-- 3페이지: 호시노 기본 / 수영복 -->
+<div class="page">
+  <div class="page-content">
+    <h2>호시노 / 의상 기록</h2>
 
-          <p>열람할 학생 기록을 선택하세요.</p>
-
-          <div class="page-number">03</div>
-        </div>
+    <div class="variant-grid">
+      <div class="variant-character" data-variant="default">
+        <img
+          src="../images/bluearchive/variants/hoshino/default.png"
+          alt="호시노 기본"
+        >
+        <strong>호시노</strong>
+        <span>DEFAULT</span>
       </div>
 
-      <!-- 4페이지: 추가 기록 -->
-      <div class="page">
-        <div class="page-content">
-          <h2>추가 기록</h2>
+      <div class="variant-character" data-variant="swimsuit">
+        <img
+          src="../images/bluearchive/variants/hoshino/swimsuit.png"
+          alt="호시노 수영복"
+        >
+        <strong>호시노(수영복)</strong>
+        <span>SWIMSUIT</span>
+      </div>
+    </div>
 
-          <div class="character-preview">
-            상세 기록부 연결 예정
-          </div>
+    <div class="page-number">03</div>
+  </div>
+</div>
+
+<!-- 4페이지: 호시노 무장 -->
+<div class="page">
+  <div class="page-content">
+    <h2>의상 선택</h2>
+
+    <div class="variant-grid">
+      <div class="variant-character" data-variant="armed">
+        <img
+          src="../images/bluearchive/variants/hoshino/armed.png"
+          alt="호시노 무장"
+        >
+        <strong>호시노(무장)</strong>
+        <span>ARMED</span>
+      </div>
+    </div>
+
+    <p class="variant-hint">
+      캐릭터를 선택하면 상세 기록부를 열람할 수 있습니다.
+    </p>
+
+    <div class="page-number">04</div>
+  </div>
+</div>
 
           <p>선택한 의상의 기록을 확인할 수 있습니다.</p>
 
