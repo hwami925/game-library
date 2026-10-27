@@ -556,6 +556,40 @@
   color: #7892a5;
   font-size: 12px;
 }    
+    /* 장비 4개 가로 배치 */
+.record-equipment {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 20px;
+}
+
+/* 장비 카드 */
+.record-equipment .equipment-item {
+  min-width: 0;
+  height: 100px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf6fc;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+/* 실제 장비 이미지 */
+.record-equipment .equipment-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 애용품 전용 배경 */
+.record-equipment .equipment-item.favorite-item {
+  background: #fff0f4;
+  border: 1px solid #f5d4df;
+}
   </style>
 </head>
 
