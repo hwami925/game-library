@@ -4,9 +4,425 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>학생 프로필 | SCHALE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #d9eaf5;
+      color: #173d5c;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 35px 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .system-name {
+      color: #628fb0;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+
+    .back-button {
+      padding: 11px 20px;
+      border: 1px solid #b5d1e3;
+      border-radius: 8px;
+      background: white;
+      color: #245c82;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* 학생 기록부 */
+    .folder {
+      min-height: 730px;
+      padding: 35px 42px;
+      border: 12px solid #83b8dc;
+      border-radius: 18px;
+      background: #fffefb;
+      box-shadow: 0 15px 35px rgba(34, 79, 115, 0.17);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #d9e7ef;
+    }
+
+    .school-logo {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .header p {
+      margin: 7px 0 0;
+      color: #8aabc3;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    /* 왼쪽 SD / 오른쪽 프로필 */
+    .book-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 45px;
+      margin-top: 35px;
+    }
+
+    .left-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .sd-area {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 470px;
+      border: 2px dashed #b8d7ea;
+      border-radius: 12px;
+      background: #f3f9fd;
+      overflow: hidden;
+    }
+
+    .sd-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .sd-placeholder {
+      padding: 25px;
+      text-align: center;
+      color: #8baec7;
+      line-height: 1.9;
+    }
+
+    .sd-placeholder strong {
+      display: block;
+      font-size: 24px;
+    }
+
+    .character-name {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .character-name strong {
+      display: block;
+      font-size: 27px;
+    }
+
+    .character-name span {
+      display: block;
+      margin-top: 7px;
+      color: #8baec7;
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+
+    .right-page {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #9ac6e3;
+      font-size: 19px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .profile-item {
+      padding: 15px;
+      border: 1px solid #d7e7f1;
+      border-radius: 8px;
+      background: #f7fbfd;
+    }
+
+    .profile-item .label {
+      display: block;
+      margin-bottom: 8px;
+      color: #8baec7;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .profile-item .value {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .description {
+      margin-top: 28px;
+    }
+
+    .description-box {
+      min-height: 140px;
+      padding: 20px;
+      border: 1px solid #d7e7f1;
+      border-radius: 8px;
+      background: #f7fbfd;
+      font-size: 14px;
+      line-height: 1.9;
+      color: #54758e;
+      white-space: pre-line;
+    }
+
+    .page-navigation {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 35px;
+    }
+
+    .next-button {
+      padding: 14px 25px;
+      border: none;
+      border-radius: 8px;
+      background: #83b8dc;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .next-button:hover {
+      background: #569bc9;
+      transform: translateX(5px);
+    }
+
+    .footer-note {
+      margin-top: 35px;
+      padding-top: 18px;
+      border-top: 1px solid #d9e7ef;
+      text-align: center;
+      color: #8aa7b9;
+      font-size: 12px;
+    }
+
+    @media (max-width: 850px) {
+      .page {
+        padding: 15px;
+      }
+
+      .folder {
+        min-height: auto;
+        padding: 22px 16px;
+        border-width: 7px;
+      }
+
+      .book-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .sd-area {
+        height: 350px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .school-logo {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>샬레 학생 기록부</h1>
-  <p>호시노 프로필 페이지 준비 중</p>
+  <main class="page">
+
+    <div class="topbar">
+      <div class="system-name">SCHALE / STUDENT PROFILE</div>
+      <a class="back-button" href="students.html">← 학생 명부</a>
+    </div>
+
+    <section class="folder">
+
+      <header class="header">
+        <img
+          class="school-logo"
+          src="../images/bluearchive/schools/abydos.png"
+          alt="아비도스 교표"
+        >
+
+        <div>
+          <h1 id="student-name">호시노</h1>
+          <p id="student-english">HOSHINO / STUDENT PROFILE</p>
+        </div>
+      </header>
+
+      <div class="book-content">
+
+        <!-- 왼쪽: 화미 SD 일러스트 -->
+        <div class="left-page">
+
+          <div class="sd-area" id="sd-area">
+            <div class="sd-placeholder">
+              <strong>SD ILLUSTRATION</strong>
+              화미의 SD 일러스트가<br>
+              이곳에 들어갈 예정입니다.
+            </div>
+          </div>
+
+          <div class="character-name">
+            <strong id="character-name">호시노</strong>
+            <span>ABYDOS HIGH SCHOOL</span>
+          </div>
+
+        </div>
+
+        <!-- 오른쪽: 학생 프로필 -->
+        <div class="right-page">
+
+          <h2 class="section-title">01 / 학생 프로필</h2>
+
+          <div class="profile-grid">
+            <div class="profile-item">
+              <span class="label">소속 학원</span>
+              <span class="value">아비도스 고등학교</span>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">소속 동아리</span>
+              <span class="value">대책위원회</span>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">나이</span>
+              <span class="value" id="age">준비 중</span>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">신장</span>
+              <span class="value" id="height">준비 중</span>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">생일</span>
+              <span class="value" id="birthday">준비 중</span>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">취미</span>
+              <span class="value" id="hobby">준비 중</span>
+            </div>
+          </div>
+
+          <div class="description">
+            <h2 class="section-title">02 / 학생 소개</h2>
+
+            <div class="description-box" id="description">
+              학생 소개 정보가 들어갈 예정입니다.
+            </div>
+          </div>
+
+          <div class="page-navigation">
+            <a
+              class="next-button"
+              id="next-button"
+              href="variants.html?student=hoshino"
+            >
+              다음 페이지 →
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="footer-note">
+        SCHALE STUDENT INFORMATION SYSTEM
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    const students = {
+      hoshino: {
+        name: "호시노",
+        english: "HOSHINO",
+
+        // 프로필 정보는 나중에 입력
+        age: "준비 중",
+        height: "준비 중",
+        birthday: "준비 중",
+        hobby: "준비 중",
+        description: "학생 소개 정보가 들어갈 예정입니다."
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const studentId = params.get("student") || "hoshino";
+    const student = students[studentId] || students.hoshino;
+
+    document.getElementById("student-name").textContent = student.name;
+    document.getElementById("student-english").textContent =
+      `${student.english} / STUDENT PROFILE`;
+
+    document.getElementById("character-name").textContent = student.name;
+    document.getElementById("age").textContent = student.age;
+    document.getElementById("height").textContent = student.height;
+    document.getElementById("birthday").textContent = student.birthday;
+    document.getElementById("hobby").textContent = student.hobby;
+    document.getElementById("description").textContent = student.description;
+
+    document.getElementById("next-button").href =
+      `variants.html?student=${studentId}`;
+
+    // 화미 SD 일러스트가 추가되면 자동 표시
+    const sdImagePath =
+      `../images/bluearchive/sd/${studentId}/default.png`;
+
+    const image = new Image();
+    image.src = sdImagePath;
+    image.alt = `${student.name} SD 일러스트`;
+
+    image.onload = () => {
+      const sdArea = document.getElementById("sd-area");
+      sdArea.innerHTML = "";
+      sdArea.appendChild(image);
+    };
+  </script>
 </body>
 </html>
