@@ -1219,9 +1219,46 @@ const exVideoClose = document.getElementById("ex-video-close");
 function openExVideo() {
   exVideoPopup.classList.add("open");
 
+  // EX 스킬 카드 위치 확인
+  const card = exSkillCard.getBoundingClientRect();
+
+  // 영상 창 크기
+  const popupWidth = exVideoPopup.offsetWidth;
+  const popupHeight = exVideoPopup.offsetHeight;
+  const gap = 15;
+  const margin = 12;
+
+  // 기본 위치: EX 스킬 카드 오른쪽
+  let left = card.right + gap;
+  let top = card.top;
+
+  // 오른쪽 공간이 부족하면 카드 왼쪽에 표시
+  if (left + popupWidth > window.innerWidth - margin) {
+    left = card.left - popupWidth - gap;
+  }
+
+  // 양쪽 모두 공간이 부족하면 화면 중앙에 표시
+  if (left < margin) {
+    left = (window.innerWidth - popupWidth) / 2;
+    top = (window.innerHeight - popupHeight) / 2;
+  }
+
+  // 화면 밖으로 벗어나지 않도록 조정
+  left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+  top = Math.max(margin, Math.min(top, window.innerHeight - popupHeight - margin));
+
+  // 기존 오른쪽·아래쪽 고정 위치 해제
+  exVideoPopup.style.right = "auto";
+  exVideoPopup.style.bottom = "auto";
+
+  // 새 위치 적용
+  exVideoPopup.style.left = `${left}px`;
+  exVideoPopup.style.top = `${top}px`;
+
+  // 영상 재생
   exSkillVideo.currentTime = 0;
   exSkillVideo.play().catch(() => {
-    // 자동 재생이 차단되면 영상의 재생 버튼으로 실행
+    // 자동 재생이 차단되면 재생 버튼 사용
   });
 }
 
