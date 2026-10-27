@@ -214,6 +214,217 @@
       .outfit-character img { height: 330px; }
       .outfit-character strong { font-size: 11px; }
     }
+
+    /* 상세 기록부 배경 */
+.record-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 37, 59, 0.68);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0.35s;
+}
+
+.record-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* 펼쳐지는 기록부 */
+.record-sheet {
+  position: relative;
+  width: min(1100px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px;
+  border: 1px solid #c5dce9;
+  border-radius: 12px;
+  background: #fffefb;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+
+  opacity: 0;
+  transform: translateY(70px) scaleY(0.65);
+  transform-origin: top center;
+  transition:
+    opacity 0.45s ease,
+    transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.record-overlay.open .record-sheet {
+  opacity: 1;
+  transform: translateY(0) scaleY(1);
+}
+
+.record-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #dceef8;
+  color: #285e80;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.record-header {
+  padding-bottom: 18px;
+  border-bottom: 2px solid #9ac6e3;
+}
+
+.record-header span {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #7da6c0;
+}
+
+.record-header h2 {
+  margin: 10px 0 5px;
+  font-size: 27px;
+}
+
+.record-header p {
+  margin: 0;
+  color: #7898ad;
+}
+
+.record-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 25px;
+}
+
+.record-left,
+.record-right {
+  min-width: 0;
+}
+
+.record-content h3 {
+  margin: 0 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #c9dfeb;
+  font-size: 17px;
+}
+
+.record-memorial {
+  height: 310px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #b8d7ea;
+  border-radius: 10px;
+  background: #f3f9fd;
+  color: #8baec7;
+}
+
+.record-memorial img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.record-weapon {
+  margin-top: 24px;
+}
+
+.record-weapon-image {
+  padding: 30px;
+  text-align: center;
+  border-radius: 8px;
+  background: #edf6fb;
+  color: #8baec7;
+}
+
+.record-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.record-stats > div {
+  padding: 13px 8px;
+  text-align: center;
+  border-radius: 8px;
+  background: #edf6fb;
+}
+
+.record-stats small {
+  display: block;
+  margin-bottom: 7px;
+  color: #7b9bb0;
+}
+
+.record-stats strong {
+  font-size: 14px;
+}
+
+.record-right h3 small {
+  margin-left: 8px;
+  font-size: 11px;
+  color: #8baec7;
+}
+
+.record-skills {
+  display: grid;
+  gap: 10px;
+}
+
+.record-skill {
+  position: relative;
+  padding: 13px 16px;
+  border-left: 4px solid #83b8dc;
+  border-radius: 6px;
+  background: #f3f9fd;
+}
+
+.record-skill strong {
+  font-size: 14px;
+}
+
+.record-skill p {
+  margin: 7px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.record-skill span {
+  display: inline-block;
+  margin-top: 7px;
+  color: #4c91bd;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+@media (max-width: 700px) {
+  .record-overlay {
+    padding: 12px;
+  }
+
+  .record-sheet {
+    padding: 20px;
+  }
+
+  .record-content {
+    grid-template-columns: 1fr;
+  }
+
+  .record-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+    
   </style>
 </head>
 
