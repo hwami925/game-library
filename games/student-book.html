@@ -642,6 +642,76 @@
   font-size: 11px;
   font-weight: bold;
 }
+    /* EX 스킬 미니 영상 창 */
+.ex-video-popup {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  z-index: 300;
+
+  width: min(360px, calc(100vw - 30px));
+  padding: 10px;
+
+  background: #fffefb;
+  border: 2px solid #83b8dc;
+  border-radius: 12px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+
+  display: none;
+}
+
+.ex-video-popup.open {
+  display: block;
+}
+
+.ex-video-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 10px;
+  color: #326b98;
+  font-size: 13px;
+}
+
+#ex-video-close {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: #dceef8;
+  color: #285e80;
+  cursor: pointer;
+}
+
+#ex-skill-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 6px;
+}
+
+/* EX 스킬 클릭 가능 표시 */
+.ex-skill-card {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ex-skill-card:hover {
+  background: #e1f2ff;
+}
+
+.ex-skill-card:focus-visible {
+  outline: 3px solid #569bc9;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .ex-video-popup {
+    right: 15px;
+    bottom: 15px;
+  }
+}
   </style>
 </head>
 
@@ -856,6 +926,27 @@
 
 </div>
   <!-- 메모리얼 영상 팝업 -->
+  <!-- EX 스킬 미니 영상 플레이어 -->
+<div class="ex-video-popup" id="ex-video-popup">
+  <div class="ex-video-header">
+    <strong>🎬 EX SKILL</strong>
+    <button type="button" id="ex-video-close" aria-label="영상 닫기">✕</button>
+  </div>
+
+  <video
+    id="ex-skill-video"
+    playsinline
+    controls
+    loop
+    preload="none"
+  >
+    <source
+      src="../images/bluearchive/skills/hoshino/default-ex.mp4"
+      type="video/mp4"
+    >
+    브라우저에서 영상을 재생할 수 없습니다.
+  </video>
+</div>
 <div class="video-overlay" id="video-overlay">
   <div class="video-popup">
 
@@ -1119,6 +1210,51 @@ skillLevelUp.addEventListener("click", () => {
 });
 
 updateSkillLevel();
+    // EX 스킬 영상 플레이어
+const exSkillCard = document.getElementById("ex-skill-card");
+const exVideoPopup = document.getElementById("ex-video-popup");
+const exSkillVideo = document.getElementById("ex-skill-video");
+const exVideoClose = document.getElementById("ex-video-close");
+
+function openExVideo() {
+  exVideoPopup.classList.add("open");
+
+  exSkillVideo.currentTime = 0;
+  exSkillVideo.play().catch(() => {
+    // 자동 재생이 차단되면 영상의 재생 버튼으로 실행
+  });
+}
+
+function closeExVideo() {
+  exVideoPopup.classList.remove("open");
+  exSkillVideo.pause();
+  exSkillVideo.currentTime = 0;
+}
+
+// EX 스킬 카드 클릭
+exSkillCard.addEventListener("click", openExVideo);
+
+// 키보드 Enter / Space로도 열기
+exSkillCard.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openExVideo();
+  }
+});
+
+// 닫기 버튼
+exVideoClose.addEventListener("click", closeExVideo);
+
+// ESC 키로 닫기
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeExVideo();
+  }
+});
+
+// 상세 기록부를 닫으면 EX 영상도 종료
+document.getElementById("record-close")
+  .addEventListener("click", closeExVideo);
   </script>
 
 </body>
