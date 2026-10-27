@@ -823,28 +823,30 @@
 
         <div class="record-skills">
 
-          <div class="record-skill">
-            <strong>EX 스킬</strong>
-            <p>전방 부채꼴 범위 내 적에게 공격력 435% 대미지</p>
-            <span>COST 4</span>
-          </div>
+         <div class="record-skills">
 
-          <div class="record-skill">
-            <strong>기본 스킬</strong>
-            <p>HP 30% 이하 시 지속 회복 효과 부여</p>
-          </div>
+  <div class="record-skill">
+    <strong>EX 스킬</strong>
+    <p id="skill-ex"></p>
+    <span>COST 4</span>
+  </div>
 
-          <div class="record-skill">
-            <strong>강화 스킬</strong>
-            <p>방어력 14% 증가</p>
-          </div>
+  <div class="record-skill">
+    <strong>기본 스킬</strong>
+    <p id="skill-basic"></p>
+  </div>
 
-          <div class="record-skill">
-            <strong>서브 스킬</strong>
-            <p>EX 스킬 사용 중 보호막 효과 부여</p>
-          </div>
+  <div class="record-skill">
+    <strong>강화 스킬</strong>
+    <p id="skill-enhanced"></p>
+  </div>
 
-        </div>
+  <div class="record-skill">
+    <strong>서브 스킬</strong>
+    <p id="skill-sub"></p>
+  </div>
+
+</div>
 
       </div>
 
@@ -1071,6 +1073,35 @@ function updateSkillLevel() {
 
   skillLevelDown.disabled = skillLevel === 1;
   skillLevelUp.disabled = skillLevel === 10;
+
+  // EX 스킬은 최대 5레벨
+  const exLevel = Math.min(skillLevel, 5);
+
+  const exDamage = hoshinoSkills.ex[exLevel - 1];
+  const basicHeal = hoshinoSkills.basic[skillLevel - 1];
+  const enhancedDefense = hoshinoSkills.enhanced[skillLevel - 1];
+  const subShield = hoshinoSkills.sub[skillLevel - 1];
+
+  // EX 스킬
+  const stunTime =
+    exLevel >= 5 ? "1.4초" :
+    exLevel >= 3 ? "1초" : "";
+
+  document.getElementById("skill-ex").textContent =
+    `부채꼴 범위 내 적에게 공격력 ${exDamage}% 대미지` +
+    (stunTime ? ` / 기절 (${stunTime})` : "");
+
+  // 기본 스킬
+  document.getElementById("skill-basic").textContent =
+    `체력 30% 이하 시 치유력 ${basicHeal}% 지속 회복 (20초, 전투 당 1회)`;
+
+  // 강화 스킬
+  document.getElementById("skill-enhanced").textContent =
+    `방어력 ${enhancedDefense}% 증가`;
+
+  // 서브 스킬
+  document.getElementById("skill-sub").textContent =
+    `EX 스킬 사용 중 치유력 ${subShield}% 보호막`;
 }
 
 skillLevelDown.addEventListener("click", () => {
