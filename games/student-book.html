@@ -318,6 +318,7 @@
 }
 
 .record-memorial {
+  position: relative;
   height: 310px;
   display: flex;
   align-items: center;
@@ -326,6 +327,23 @@
   border-radius: 10px;
   background: #f3f9fd;
   color: #8baec7;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.record-memorial:hover {
+  transform: scale(1.02);
+}
+
+.record-memorial:hover::after {
+  content: "▶ 메모리얼 영상 보기";
+  position: absolute;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: rgba(10, 40, 65, 0.8);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .record-memorial img {
