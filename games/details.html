@@ -150,6 +150,56 @@
       text-align: center;
     }
 
+    /* 전용무기 정보 */
+.weapon-panel {
+  width: 100%;
+  margin-top: 25px;
+  padding: 20px;
+  border: 1px solid #d7e7f1;
+  border-radius: 10px;
+  background: #f7fbfd;
+}
+
+.weapon-title {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #9ac6e3;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.weapon-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.weapon-image {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 110px;
+  height: 90px;
+  border: 2px dashed #b8d7ea;
+  border-radius: 8px;
+  color: #8baec7;
+  font-size: 12px;
+  background: #fff;
+}
+
+.weapon-info strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.weapon-info p {
+  margin: 0;
+  color: #7898ad;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
     .character-caption strong {
       display: block;
       font-size: 23px;
@@ -370,6 +420,22 @@
             <strong id="character-caption">호시노</strong>
             <span id="variant-caption">DEFAULT</span>
           </div>
+
+          <!-- 전용무기 -->
+<div class="weapon-panel">
+  <div class="weapon-title">04 / 전용무기</div>
+
+  <div class="weapon-content">
+    <div class="weapon-image">
+      무기 이미지
+    </div>
+
+    <div class="weapon-info">
+      <strong>전용무기 이름</strong>
+      <p>전용무기 설명이 들어갈 예정입니다.</p>
+    </div>
+  </div>
+</div>
 
         </div>
 
