@@ -1063,6 +1063,9 @@ recordClose.addEventListener("click", () => {
 recordOverlay.addEventListener("click", event => {
   if (event.target === recordOverlay) {
     recordOverlay.classList.remove("open");
+
+    // EX 스킬 영상도 함께 닫기
+    closeExVideo();
   }
 });
 
