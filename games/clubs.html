@@ -534,10 +534,13 @@ additionalSchools.forEach(([slug, name, english]) => {
         <div class="arrow">›</div>
       `;
 
-      button.addEventListener("click", () => {
-        alert("학생 명부 페이지는 다음 단계에서 제작할 예정이야!");
-      });
-
+button.addEventListener("click", () => {
+  if (schoolId === "abydos" && club.name === "대책위원회") {
+    window.location.href = "students.html";
+  } else {
+    alert("이 동아리의 학생 명부는 아직 준비 중이야!");
+  }
+});
       clubList.appendChild(button);
     });
   </script>
