@@ -285,4 +285,59 @@ footer {
   opacity: 0;
   transform: translateY(12px);
 }
+/* 장비 정보 제목 */
+.equipment-title {
+  margin-top: 20px;
+}
 
+/* 장비 정보 4칸 */
+.record-equipment {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* 개별 장비 */
+.equipment-item {
+  min-width: 0;
+  min-height: 90px;
+  padding: 12px 5px;
+  border-radius: 8px;
+  background: #edf6fc;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  text-align: center;
+}
+
+.equipment-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.equipment-item strong {
+  color: #173d5c;
+  font-size: 13px;
+}
+
+/* 애용품 전용 디자인 */
+.favorite-item {
+  background: #fff0f4;
+  border: 1px solid #f5d4df;
+}
+
+.favorite-item strong {
+  color: #c56a8d;
+}
+
+/* 작은 화면 대응 */
+@media (max-width: 500px) {
+  .record-equipment {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
