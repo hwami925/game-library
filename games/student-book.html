@@ -442,7 +442,74 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-    
+ /* 메모리얼 영상 팝업 */
+.video-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 20, 35, 0.85);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.video-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.video-popup {
+  position: relative;
+  width: min(900px, 100%);
+  padding: 25px;
+  border-radius: 12px;
+  background: #fffefb;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+.video-popup h2 {
+  margin: 0 45px 20px 0;
+  color: #173d5c;
+  font-size: 22px;
+}
+
+.video-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #dceef8;
+  color: #285e80;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}   
   </style>
 </head>
 
@@ -614,6 +681,28 @@
   </div>
 
 </div>
+  <!-- 메모리얼 영상 팝업 -->
+<div class="video-overlay" id="video-overlay">
+  <div class="video-popup">
+
+    <button class="video-close" id="video-close" aria-label="영상 닫기">
+      ✕
+    </button>
+
+    <h2 id="video-title">호시노 메모리얼</h2>
+
+    <div class="video-container">
+      <iframe
+        id="memorial-video"
+        src=""
+        title="메모리얼 영상"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+  </div>
+</div>
   <div class="controls">
     <button id="prev" disabled>← 이전 페이지</button>
     <button id="next">다음 페이지 →</button>
@@ -716,6 +805,66 @@ recordOverlay.addEventListener("click", event => {
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") {
     recordOverlay.classList.remove("open");
+  }
+});
+    // 메모리얼 유튜브 영상
+const videoOverlay = document.getElementById("video-overlay");
+const videoClose = document.getElementById("video-close");
+const memorialVideo = document.getElementById("memorial-video");
+const memorialArea = document.getElementById("record-memorial");
+
+// 의상별 유튜브 영상 ID
+const memorialVideos = {
+  default: "fcR8KYVzjpg",
+  swimsuit: "",
+  armed: ""
+};
+
+let selectedVariant = "default";
+
+// 의상을 선택하면 해당 영상 기억
+document.querySelectorAll(".outfit-character").forEach(button => {
+  button.addEventListener("click", () => {
+    selectedVariant = button.dataset.variant;
+  });
+});
+
+// 메모리얼 클릭 시 영상 열기
+memorialArea.addEventListener("click", () => {
+  const videoId = memorialVideos[selectedVariant];
+
+  if (!videoId) {
+    alert("메모리얼 영상 준비 중입니다!");
+    return;
+  }
+
+  document.getElementById("video-title").textContent =
+    `${variantNames[selectedVariant]} 메모리얼`;
+
+  memorialVideo.src =
+  `https://www.youtube.com/embed/${videoId}?start=629&end=677&autoplay=1&rel=0`;
+
+  videoOverlay.classList.add("open");
+  videoClose.focus();
+});
+
+// 영상 닫기
+function closeMemorialVideo() {
+  videoOverlay.classList.remove("open");
+  memorialVideo.src = ""; // 영상 재생 중지
+}
+
+videoClose.addEventListener("click", closeMemorialVideo);
+
+videoOverlay.addEventListener("click", event => {
+  if (event.target === videoOverlay) {
+    closeMemorialVideo();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeMemorialVideo();
   }
 });
   </script>
