@@ -605,6 +605,43 @@
 .record-stats .type-yellow strong {
   color: #9b7414;
 }
+    /* 스킬 정보 제목과 레벨 버튼 */
+.record-right .skill-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.skill-level-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-level-control button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #b8d7ea;
+  border-radius: 6px;
+  background: #edf6fc;
+  color: #326b98;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.skill-level-control button:hover {
+  background: #d4eaf8;
+}
+
+.skill-level-control small {
+  min-width: 55px;
+  text-align: center;
+  color: #6596ba;
+  font-size: 11px;
+  font-weight: bold;
+}
   </style>
 </head>
 
@@ -1001,6 +1038,35 @@ document.addEventListener("keydown", event => {
     closeMemorialVideo();
   }
 });
+    // 스킬 레벨 조절
+let skillLevel = 1;
+
+const skillLevelText = document.getElementById("skill-level-text");
+const skillLevelDown = document.getElementById("skill-level-down");
+const skillLevelUp = document.getElementById("skill-level-up");
+
+function updateSkillLevel() {
+  skillLevelText.textContent = `LEVEL ${skillLevel}`;
+
+  skillLevelDown.disabled = skillLevel === 1;
+  skillLevelUp.disabled = skillLevel === 10;
+}
+
+skillLevelDown.addEventListener("click", () => {
+  if (skillLevel > 1) {
+    skillLevel--;
+    updateSkillLevel();
+  }
+});
+
+skillLevelUp.addEventListener("click", () => {
+  if (skillLevel < 10) {
+    skillLevel++;
+    updateSkillLevel();
+  }
+});
+
+updateSkillLevel();
   </script>
 
 </body>
