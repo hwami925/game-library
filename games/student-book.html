@@ -510,6 +510,52 @@
   height: 100%;
   border: none;
 }   
+/* 전용무기 이미지 */
+.record-weapon-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  padding: 12px;
+  background: #f8fbff;
+  border: 1px solid #dce9f2;
+  border-radius: 10px;
+}
+
+.record-weapon-image img {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+/* 전용무기 정보 */
+.weapon-info {
+  margin-top: 12px;
+}
+
+.weapon-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dce9f2;
+  color: #326b98;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.weapon-info h4 {
+  margin: 12px 0 5px;
+  color: #173d5c;
+  font-size: 15px;
+}
+
+.weapon-info p {
+  margin: 0;
+  color: #7892a5;
+  font-size: 12px;
+}    
   </style>
 </head>
 
@@ -624,12 +670,26 @@
 </div>
 
         <div class="record-weapon">
-          <h3>전용무기</h3>
-          <div class="record-weapon-image">
-            전용무기 이미지 준비 중
-          </div>
-          <p>전용무기 정보 준비 중</p>
-        </div>
+  <h3>전용무기</h3>
+
+  <div class="record-weapon-image">
+    <img
+      id="weapon-image"
+      src="../images/bluearchive/weapons/hoshino/default.png"
+      alt="호시노 전용무기"
+    >
+  </div>
+
+  <div class="weapon-info">
+    <div class="weapon-type">
+      <span>고유무기</span>
+      <strong>SG</strong>
+    </div>
+
+    <h4>호루스의 눈 + 진압 방패 '아이언 호루스'</h4>
+    <p>베레타 1301 택티컬 Gen.1.5</p>
+  </div>
+</div>>
 
       </div>
 
