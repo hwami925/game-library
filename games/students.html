@@ -551,7 +551,7 @@
             <img
               src="${imagePath}"
               alt="${student.name} SD 일러스트"
-              onerror="this.outerHTML = \`${placeholderSVG}\`"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
             >
           </div>
 
