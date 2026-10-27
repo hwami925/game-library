@@ -143,7 +143,6 @@
   <div class="book-wrapper">
     <div id="book">
 
-      <!-- 1페이지: 프로필 일러스트 -->
      <!-- 1페이지: 호시노 SD 일러스트 -->
 <div class="page">
   <div class="page-content">
@@ -159,21 +158,35 @@
   </div>
 </div>
 
-      <!-- 2페이지: 프로필 정보 -->
-      <div class="page">
-        <div class="page-content">
-          <h2>학생 프로필</h2>
+     <!-- 2페이지: 호시노 프로필 정보 -->
+<div class="page">
+  <div class="page-content">
+    <h2>학생 프로필</h2>
 
-          <p><strong>이름:</strong> 호시노</p>
-          <p><strong>소속:</strong> 아비도스 고등학교</p>
-          <p><strong>동아리:</strong> 대책위원회</p>
-          <p><strong>나이:</strong> 준비 중</p>
-          <p><strong>생일:</strong> 준비 중</p>
-          <p><strong>취미:</strong> 준비 중</p>
+    <p><strong>이름:</strong> 타카나시 호시노</p>
+    <p><strong>소속:</strong> 아비도스 고등학교 (3학년)</p>
+    <p><strong>동아리:</strong> 대책위원회</p>
+    <p><strong>나이:</strong> 17살</p>
+    <p><strong>신장:</strong> 145cm</p>
+    <p><strong>생일:</strong> 1월 2일</p>
+    <p><strong>취미:</strong> 낮잠, 빈둥대기</p>
 
-          <div class="page-number">02</div>
-        </div>
-      </div>
+    <h2 style="margin-top: 20px;">학생 소개</h2>
+
+    <p style="font-size: 13px;">
+      아저씨 같은 말투를 즐겨 쓰며 업무보다는
+      장난치기를 좋아한다.
+    </p>
+
+    <p style="font-size: 13px;">
+      때로는 위원회에 부족한 부분을 채워주며,
+      일이 시작되면 다른 아이들을 지켜주기 위해
+      가장 앞에서 분투한다.
+    </p>
+
+    <div class="page-number">02</div>
+  </div>
+</div>
 
       <!-- 3페이지: 의상 선택 -->
       <div class="page">
@@ -267,6 +280,18 @@
 
     updateButtons();
   </script>
+<script>
+  const sdPath = "../images/bluearchive/sd/hoshino/default.png";
 
+  const sdImage = new Image();
+  sdImage.src = sdPath;
+  sdImage.alt = "호시노 SD 일러스트";
+
+  sdImage.onload = () => {
+    const preview = document.getElementById("sd-preview");
+    preview.innerHTML = "";
+    preview.appendChild(sdImage);
+  };
+</script>
 </body>
 </html>
