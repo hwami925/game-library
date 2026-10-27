@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>이격 선택 | 게임창고</title>
+  <title>학생 의상 기록 | SCHALE</title>
 
   <style>
     * {
@@ -13,380 +13,258 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Pretendard", "Noto Sans KR", sans-serif;
-      color: #284c68;
-      background:
-        radial-gradient(circle at 15% 20%, #ffffff 0, transparent 32%),
-        linear-gradient(135deg, #e9f8ff, #c9e8fb);
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      padding: 24px 5%;
-    }
-
-    .brand {
-      font-size: 22px;
-      font-weight: 900;
-    }
-
-    .back-button {
-      padding: 11px 19px;
-      border-radius: 12px;
-      background: white;
-      color: #347ba7;
-      text-decoration: none;
-      font-weight: 800;
-      box-shadow: 0 4px 15px #8fc7e344;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      color: #173d5c;
+      background: #d9eaf5;
     }
 
     .page {
-      max-width: 1250px;
-      margin: 25px auto 80px;
-      padding: 0 22px;
+      max-width: 1400px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 35px 24px;
     }
 
-    .eyebrow {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: #6c9ec1;
-    }
-
-    h1 {
-      margin: 9px 0;
-      font-size: clamp(28px, 4vw, 43px);
-    }
-
-    .description {
-      margin-bottom: 30px;
-      color: #7293aa;
-      line-height: 1.7;
-    }
-
-    /* 펼쳐진 서류철 */
-
-    .folder {
-      position: relative;
-      min-height: 680px;
-      padding: 35px;
-      border: 13px solid #79b9df;
-      border-radius: 17px;
-      background: #b9dcf3;
-      box-shadow:
-        0 22px 45px #5b9bc04d,
-        inset 0 0 0 3px #ffffff55;
-    }
-
-    .paper {
-      position: relative;
-      min-height: 590px;
-      padding: 35px;
-      border-radius: 5px;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0,
-          transparent 34px,
-          #dcebf344 35px
-        ),
-        #fcfeff;
-      box-shadow: 3px 5px 12px #3e7b9d33;
-    }
-
-    /* 캐릭터 정보 */
-
-    .character-heading {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      padding-bottom: 24px;
-      border-bottom: 2px solid #d9e9f3;
-    }
-
-    .character-emblem {
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      width: 85px;
-      height: 85px;
-      border: 2px solid #d7e7f0;
-      border-radius: 50%;
-      background: #f5fbff;
-    }
-
-    .character-emblem img {
-      width: 75%;
-      height: 75%;
-      object-fit: contain;
-    }
-
-    .character-label {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #8aacc2;
-    }
-
-    .character-name {
-      margin: 7px 0;
-      font-size: 34px;
-      font-weight: 900;
-      color: #244762;
-    }
-
-    .character-en {
-      font-size: 13px;
-      font-weight: 700;
-      color: #8aa7bb;
-      letter-spacing: 1px;
-    }
-
-    /* 이격 카드 */
-
-    .variant-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 22px;
-      margin-top: 30px;
-    }
-
-    .variant-card {
-      min-width: 0;
-      padding: 13px;
-      border: 1px solid #d4e6f1;
-      border-radius: 10px;
-      background: #fff;
-      color: #284c68;
-      cursor: pointer;
-      text-align: left;
-      box-shadow: 0 5px 13px #6b9eb422;
-      transition: transform .25s, box-shadow .25s;
-    }
-
-    .variant-card:hover {
-      transform: translateY(-9px);
-      box-shadow: 0 15px 25px #6b9eb444;
-      border-color: #86c9ee;
-    }
-
-    .variant-image {
-      position: relative;
-      display: grid;
-      place-items: center;
-      width: 100%;
-      height: 360px;
-      overflow: hidden;
-      border-radius: 6px;
-      background: linear-gradient(145deg, #e4f5ff, #c3e5f6);
-    }
-
-    .variant-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      transition: transform .3s;
-    }
-
-    .variant-card:hover .variant-image img {
-      transform: scale(1.05);
-    }
-
-    .variant-placeholder {
-      display: none;
-      place-items: center;
-      width: 100%;
-      height: 100%;
-      font-size: 50px;
-      color: #8bb9d4;
-    }
-
-    .variant-name {
-      margin-top: 16px;
-      font-size: 18px;
-      font-weight: 900;
-    }
-
-    .variant-en {
-      margin-top: 5px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #90aabd;
-      letter-spacing: 1px;
-    }
-
-    .variant-bottom {
+    .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 17px;
-      padding-top: 12px;
-      border-top: 1px dashed #dce8f0;
-      font-size: 12px;
-      font-weight: 800;
-      color: #82a8bf;
+      gap: 20px;
+      margin-bottom: 25px;
     }
 
-    .variant-bottom .arrow {
-      font-size: 23px;
-    }
-
-    /* 인덱스 */
-
-    .index-tabs {
-      position: absolute;
-      top: 110px;
-      right: -42px;
-      display: grid;
-      gap: 5px;
-    }
-
-    .index-tab {
-      padding: 14px 10px;
-      border-radius: 0 8px 8px 0;
-      background: #a8d4ee;
-      color: #356a8b;
-      font-size: 12px;
-      font-weight: 800;
-      writing-mode: vertical-rl;
-      box-shadow: 3px 4px 7px #6395b344;
-    }
-
-    .index-tab.active {
-      background: #ffd6ba;
-      color: #9c694d;
-    }
-
-    .bottom-nav {
-      margin-top: 25px;
-    }
-
-    .bottom-nav a {
-      display: inline-block;
-      padding: 13px 19px;
-      border-radius: 10px;
-      background: white;
-      color: #417fa5;
+    .system-name {
       font-size: 13px;
       font-weight: 800;
+      letter-spacing: 3px;
+      color: #628fb0;
+    }
+
+    .back-button {
+      padding: 11px 20px;
+      border: 1px solid #b5d1e3;
+      border-radius: 8px;
+      background: white;
+      color: #245c82;
+      font-weight: bold;
       text-decoration: none;
     }
 
-    @media (max-width: 900px) {
-      .variant-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    /* 펼쳐진 학생 기록부 */
+    .folder {
+      position: relative;
+      min-height: 730px;
+      padding: 40px 48px 45px;
+      border: 12px solid #83b8dc;
+      border-radius: 18px;
+      background: #fffefb;
+      box-shadow: 0 15px 35px rgba(34, 79, 115, 0.17);
     }
 
-    @media (max-width: 600px) {
+    .folder::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: #edf0ef;
+      pointer-events: none;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #d9e7ef;
+    }
+
+    .school-logo {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .header p {
+      margin: 7px 0 0;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #8aabc3;
+    }
+
+    .subtitle {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      color: #86a9c2;
+    }
+
+    /* 캐릭터를 카드 없이 나란히 배치 */
+    .characters {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 8px;
+      min-height: 540px;
+      margin-top: 10px;
+    }
+
+    .character {
+      position: relative;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      min-width: 0;
+      max-width: 400px;
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .character-image {
+      display: flex;
+      width: 100%;
+      height: 455px;
+      justify-content: center;
+      align-items: flex-end;
+      transition: transform 0.25s ease, filter 0.25s ease;
+    }
+
+    .character-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+    }
+
+    .character:hover .character-image {
+      transform: translateY(-12px) scale(1.055);
+      filter: drop-shadow(0 10px 10px rgba(55, 119, 160, 0.2));
+    }
+
+    .character-name {
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px 5px;
+      border-top: 2px solid #a7cce5;
+      text-align: center;
+      transition: border-color 0.2s ease;
+    }
+
+    .character-name strong {
+      display: block;
+      font-size: 20px;
+    }
+
+    .character-name span {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #88a8c0;
+    }
+
+    .character:hover .character-name {
+      border-color: #268fd1;
+    }
+
+    .footer-note {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 12px;
+      color: #8aa7b9;
+    }
+
+    @media (max-width: 800px) {
+      .page {
+        padding: 15px;
+      }
+
       .folder {
-        padding: 16px;
-        border-width: 8px;
+        min-height: auto;
+        padding: 25px 15px;
+        border-width: 7px;
       }
 
-      .paper {
-        padding: 20px;
+      .folder::before {
+        display: none;
       }
 
-      .character-heading {
-        gap: 13px;
+      .characters {
+        gap: 3px;
+        min-height: 350px;
       }
 
-      .character-emblem {
-        width: 60px;
-        height: 60px;
+      .character-image {
+        height: 290px;
       }
 
-      .character-name {
-        font-size: 26px;
+      .character-name strong {
+        font-size: 14px;
       }
 
-      .variant-grid {
-        grid-template-columns: 1fr;
+      .character-name span {
+        font-size: 9px;
+        letter-spacing: 0;
       }
 
-      .variant-image {
-        height: 390px;
+      .header h1 {
+        font-size: 24px;
       }
 
-      .index-tabs {
-        right: -15px;
-      }
-
-      .index-tab {
-        padding: 10px 5px;
-        font-size: 10px;
+      .school-logo {
+        width: 50px;
+        height: 50px;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <header>
-    <div class="brand">📦 게임창고</div>
-    <a class="back-button" href="students.html">
-      ← 학생 명부
-    </a>
-  </header>
-
   <main class="page">
 
-    <div class="eyebrow">SCHALE STUDENT DATABASE</div>
-    <h1>이격 선택</h1>
-    <p class="description">
-      학생의 버전을 선택하여 개별 기록을 열람합니다.
-    </p>
+    <div class="topbar">
+      <div class="system-name">SCHALE / STUDENT ARCHIVE</div>
+      <a class="back-button" href="students.html">← 학생 명부</a>
+    </div>
 
-    <div class="folder">
+    <section class="folder">
 
-      <section class="paper">
+      <header class="header">
+        <img
+          class="school-logo"
+          src="../images/bluearchive/schools/abydos.png"
+          alt="아비도스 교표"
+        >
 
-        <div class="character-heading">
-
-          <div class="character-emblem">
-            <img
-              src="../images/bluearchive/schools/abydos.png"
-              alt="아비도스 문양"
-            >
-          </div>
-
-          <div>
-            <div class="character-label">
-              ABYDOS / COUNTERMEASURES COMMITTEE
-            </div>
-
-            <div class="character-name" id="characterName">
-              호시노
-            </div>
-
-            <div class="character-en" id="characterEnglish">
-              HOSHINO
-            </div>
-          </div>
-
+        <div>
+          <h1 id="student-name">호시노</h1>
+          <p id="student-english">HOSHINO</p>
         </div>
+      </header>
 
-        <div class="variant-grid" id="variantGrid"></div>
+      <div class="subtitle">SELECT STUDENT RECORD</div>
 
-      </section>
+      <div class="characters" id="characters"></div>
 
-      <div class="index-tabs">
-        <div class="index-tab">동아리</div>
-        <div class="index-tab">학생</div>
-        <div class="index-tab active">이격</div>
-        <div class="index-tab">기록</div>
+      <div class="footer-note">
+        열람할 학생 기록을 선택하세요.
       </div>
 
-    </div>
-
-    <div class="bottom-nav">
-      <a href="students.html">← 학생 명부로 돌아가기</a>
-    </div>
-
+    </section>
   </main>
 
   <script>
@@ -394,7 +272,6 @@
       hoshino: {
         name: "호시노",
         english: "HOSHINO",
-        school: "abydos",
         variants: [
           {
             id: "default",
@@ -417,62 +294,37 @@
 
     const params = new URLSearchParams(window.location.search);
     const characterId = params.get("student") || "hoshino";
-
     const character = characterData[characterId] || characterData.hoshino;
 
-    document.getElementById("characterName").textContent =
-      character.name;
+    document.getElementById("student-name").textContent = character.name;
+    document.getElementById("student-english").textContent = character.english;
 
-    document.getElementById("characterEnglish").textContent =
-      character.english;
+    const container = document.getElementById("characters");
 
-    const variantGrid = document.getElementById("variantGrid");
-
-    character.variants.forEach((variant, index) => {
-      const card = document.createElement("button");
-      card.className = "variant-card";
-
+    character.variants.forEach((variant) => {
       const imagePath =
         `../images/bluearchive/variants/${characterId}/${variant.id}.png`;
 
-      card.innerHTML = `
-        <div class="variant-image">
-          <img
-            src="${imagePath}"
-            alt="${character.name} ${variant.name} 일러스트"
-          >
-          <div class="variant-placeholder">?</div>
+      const link = document.createElement("a");
+      link.className = "character";
+
+      // 상세 기록부 페이지를 제작하면 이 주소로 연결됨
+      link.href =
+        `details.html?student=${characterId}&variant=${variant.id}`;
+
+      link.innerHTML = `
+        <div class="character-image">
+          <img src="${imagePath}" alt="${character.name} ${variant.name}">
         </div>
 
-        <div class="variant-name">
-          ${character.name}${variant.id === "default" ? "" : `(${variant.name})`}
-        </div>
-
-        <div class="variant-en">
-          ${variant.english}
-        </div>
-
-        <div class="variant-bottom">
-          <span>RECORD / ${String(index + 1).padStart(3, "0")}</span>
-          <span class="arrow">›</span>
+        <div class="character-name">
+          <strong>${character.name}${variant.id === "default" ? "" : `(${variant.name})`}</strong>
+          <span>${variant.english}</span>
         </div>
       `;
 
-      const image = card.querySelector("img");
-      const placeholder = card.querySelector(".variant-placeholder");
-
-      image.addEventListener("error", () => {
-        image.style.display = "none";
-        placeholder.style.display = "grid";
-      });
-
-      card.addEventListener("click", () => {
-        alert(`${character.name} ${variant.name} 상세 기록은 다음 단계에서 제작할 예정이야!`);
-      });
-
-      variantGrid.appendChild(card);
+      container.appendChild(link);
     });
   </script>
-
 </body>
 </html>
