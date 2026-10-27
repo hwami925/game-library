@@ -6,92 +6,197 @@
   <title>샬레 학생 기록부 | SCHALE</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
+      padding: 30px 16px;
+      background: #d9eaf5;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      color: #173d5c;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #d9eaf5;
-      font-family: Arial, "Malgun Gothic", sans-serif;
-      color: #173d5c;
     }
 
     h1 {
-      margin-bottom: 10px;
+      margin: 0 0 10px;
       font-size: 26px;
     }
 
     .description {
-      margin-bottom: 30px;
-      color: #628fb0;
+      margin: 0 0 25px;
       font-size: 14px;
+      color: #628fb0;
     }
 
-    .book-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-  overflow: visible;
-}
-
-  #book {
-  margin: 0 auto;
-}
-
-    .page {
+    /* 책 전체 */
+    .book {
+      position: relative;
+      width: min(100%, 1000px);
+      height: 620px;
       background: #fffefb;
       border: 1px solid #d5e2eb;
+      border-radius: 12px;
+      box-shadow: 0 18px 40px #487b9b35;
       overflow: hidden;
     }
 
-    .page-content {
-      height: 100%;
+    /* 중앙 접힘선 */
+    .book::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 14px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        to right,
+        #7b98a01c,
+        #48677830,
+        #ffffff80,
+        #7b98a01c
+      );
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* 슬라이드 화면 */
+    .slide {
+      position: absolute;
+      inset: 0;
       padding: 35px;
+      opacity: 0;
+      transform: translateX(40px);
+      pointer-events: none;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .slide h2 {
+      margin: 0 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #9ac6e3;
+      font-size: 22px;
+    }
+
+    /* 프로필 */
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100%;
+    }
+
+    .profile-left,
+    .profile-right {
+      min-width: 0;
+      padding: 10px 28px;
+    }
+
+    .sd-preview {
+      height: 430px;
+      border: 2px dashed #b8d7ea;
+      border-radius: 12px;
+      background: #f3f9fd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8baec7;
+    }
+
+    .sd-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .profile-right p {
+      margin: 9px 0;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .profile-right h3 {
+      margin-top: 25px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #b8d7ea;
+    }
+
+    /* 의상 선택 */
+    .outfit-slide {
       display: flex;
       flex-direction: column;
     }
 
-    .page-number {
-      margin-top: auto;
+    .outfit-slide h2 {
       text-align: center;
-      color: #9ab5c8;
+    }
+
+    .outfit-grid {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-evenly;
+      flex: 1;
+      min-height: 0;
+      gap: 15px;
+    }
+
+    .outfit-character {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+    }
+
+    .outfit-character img {
+      width: 100%;
+      height: 420px;
+      max-height: 80%;
+      object-fit: contain;
+      object-position: center bottom;
+      transition: transform .25s ease;
+    }
+
+    .outfit-character:hover img {
+      transform: translateY(-10px) scale(1.04);
+    }
+
+    .outfit-character strong {
+      margin-top: 12px;
+      font-size: 16px;
+    }
+
+    .outfit-character span {
+      margin-top: 5px;
+      color: #8baec7;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .outfit-hint {
+      margin: 18px 0 0;
+      text-align: center;
+      color: #7898ad;
       font-size: 12px;
     }
 
-    .page h2 {
-      margin: 0 0 20px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #9ac6e3;
-    }
-
-    .page p {
-      line-height: 1.8;
-    }
-
-    .character-preview {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      margin: 20px 0;
-      border: 2px dashed #b8d7ea;
-      border-radius: 12px;
-      color: #8baec7;
-      background: #f3f9fd;
-    }
-    .character-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
+    /* 페이지 전환 버튼 */
     .controls {
       display: flex;
       gap: 20px;
@@ -109,384 +214,163 @@
       cursor: pointer;
     }
 
-    .controls button:hover {
+    .controls button:hover:not(:disabled) {
       background: #569bc9;
     }
 
     .controls button:disabled {
-      opacity: 0.4;
+      opacity: .4;
       cursor: default;
     }
 
-    .hint {
-      margin-top: 15px;
-      color: #7898ad;
-      font-size: 12px;
-    }
-
     @media (max-width: 700px) {
-      h1 {
-        font-size: 21px;
-      }
-
-      .page-content {
-        padding: 18px;
-      }
-
-      .page h2 {
-        font-size: 17px;
-      }
+      .book { height: 540px; }
+      .slide { padding: 15px; }
+      .profile-left, .profile-right { padding: 8px; }
+      .slide h2 { font-size: 16px; }
+      .profile-right p { font-size: 11px; }
+      .sd-preview { height: 340px; }
+      .outfit-grid { gap: 3px; }
+      .outfit-character img { height: 330px; }
+      .outfit-character strong { font-size: 11px; }
     }
-    /* 의상 선택 */
-.variant-grid {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  flex: 1;
-  gap: 10px;
-  min-height: 0;
-}
-
-.variant-character {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 0;
-  height: 100%;
-  cursor: pointer;
-}
-
-.variant-character img {
-  display: block;
-  width: 100%;
-  height: 75%;
-  object-fit: contain;
-  object-position: center bottom;
-  transition: transform 0.25s ease;
-}
-
-.variant-character:hover img {
-  transform: translateY(-8px) scale(1.05);
-}
-
-.variant-character strong {
-  margin-top: 12px;
-  font-size: 14px;
-  text-align: center;
-}
-
-.variant-character span {
-  margin-top: 5px;
-  color: #8baec7;
-  font-size: 10px;
-  letter-spacing: 1px;
-}
-
-.variant-hint {
-  text-align: center;
-  color: #8baec7;
-  font-size: 12px;
-}
-    /* 책 속 의상 선택 화면 */
-
-.outfit-page {
-  position: relative;
-  overflow: hidden;
-}
-
-.outfit-character {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 0;
-  cursor: pointer;
-}
-
-.outfit-character img {
-  width: 100%;
-  height: 390px;
-  object-fit: contain;
-  object-position: center bottom;
-  transition: transform 0.3s ease;
-}
-
-.outfit-character:hover img {
-  transform: translateY(-10px) scale(1.05);
-}
-
-.outfit-character strong {
-  margin-top: 12px;
-  font-size: 15px;
-  white-space: nowrap;
-}
-
-.outfit-character span {
-  margin-top: 5px;
-  color: #8baec7;
-  font-size: 11px;
-  letter-spacing: 1px;
-}
-
-.outfit-default {
-  flex: 1;
-  margin-top: 15px;
-}
-
-.outfit-default img {
-  max-width: 320px;
-}
-
-.outfit-characters-right {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 5px;
-  flex: 1;
-  min-height: 0;
-}
-
-.outfit-characters-right .outfit-character {
-  flex: 1;
-}
-
-.outfit-characters-right .outfit-character img {
-  height: 360px;
-}
   </style>
 </head>
 
 <body>
 
   <h1>📖 SCHALE STUDENT RECORD</h1>
-  <p class="description">샬레 학생 기록부 · 책장 넘김 테스트</p>
+  <p class="description">샬레 학생 기록부</p>
 
-  <div class="book-wrapper">
-    <div id="book">
+  <div class="book">
 
-     <!-- 1페이지: 호시노 SD 일러스트 -->
-<div class="page">
-  <div class="page-content">
-    <h2>호시노</h2>
+    <!-- 첫 번째 화면: 프로필 -->
+    <section class="slide active" id="slide-profile">
+      <div class="profile-layout">
 
-    <div class="character-preview" id="sd-preview">
-      <span>화미 SD 일러스트 준비 중</span>
-    </div>
+        <div class="profile-left">
+          <h2>호시노</h2>
 
-    <p>아비도스 고등학교 / 대책위원회</p>
+          <div class="sd-preview" id="sd-preview">
+            화미 SD 일러스트 준비 중
+          </div>
 
-    <div class="page-number">01</div>
-  </div>
-</div>
-
-     <!-- 2페이지: 호시노 프로필 정보 -->
-<div class="page">
-  <div class="page-content">
-    <h2>학생 프로필</h2>
-
-    <p><strong>이름:</strong> 타카나시 호시노</p>
-    <p><strong>소속:</strong> 아비도스 고등학교 (3학년)</p>
-    <p><strong>동아리:</strong> 대책위원회</p>
-    <p><strong>나이:</strong> 17살</p>
-    <p><strong>신장:</strong> 145cm</p>
-    <p><strong>생일:</strong> 1월 2일</p>
-    <p><strong>취미:</strong> 낮잠, 빈둥대기</p>
-
-    <h2 style="margin-top: 20px;">학생 소개</h2>
-
-    <p style="font-size: 13px;">
-      아저씨 같은 말투를 즐겨 쓰며 업무보다는
-      장난치기를 좋아한다.
-    </p>
-
-    <p style="font-size: 13px;">
-      때로는 위원회에 부족한 부분을 채워주며,
-      일이 시작되면 다른 아이들을 지켜주기 위해
-      가장 앞에서 분투한다.
-    </p>
-
-    <div class="page-number">02</div>
-  </div>
-</div>
-
-<!-- 3페이지: 의상 선택 왼쪽 -->
-<div class="page">
-  <div class="page-content outfit-page">
-
-    <h2>호시노 / 의상 기록</h2>
-
-    <div class="outfit-character outfit-default" data-variant="default">
-      <img src="../images/bluearchive/variants/hoshino/default.png" alt="호시노 기본">
-      <strong>호시노</strong>
-      <span>DEFAULT</span>
-    </div>
-
-    <div class="page-number">03</div>
-  </div>
-</div>
-
-<!-- 3페이지: 의상 선택 왼쪽 -->
-<div class="page">
-  <div class="page-content outfit-page">
-
-    <h2>호시노 / 의상 기록</h2>
-
-    <div class="outfit-character outfit-default" data-variant="default">
-      <img src="../images/bluearchive/variants/hoshino/default.png" alt="호시노 기본">
-      <strong>호시노</strong>
-      <span>DEFAULT</span>
-    </div>
-
-    <div class="page-number">03</div>
-  </div>
-</div>
-
-<!-- 4페이지: 의상 선택 오른쪽 -->
-<div class="page">
-  <div class="page-content outfit-page">
-
-    <h2>의상 선택</h2>
-
-    <div class="outfit-characters-right">
-
-      <div class="outfit-character" data-variant="swimsuit">
-        <img src="../images/bluearchive/variants/hoshino/swimsuit.png" alt="호시노 수영복">
-        <strong>호시노(수영복)</strong>
-        <span>SWIMSUIT</span>
-      </div>
-
-      <div class="outfit-character" data-variant="armed">
-        <img src="../images/bluearchive/variants/hoshino/armed.png" alt="호시노 무장">
-        <strong>호시노(무장)</strong>
-        <span>ARMED</span>
-      </div>
-
-    </div>
-
-    <div class="page-number">04</div>
-  </div>
-</div>
-
-<!-- 책과 책을 감싸는 영역 닫기 -->
-    </div>
-  </div>
-      
-<!-- 4페이지: 의상 선택 오른쪽 -->
-<div class="page">
-  <div class="page-content outfit-page">
-
-    <h2>의상 선택</h2>
-
-    <div class="outfit-characters-right">
-
-      <div class="outfit-character" data-variant="swimsuit">
-        <img src="../images/bluearchive/variants/hoshino/swimsuit.png" alt="호시노 수영복">
-        <strong>호시노(수영복)</strong>
-        <span>SWIMSUIT</span>
-      </div>
-
-      <div class="outfit-character" data-variant="armed">
-        <img src="../images/bluearchive/variants/hoshino/armed.png" alt="호시노 무장">
-        <strong>호시노(무장)</strong>
-        <span>ARMED</span>
-      </div>
-
-    </div>
-
-    <div class="page-number">04</div>
-  </div>
-</div>
-
-    <p class="variant-hint">
-      캐릭터를 선택하면 상세 기록부를 열람할 수 있습니다.
-    </p>
-
-    <div class="page-number">04</div>
-  </div>
-</div>
-
-          <p>선택한 의상의 기록을 확인할 수 있습니다.</p>
-
-          <div class="page-number">04</div>
+          <p>아비도스 고등학교 / 대책위원회</p>
         </div>
+
+        <div class="profile-right">
+          <h2>학생 프로필</h2>
+
+          <p><strong>이름:</strong> 타카나시 호시노</p>
+          <p><strong>소속:</strong> 아비도스 고등학교 (3학년)</p>
+          <p><strong>동아리:</strong> 대책위원회</p>
+          <p><strong>나이:</strong> 17살</p>
+          <p><strong>신장:</strong> 145cm</p>
+          <p><strong>생일:</strong> 1월 2일</p>
+          <p><strong>취미:</strong> 낮잠, 빈둥대기</p>
+
+          <h3>학생 소개</h3>
+
+          <p>
+            아저씨 같은 말투를 즐겨 쓰며
+            업무보다는 장난치기를 좋아한다.
+          </p>
+
+          <p>
+            때로는 위원회에 부족한 부분을 채워주며,
+            일이 시작되면 다른 아이들을 지켜주기 위해
+            가장 앞에서 분투한다.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 두 번째 화면: 의상 선택 -->
+    <section class="slide outfit-slide" id="slide-outfits">
+
+      <h2>호시노 / 의상 기록</h2>
+
+      <div class="outfit-grid">
+
+        <button class="outfit-character" data-variant="default">
+          <img src="../images/bluearchive/variants/hoshino/default.png" alt="호시노 기본">
+          <strong>호시노</strong>
+          <span>DEFAULT</span>
+        </button>
+
+        <button class="outfit-character" data-variant="swimsuit">
+          <img src="../images/bluearchive/variants/hoshino/swimsuit.png" alt="호시노 수영복">
+          <strong>호시노(수영복)</strong>
+          <span>SWIMSUIT</span>
+        </button>
+
+        <button class="outfit-character" data-variant="armed">
+          <img src="../images/bluearchive/variants/hoshino/armed.png" alt="호시노 무장">
+          <strong>호시노(무장)</strong>
+          <span>ARMED</span>
+        </button>
+
       </div>
 
-    </div>
+      <p class="outfit-hint">
+        캐릭터를 선택하면 상세 기록부를 열람할 수 있습니다.
+      </p>
+    </section>
+
   </div>
 
   <div class="controls">
-    <button id="prev">← 이전 페이지</button>
+    <button id="prev" disabled>← 이전 페이지</button>
     <button id="next">다음 페이지 →</button>
   </div>
 
-  <p class="hint">마우스로 페이지 모서리를 드래그해 보세요!</p>
-
-  <!-- StPageFlip 라이브러리 -->
-  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
-
   <script>
-    const bookElement = document.getElementById("book");
-
-    const pageFlip = new St.PageFlip(bookElement, {
-      width: 480,
-      height: 620,
-
-      size: "stretch",
-      minWidth: 260,
-      maxWidth: 480,
-      minHeight: 350,
-      maxHeight: 620,
-
-      showCover: false,
-      mobileScrollSupport: false,
-      useMouseEvents: true,
-      flippingTime: 900,
-      drawShadow: true,
-      maxShadowOpacity: 0.35
-    });
-
-    pageFlip.loadFromHTML(
-      document.querySelectorAll(".page")
-    );
-
+    const slides = document.querySelectorAll(".slide");
     const prevButton = document.getElementById("prev");
     const nextButton = document.getElementById("next");
 
-    function updateButtons() {
-      const current = pageFlip.getCurrentPageIndex();
-      const total = pageFlip.getPageCount();
+    let currentSlide = 0;
 
-      prevButton.disabled = current === 0;
-      nextButton.disabled = current >= total - 2;
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+      });
+
+      currentSlide = index;
+      prevButton.disabled = currentSlide === 0;
+      nextButton.disabled = currentSlide === slides.length - 1;
     }
 
     prevButton.addEventListener("click", () => {
-      pageFlip.flipPrev();
+      showSlide(currentSlide - 1);
     });
 
     nextButton.addEventListener("click", () => {
-      pageFlip.flipNext();
+      showSlide(currentSlide + 1);
     });
 
-    pageFlip.on("flip", updateButtons);
-    pageFlip.on("init", updateButtons);
+    // SD 일러스트가 존재하면 자동 표시
+    const sdImage = new Image();
+    sdImage.src = "../images/bluearchive/sd/hoshino/default.png";
+    sdImage.alt = "호시노 SD 일러스트";
 
-    updateButtons();
+    sdImage.onload = () => {
+      const preview = document.getElementById("sd-preview");
+      preview.textContent = "";
+      preview.appendChild(sdImage);
+    };
+
+    // 상세 기록부는 다음 단계에서 연결
+    document.querySelectorAll(".outfit-character").forEach(button => {
+      button.addEventListener("click", () => {
+        const variant = button.dataset.variant;
+        console.log("선택한 의상:", variant);
+      });
+    });
   </script>
-<script>
-  const sdPath = "../images/bluearchive/sd/hoshino/default.png";
 
-  const sdImage = new Image();
-  sdImage.src = sdPath;
-  sdImage.alt = "호시노 SD 일러스트";
-
-  sdImage.onload = () => {
-    const preview = document.getElementById("sd-preview");
-    preview.innerHTML = "";
-    preview.appendChild(sdImage);
-  };
-</script>
 </body>
 </html>
