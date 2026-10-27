@@ -530,9 +530,13 @@
       <!-- 왼쪽: 메모리얼 및 전용무기 -->
       <div class="record-left">
 
-        <div class="record-memorial" id="record-memorial">
-          <span>메모리얼 일러스트 준비 중</span>
-        </div>
+       <div class="record-memorial" id="record-memorial">
+  <img
+    id="memorial-image"
+    src="../images/bluearchive/memorial/hoshino/default.png"
+    alt="호시노 메모리얼"
+  >
+</div>
 
         <div class="record-weapon">
           <h3>전용무기</h3>
@@ -645,14 +649,35 @@ const variantNames = {
   armed: "호시노(무장)"
 };
 
+    const memorialImages = {
+  default: "../images/bluearchive/memorial/hoshino/default.png",
+  swimsuit: null,
+  armed: null
+};
+
 document.querySelectorAll(".outfit-character").forEach(button => {
   button.addEventListener("click", () => {
     const variant = button.dataset.variant;
 
     document.getElementById("record-title").textContent =
-      variantNames[variant] || "호시노";
+  variantNames[variant] || "호시노";
 
-    recordOverlay.classList.add("open");
+const memorial = document.getElementById("record-memorial");
+const memorialPath = memorialImages[variant];
+
+if (memorialPath) {
+  memorial.innerHTML = "";
+
+  const img = document.createElement("img");
+  img.src = memorialPath;
+  img.alt = `${variantNames[variant]} 메모리얼`;
+
+  memorial.appendChild(img);
+} else {
+  memorial.innerHTML = "<span>메모리얼 일러스트 준비 중</span>";
+}
+
+recordOverlay.classList.add("open");
     recordClose.focus();
   });
 });
