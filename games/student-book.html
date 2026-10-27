@@ -3,10 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>샬레 학생 기록부</title>
+  <title>샬레 학생 기록부 | SCHALE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #d9eaf5;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      color: #173d5c;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 26px;
+    }
+
+    .description {
+      margin-bottom: 30px;
+      color: #628fb0;
+      font-size: 14px;
+    }
+
+    .book-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #book {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .page {
+      background: #fffefb;
+      border: 1px solid #d5e2eb;
+      overflow: hidden;
+    }
+
+    .page-content {
+      height: 100%;
+      padding: 35px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-number {
+      margin-top: auto;
+      text-align: center;
+      color: #9ab5c8;
+      font-size: 12px;
+    }
+
+    .page h2 {
+      margin: 0 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #9ac6e3;
+    }
+
+    .page p {
+      line-height: 1.8;
+    }
+
+    .character-preview {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      margin: 20px 0;
+      border: 2px dashed #b8d7ea;
+      border-radius: 12px;
+      color: #8baec7;
+      background: #f3f9fd;
+    }
+
+    .controls {
+      display: flex;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .controls button {
+      padding: 13px 25px;
+      border: none;
+      border-radius: 8px;
+      background: #83b8dc;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background: #569bc9;
+    }
+
+    .controls button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .hint {
+      margin-top: 15px;
+      color: #7898ad;
+      font-size: 12px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 21px;
+      }
+
+      .page-content {
+        padding: 18px;
+      }
+
+      .page h2 {
+        font-size: 17px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>📖 SCHALE STUDENT BOOK</h1>
-  <p>학생 기록부 책장 넘김 테스트</p>
+
+  <h1>📖 SCHALE STUDENT RECORD</h1>
+  <p class="description">샬레 학생 기록부 · 책장 넘김 테스트</p>
+
+  <div class="book-wrapper">
+    <div id="book">
+
+      <!-- 1페이지: 프로필 일러스트 -->
+      <div class="page">
+        <div class="page-content">
+          <h2>호시노</h2>
+
+          <div class="character-preview">
+            화미 SD 일러스트 자리
+          </div>
+
+          <p>아비도스 고등학교 / 대책위원회</p>
+
+          <div class="page-number">01</div>
+        </div>
+      </div>
+
+      <!-- 2페이지: 프로필 정보 -->
+      <div class="page">
+        <div class="page-content">
+          <h2>학생 프로필</h2>
+
+          <p><strong>이름:</strong> 호시노</p>
+          <p><strong>소속:</strong> 아비도스 고등학교</p>
+          <p><strong>동아리:</strong> 대책위원회</p>
+          <p><strong>나이:</strong> 준비 중</p>
+          <p><strong>생일:</strong> 준비 중</p>
+          <p><strong>취미:</strong> 준비 중</p>
+
+          <div class="page-number">02</div>
+        </div>
+      </div>
+
+      <!-- 3페이지: 의상 선택 -->
+      <div class="page">
+        <div class="page-content">
+          <h2>의상 선택</h2>
+
+          <div class="character-preview">
+            호시노 기본 / 수영복 / 무장
+          </div>
+
+          <p>열람할 학생 기록을 선택하세요.</p>
+
+          <div class="page-number">03</div>
+        </div>
+      </div>
+
+      <!-- 4페이지: 추가 기록 -->
+      <div class="page">
+        <div class="page-content">
+          <h2>추가 기록</h2>
+
+          <div class="character-preview">
+            상세 기록부 연결 예정
+          </div>
+
+          <p>선택한 의상의 기록을 확인할 수 있습니다.</p>
+
+          <div class="page-number">04</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="prev">← 이전 페이지</button>
+    <button id="next">다음 페이지 →</button>
+  </div>
+
+  <p class="hint">마우스로 페이지 모서리를 드래그해 보세요!</p>
+
+  <!-- StPageFlip 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+
+  <script>
+    const bookElement = document.getElementById("book");
+
+    const pageFlip = new St.PageFlip(bookElement, {
+      width: 480,
+      height: 620,
+
+      size: "stretch",
+      minWidth: 260,
+      maxWidth: 480,
+      minHeight: 350,
+      maxHeight: 620,
+
+      showCover: false,
+      mobileScrollSupport: false,
+      useMouseEvents: true,
+      flippingTime: 900,
+      drawShadow: true,
+      maxShadowOpacity: 0.35
+    });
+
+    pageFlip.loadFromHTML(
+      document.querySelectorAll(".page")
+    );
+
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+
+    function updateButtons() {
+      const current = pageFlip.getCurrentPageIndex();
+      const total = pageFlip.getPageCount();
+
+      prevButton.disabled = current === 0;
+      nextButton.disabled = current >= total - 2;
+    }
+
+    prevButton.addEventListener("click", () => {
+      pageFlip.flipPrev();
+    });
+
+    nextButton.addEventListener("click", () => {
+      pageFlip.flipNext();
+    });
+
+    pageFlip.on("flip", updateButtons);
+    pageFlip.on("init", updateButtons);
+
+    updateButtons();
+  </script>
+
 </body>
 </html>
