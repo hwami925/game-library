@@ -572,12 +572,15 @@
           </div>
         `;
 
-        card.addEventListener("click", () => {
-          if (student.slug === "hoshino") {
-  window.location.href = "student-book.html";
-} else {
-  alert(`${student.name}의 이격 선택 화면은 다음 단계에서 제작할 예정이야!`);
-}
+        
+card.addEventListener("click", () => {
+  if (student.slug === "hoshino") {
+    window.location.href = "student-book.html";
+  } else {
+    alert(`${student.name}의 이격 선택 화면은 다음 단계에서 제작할 예정이야!`);
+  }
+});
+
 
         studentGrid.appendChild(card);
       });
