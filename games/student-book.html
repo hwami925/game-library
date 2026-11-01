@@ -35,7 +35,7 @@
     /* 책 전체 */
     .book {
       position: relative;
-      width: min(100%, 1000px);
+     width: min(100%, 880px);
       height: 620px;
       background: #fffefb;
       border: 1px solid #d5e2eb;
@@ -734,6 +734,110 @@
 .back-to-list:hover {
   background: #569bc9;
 }
+    /* 학생 기록부 + 모모톡 가로 배치 */
+.student-page-layout {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 18px;
+  width: min(100%, 1280px);
+}
+
+/* 기존 기록부 크기 조정 */
+.student-page-layout .book {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* 모모톡 패널 */
+.momotalk-panel {
+  flex: 0 0 300px;
+  height: 620px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff8fb;
+  border: 1px solid #f0c8d8;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(72, 123, 155, 0.15);
+}
+
+.momotalk-header {
+  padding: 18px;
+  background: #f6a9c7;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.momotalk-header small {
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.momotalk-body {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.momotalk-empty {
+  margin-top: 30px;
+  text-align: center;
+  color: #b18fa0;
+  font-size: 13px;
+}
+
+.momotalk-footer {
+  padding: 15px;
+  background: #fff;
+  border-top: 1px solid #f0dce5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.momotalk-footer button {
+  padding: 12px;
+  border: none;
+  border-radius: 9px;
+  background: #f6a9c7;
+  color: white;
+  font-weight: bold;
+}
+
+.momotalk-footer button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.momotalk-footer small {
+  color: #b18fa0;
+  font-size: 11px;
+}
+
+/* 좁은 화면에서는 아래로 배치 */
+@media (max-width: 850px) {
+  .student-page-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .student-page-layout .book {
+    flex: none;
+    width: 100%;
+  }
+
+  .momotalk-panel {
+    flex: none;
+    width: 100%;
+    height: 400px;
+  }
+}
   </style>
 </head>
 
@@ -746,6 +850,7 @@
   <h1>📖 SCHALE STUDENT RECORD</h1>
   <p class="description">샬레 학생 기록부</p>
 
+  <div class="student-page-layout">
   <div class="book">
 
     <!-- 첫 번째 화면: 프로필 -->
@@ -823,6 +928,28 @@
     </section>
 
   </div>
+      <!-- 모모톡 영역 -->
+  <aside class="momotalk-panel">
+    <div class="momotalk-header">
+      <span>💬 MomoTalk</span>
+      <small>선생님들의 반응</small>
+    </div>
+
+    <div class="momotalk-body">
+      <p class="momotalk-empty">
+        아직 등록된 콘이 없습니다.
+      </p>
+    </div>
+
+    <div class="momotalk-footer">
+      <button type="button" disabled>
+        🎀 내 콘에서 선택하기
+      </button>
+      <small>이모티콘 기능 준비 중</small>
+    </div>
+  </aside>
+
+</div>
 <!-- 상세 기록부 팝업 -->
 <div class="record-overlay" id="record-overlay">
 
@@ -1324,12 +1451,7 @@ document.getElementById("record-close")
     // 학생 명부로 돌아가기
 document.getElementById("back-to-list").addEventListener("click", (event) => {
   event.preventDefault();
-
-  if (window.history.length > 1) {
-    window.history.back();
-  } else {
-    window.location.href = "../index.html";
-  }
+  window.history.back();
 });
   </script>
 
