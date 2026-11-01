@@ -544,7 +544,9 @@
         card.className = "student-card";
 
         const imagePath =
-          `../images/bluearchive/students/abydos/${student.slug}.png`;
+          student.slug === "hoshino"
+  ? "../images/bluearchive/profiles/hoshino.png"
+  : `../images/bluearchive/students/abydos/${student.slug}.png`;
 
         card.innerHTML = `
        <div class="photo-frame">
