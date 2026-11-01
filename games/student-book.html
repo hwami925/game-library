@@ -85,7 +85,7 @@
   width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
-  border: 2px dashed #b8d7ea;
+  border: none;
   border-radius: 12px;
   background: #f3f9fd;
   display: flex;
@@ -715,10 +715,33 @@
     bottom: 15px;
   }
 }
+    /* 학생 명부 돌아가기 버튼 */
+.back-to-list {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 50;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #83b8dc;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.back-to-list:hover {
+  background: #569bc9;
+}
   </style>
 </head>
 
 <body>
+
+  <a href="#" class="back-to-list" id="back-to-list">
+  ← 학생 명부로 돌아가기
+</a>
 
   <h1>📖 SCHALE STUDENT RECORD</h1>
   <p class="description">샬레 학생 기록부</p>
@@ -1298,6 +1321,16 @@ document.addEventListener("keydown", (event) => {
 // 상세 기록부를 닫으면 EX 영상도 종료
 document.getElementById("record-close")
   .addEventListener("click", closeExVideo);
+    // 학생 명부로 돌아가기
+document.getElementById("back-to-list").addEventListener("click", (event) => {
+  event.preventDefault();
+
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = "../index.html";
+  }
+});
   </script>
 
 </body>
