@@ -66,6 +66,16 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .plinko-pin {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f6b5d1;
+  border: 2px solid #fff;
+  box-shadow: 0 0 8px #f6b5d180;
+  transform: translate(-50%, -50%);
+}
   </style>
 </head>
 <body>
@@ -86,5 +96,28 @@
 
     <p>매일 00:00에 뽑기 기회가 초기화됩니다.</p>
   </main>
+  <script>
+  const board = document.getElementById("plinkoBoard");
+
+  // 플링코 핀을 지그재그로 배치
+  const rows = 7;
+
+  for (let row = 0; row < rows; row++) {
+    const pinCount = row % 2 === 0 ? 6 : 5;
+
+    for (let col = 0; col < pinCount; col++) {
+      const pin = document.createElement("div");
+      pin.className = "plinko-pin";
+
+      const x = (col + 1) * (100 / (pinCount + 1));
+      const y = 14 + row * 10;
+
+      pin.style.left = `${x}%`;
+      pin.style.top = `${y}%`;
+
+      board.appendChild(pin);
+    }
+  }
+</script>
 </body>
 </html>
