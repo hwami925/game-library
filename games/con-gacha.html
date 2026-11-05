@@ -129,6 +129,22 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
+    .plinko-ball {
+  /* 기존 공 디자인 코드 */
+}
+
+/* 여기부터 당첨 결과창 CSS 추가 */
+.con-result {
+  display: none;
+  /* 나머지 코드 */
+}
+
+/* 나머지 결과창 CSS도 전부 추가 */
+
+@keyframes conAppear {
+  /* 애니메이션 코드 */
+}
+</style>
   </style>
 </head>
 <body>
@@ -146,13 +162,53 @@
     <button class="draw-button" id="drawButton">
       뽑기 시작!
     </button>
+    
+<div class="con-result" id="conResult">
+  <h2 id="resultTitle">🎉 CON GET!</h2>
+  <img id="resultImage" src="" alt="당첨 콘">
+  <p id="resultName"></p>
+  <button id="closeResult">확인!</button>
+</div>
+
 
     <p>매일 00:00에 뽑기 기회가 초기화됩니다.</p>
   </main>
+  <script src="cons.js"></script>
   <script>
  
 const board = document.getElementById("plinkoBoard");
 const drawButton = document.getElementById("drawButton");
+    
+const conResult = document.getElementById("conResult");
+const resultTitle = document.getElementById("resultTitle");
+const resultImage = document.getElementById("resultImage");
+const resultName = document.getElementById("resultName");
+const closeResult = document.getElementById("closeResult");
+
+const conGameMap = {
+  "블루 아카이브": "shiroko-sparkle",
+  "명조": "aemes-daughter"
+};
+
+function showConResult(game) {
+  const conId = conGameMap[game];
+  const con = CON_LIST.find(item => item.id === conId);
+
+  if (!con) {
+    alert("등록된 콘을 찾을 수 없어!");
+    return;
+  }
+
+  resultTitle.textContent = `🎉 ${game} 당첨!`;
+  resultImage.src = con.image;
+  resultName.textContent = `${con.character} — ${con.name}`;
+  conResult.classList.add("show");
+}
+
+closeResult.addEventListener("click", () => {
+  conResult.classList.remove("show");
+});
+
 
 
 const rows = 12;
@@ -339,6 +395,7 @@ if (peg.special && !peg.triggered) {
       );
 
       drawButton.textContent = `${categories[index]} 당첨!`;
+      showConResult(categories[index]);
 
       cancelAnimationFrame(animationId);
       animationId = null;
