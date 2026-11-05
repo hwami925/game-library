@@ -76,6 +76,22 @@
   box-shadow: 0 0 8px #f6b5d180;
   transform: translate(-50%, -50%);
 }
+    .plinko-ball {
+  position: absolute;
+  z-index: 5;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    #fff9d7,
+    #ffd166 65%,
+    #e49a35
+  );
+  box-shadow: 0 0 12px #ffd16688;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
   </style>
 </head>
 <body>
@@ -97,27 +113,139 @@
     <p>매일 00:00에 뽑기 기회가 초기화됩니다.</p>
   </main>
   <script>
-  const board = document.getElementById("plinkoBoard");
+ 
+const board = document.getElementById("plinkoBoard");
+const drawButton = document.getElementById("drawButton");
 
-  // 플링코 핀을 지그재그로 배치
-  const rows = 7;
+const rows = 7;
+const pins = [];
 
-  for (let row = 0; row < rows; row++) {
-    const pinCount = row % 2 === 0 ? 6 : 5;
+for (let row = 0; row < rows; row++) {
+  const pinCount = row % 2 === 0 ? 6 : 5;
 
-    for (let col = 0; col < pinCount; col++) {
-      const pin = document.createElement("div");
-      pin.className = "plinko-pin";
+  for (let col = 0; col < pinCount; col++) {
+    const pin = document.createElement("div");
+    pin.className = "plinko-pin";
 
-      const x = (col + 1) * (100 / (pinCount + 1));
-      const y = 14 + row * 10;
+    const x = (col + 1) * (100 / (pinCount + 1));
+    const y = 14 + row * 10;
 
-      pin.style.left = `${x}%`;
-      pin.style.top = `${y}%`;
+    pin.style.left = `${x}%`;
+    pin.style.top = `${y}%`;
 
-      board.appendChild(pin);
-    }
+    board.appendChild(pin);
+    pins.push(pin);
   }
+}
+
+let animationId = null;
+
+drawButton.addEventListener("click", () => {
+  if (animationId !== null) return;
+
+  drawButton.disabled = true;
+  drawButton.textContent = "공이 내려가는 중...";
+
+  const ball = document.createElement("div");
+  ball.className = "plinko-ball";
+  board.appendChild(ball);
+
+  const width = board.clientWidth;
+  const height = board.clientHeight;
+  const radius = 10;
+  const floor = height - 85 - radius;
+
+  let x = width * (0.4 + Math.random() * 0.2);
+  let y = radius + 5;
+  let vx = (Math.random() - 0.5) * 2;
+  let vy = 0;
+
+  const gravity = 0.13;
+  const bounce = 0.75;
+  let lastTime = 0;
+
+  const pegPositions = pins.map(pin => ({
+    x: pin.offsetLeft,
+    y: pin.offsetTop
+  }));
+
+  function animate(time) {
+    if (!lastTime) lastTime = time;
+
+    const dt = Math.min((time - lastTime) / 16.67, 2);
+    lastTime = time;
+
+    vy += gravity * dt;
+    x += vx * dt;
+    y += vy * dt;
+
+    // 좌우 벽 충돌
+    if (x < radius || x > width - radius) {
+      x = Math.max(radius, Math.min(width - radius, x));
+      vx *= -0.8;
+    }
+
+    // 핀 충돌
+    for (const peg of pegPositions) {
+      const dx = x - peg.x;
+      const dy = y - peg.y;
+      const distance = Math.hypot(dx, dy);
+      const minDistance = radius + 6;
+
+      if (distance > 0 && distance < minDistance) {
+        const nx = dx / distance;
+        const ny = dy / distance;
+
+        x = peg.x + nx * minDistance;
+        y = peg.y + ny * minDistance;
+
+        const dot = vx * nx + vy * ny;
+
+        if (dot < 0) {
+          vx -= (1 + bounce) * dot * nx;
+          vy -= (1 + bounce) * dot * ny;
+
+          // 미세한 무작위 반동
+          vx += (Math.random() - 0.5) * 1.5;
+        }
+      }
+    }
+
+    // 수평 움직임 감쇠
+    vx *= 0.998;
+
+    ball.style.left = `${x}px`;
+    ball.style.top = `${y}px`;
+
+    if (y >= floor) {
+      ball.style.top = `${floor}px`;
+
+      const categories = ["블루 아카이브", "명조"];
+      const index = Math.min(
+        categories.length - 1,
+        Math.floor(x / (width / categories.length))
+      );
+
+      drawButton.textContent = `${categories[index]} 당첨!`;
+
+      cancelAnimationFrame(animationId);
+      animationId = null;
+
+      setTimeout(() => {
+        ball.remove();
+        drawButton.disabled = false;
+        drawButton.textContent = "다시 테스트하기";
+      }, 1800);
+
+      return;
+    }
+
+    animationId = requestAnimationFrame(animate);
+  }
+
+  animationId = requestAnimationFrame(animate);
+});
+
 </script>
 </body>
 </html>
