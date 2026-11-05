@@ -68,8 +68,8 @@
     }
     .plinko-pin {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #f6b5d1;
   border: 2px solid #fff;
@@ -117,18 +117,23 @@
 const board = document.getElementById("plinkoBoard");
 const drawButton = document.getElementById("drawButton");
 
-const rows = 10;
+
+const rows = 12;
 const pins = [];
 
 for (let row = 0; row < rows; row++) {
-  const pinCount = row % 2 === 0 ? 6 : 5;
+  const pinCount = row % 2 === 0 ? 9 : 8;
 
   for (let col = 0; col < pinCount; col++) {
     const pin = document.createElement("div");
     pin.className = "plinko-pin";
 
-    const x = (col + 1) * (100 / (pinCount + 1));
-    const y = 10 + row * 8;
+    // 한 줄씩 엇갈리도록 배치
+    const x = row % 2 === 0
+      ? 10 + col * 10
+      : 15 + col * 10;
+
+    const y = 9 + row * 6.8;
 
     pin.style.left = `${x}%`;
     pin.style.top = `${y}%`;
@@ -137,6 +142,7 @@ for (let row = 0; row < rows; row++) {
     pins.push(pin);
   }
 }
+
 
 let animationId = null;
 
