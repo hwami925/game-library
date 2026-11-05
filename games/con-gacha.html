@@ -145,7 +145,6 @@
   /* 애니메이션 코드 */
 }
 </style>
-  </style>
 </head>
 <body>
   <main class="gacha-container">
@@ -249,7 +248,8 @@ if (specialPins.some(([r, c]) => r === row && c === col)) {
   }
 }
 
-
+let categories = ["블루 아카이브", "명조"];
+const categoryElements = [...document.querySelectorAll(".category")];
 let animationId = null;
 
 drawButton.addEventListener("click", () => {
@@ -289,9 +289,6 @@ categoryElements.forEach((element, index) => {
   special: pin.dataset.special === "true",
   triggered: false
 }));
-
-const categoryElements = [...document.querySelectorAll(".category")];
-let categories = ["블루 아카이브", "명조"];
 
 
 function shuffleCategories() {
