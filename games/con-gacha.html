@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>콘 뽑기 | 게임창고</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #202b43;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .gacha-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 35px 20px;
+    }
+
+    h1 { color: #f6b5d1; }
+
+    .plinko-board {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      margin-top: 30px;
+      background: #35445f;
+      border: 5px solid #f6b5d1;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .category-area {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      height: 85px;
+    }
+
+    .category {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border: 2px solid #fff;
+      background: #526583;
+      font-weight: bold;
+    }
+
+    .draw-button {
+      margin-top: 25px;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 30px;
+      background: #f6b5d1;
+      color: #54243c;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main class="gacha-container">
+    <h1>🎰 CON GACHA</h1>
+    <p>오늘의 무료 콘 뽑기!</p>
+
+    <div class="plinko-board" id="plinkoBoard">
+      <div class="category-area">
+        <div class="category">블루 아카이브</div>
+        <div class="category">트릭컬</div>
+      </div>
+    </div>
+
+    <button class="draw-button" id="drawButton">
+      뽑기 시작!
+    </button>
+
+    <p>매일 00:00에 뽑기 기회가 초기화됩니다.</p>
+  </main>
+</body>
+</html>
