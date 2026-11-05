@@ -196,9 +196,24 @@ drawButton.addEventListener("click", () => {
   let lastTime = 0;
 
   const pegPositions = pins.map(pin => ({
-    x: pin.offsetLeft,
-    y: pin.offsetTop
-  }));
+  x: pin.offsetLeft,
+  y: pin.offsetTop,
+  radius: pin.dataset.special === "true" ? 7 : 5,
+  special: pin.dataset.special === "true",
+  triggered: false
+}));
+
+const categoryElements = [...document.querySelectorAll(".category")];
+let categories = ["블루 아카이브", "명조"];
+
+function shuffleCategories() {
+  // 현재 두 카테고리의 위치 교환
+  categories.reverse();
+
+  categoryElements.forEach((element, index) => {
+    element.textContent = categories[index];
+  });
+}
 
   function animate(time) {
     if (!lastTime) lastTime = time;
@@ -221,7 +236,7 @@ drawButton.addEventListener("click", () => {
       const dx = x - peg.x;
       const dy = y - peg.y;
       const distance = Math.hypot(dx, dy);
-      const minDistance = radius + 6;
+      const minDistance = radius + peg.radius;
 
       if (distance > 0 && distance < minDistance) {
         const nx = dx / distance;
@@ -238,6 +253,14 @@ drawButton.addEventListener("click", () => {
 
           // 미세한 무작위 반동
           vx += (Math.random() - 0.5) * 1.5;
+          // 황금 핀에 처음 충돌했을 때 카테고리 셔플
+if (peg.special && !peg.triggered) {
+  peg.triggered = true;
+  shuffleCategories();
+
+  // 황금 핀 충돌 효과
+  drawButton.textContent = "✨ SHUFFLE! ✨";
+}
         }
       }
     }
@@ -272,7 +295,6 @@ drawButton.addEventListener("click", () => {
     if (y >= floor) {
       ball.style.top = `${floor}px`;
 
-      const categories = ["블루 아카이브", "명조"];
       const index = Math.min(
         categories.length - 1,
         Math.floor(x / (width / categories.length))
