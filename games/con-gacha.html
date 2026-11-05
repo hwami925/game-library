@@ -173,6 +173,12 @@ let animationId = null;
 
 drawButton.addEventListener("click", () => {
   if (animationId !== null) return;
+  // 새 뽑기를 시작할 때 카테고리 초기화
+categories = ["블루 아카이브", "명조"];
+
+categoryElements.forEach((element, index) => {
+  element.textContent = categories[index];
+});
 
   drawButton.disabled = true;
   drawButton.textContent = "공이 내려가는 중...";
