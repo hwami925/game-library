@@ -54,6 +54,31 @@
       background: #526583;
       font-weight: bold;
     }
+    
+.category.shuffle-effect {
+  animation: categoryShuffle 0.55s ease;
+}
+
+@keyframes categoryShuffle {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  35% {
+    transform: scale(0.94);
+    filter: brightness(1.9);
+    background: #ffd166;
+  }
+  70% {
+    transform: scale(1.04);
+    filter: brightness(1.5);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
 
     .draw-button {
       margin-top: 25px;
@@ -212,14 +237,21 @@ categoryElements.forEach((element, index) => {
 const categoryElements = [...document.querySelectorAll(".category")];
 let categories = ["블루 아카이브", "명조"];
 
+
 function shuffleCategories() {
-  // 현재 두 카테고리의 위치 교환
+  // 카테고리 위치 교환
   categories.reverse();
 
   categoryElements.forEach((element, index) => {
     element.textContent = categories[index];
+
+    // 연속으로 셔플해도 애니메이션 재실행
+    element.classList.remove("shuffle-effect");
+    void element.offsetWidth;
+    element.classList.add("shuffle-effect");
   });
 }
+
 
   function animate(time) {
     if (!lastTime) lastTime = time;
