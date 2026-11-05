@@ -207,7 +207,10 @@ function showConResult(game) {
 closeResult.addEventListener("click", () => {
   conResult.classList.remove("show");
 });
-
+// 결과창 표시 테스트
+setTimeout(() => {
+  conResult.classList.add("show");
+}, 1000);
 
 
 const rows = 12;
