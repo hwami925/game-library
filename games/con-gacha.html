@@ -80,6 +80,20 @@
 }
 
 
+    .collection-link {
+      display: inline-block;
+      margin: 16px auto 0;
+      padding: 13px 24px;
+      border: 2px solid #f6b5d1;
+      border-radius: 30px;
+      color: #f6b5d1;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .collection-link:hover, .collection-link:focus-visible {
+      background: #f6b5d1;
+      color: #202b43;
+    }
     .draw-button {
       margin-top: 25px;
       padding: 15px 40px;
@@ -184,52 +198,6 @@
   }
 }
     
-/* 콘 보관함 */
-.con-collection {
-  margin-top: 45px;
-  padding: 25px;
-  background: #2d3952;
-  border: 2px solid #f6b5d1;
-  border-radius: 20px;
-}
-
-.con-collection h2 {
-  color: #f6b5d1;
-}
-
-.con-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.con-card {
-  padding: 15px;
-  background: #465674;
-  border-radius: 15px;
-}
-
-.con-card img {
-  width: 100%;
-  height: 130px;
-  object-fit: contain;
-}
-
-.con-card.locked {
-  background: #252e42;
-  color: #9da8bb;
-}
-
-.con-locked-image {
-  height: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: bold;
-}
-
 /* 모든 콘을 획득한 카테고리 */
 .category.completed {
   background: #252e42;
@@ -265,11 +233,7 @@
 
     <p id="dailyStatus" aria-live="polite">매일 한국 시간 00:00에 뽑기 기회가 초기화됩니다.</p>
     
-<section class="con-collection">
-  <h2>📚 나의 콘 보관함</h2>
-  <p id="collectionCount">획득한 콘 0 / 2</p>
-  <div class="con-grid" id="conGrid"></div>
-</section>
+<a class="collection-link" href="con-collection.html">📚 나의 콘 보관함 보기 →</a>
 
   </main>
   <script src="cons.js"></script>
@@ -362,46 +326,6 @@ function saveOwnedCon(conId) {
   }
 }
 
-function renderConCollection() {
-  const ownedCons = getOwnedCons();
-  const conGrid = document.getElementById("conGrid");
-  const collectionCount = document.getElementById("collectionCount");
-
-  conGrid.innerHTML = "";
-
-  CON_LIST.forEach(con => {
-    const owned = ownedCons.includes(con.id);
-
-    const card = document.createElement("div");
-    card.className = owned ? "con-card" : "con-card locked";
-
-    if (owned) {
-      const img = document.createElement("img");
-      img.src = con.image;
-      img.alt = con.name;
-      card.appendChild(img);
-
-      const name = document.createElement("p");
-      name.textContent = `${con.character} — ${con.name}`;
-      card.appendChild(name);
-    } else {
-      const locked = document.createElement("div");
-      locked.className = "con-locked-image";
-      locked.textContent = "???";
-      card.appendChild(locked);
-
-      const name = document.createElement("p");
-      name.textContent = "미획득";
-      card.appendChild(name);
-    }
-
-    conGrid.appendChild(card);
-  });
-
-  collectionCount.textContent =
-    `획득한 콘 ${ownedCons.length} / ${CON_LIST.length}`;
-}
-
 function showConResult(game) {
   const conId = conGameMap[game];
   const con = CON_LIST.find(item => item.id === conId);
@@ -413,7 +337,6 @@ function showConResult(game) {
 
   saveOwnedCon(con.id);
 
-  renderConCollection();
   updateCategoryLocks();
 
   resultTitle.textContent = `🎉 ${game} 당첨!`;
@@ -653,8 +576,7 @@ if (peg.special && !peg.triggered) {
   animationId = requestAnimationFrame(animate);
 });
 
-    renderConCollection();
-    updateCategoryLocks();
+      updateCategoryLocks();
     updateDailyDrawStatus();
 
     // 자정이 지난 뒤 페이지를 열어 둔 상태에서도 버튼을 갱신합니다.
