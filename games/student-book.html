@@ -838,6 +838,31 @@
     height: 400px;
   }
 }
+
+/* STEP 15: 모모톡 콘 댓글 */
+.momotalk-body { display:flex; flex-direction:column; gap:12px; }
+.momo-message { max-width:95%; align-self:flex-start; padding:11px 13px; background:white; border:1px solid #f0dce5; border-radius:14px 14px 14px 4px; text-align:left; overflow-wrap:anywhere; }
+.momo-message .momo-author { color:#a65c7d; font-size:12px; font-weight:bold; margin-bottom:6px; }
+.momo-message .momo-time { color:#aa9ca4; font-size:10px; margin-top:7px; }
+.momo-message .momo-text { white-space:pre-wrap; font-size:13px; color:#593a4a; }
+.momo-message img { display:block; width:125px; height:125px; object-fit:contain; margin-top:7px; }
+.momotalk-footer input, .momotalk-footer textarea { width:100%; border:1px solid #f0c8d8; border-radius:8px; padding:9px; font:inherit; color:#593a4a; background:#fffafb; }
+.momotalk-footer textarea { min-height:62px; resize:vertical; }
+.momotalk-actions { display:flex; gap:7px; }
+.momotalk-actions button { flex:1; cursor:pointer; padding:10px 5px; }
+.momotalk-actions button:disabled { cursor:not-allowed; }
+.momo-selected { display:flex; align-items:center; gap:7px; font-size:11px; color:#9b5879; }
+.momo-selected img { width:40px; height:40px; object-fit:contain; }
+.momo-picker { position:fixed; inset:0; z-index:400; background:#0c253bb8; display:none; align-items:center; justify-content:center; padding:15px; }
+.momo-picker.open { display:flex; }
+.momo-picker-box { width:min(500px,100%); max-height:85vh; overflow:auto; padding:20px; border-radius:16px; background:#fff8fb; color:#593a4a; box-shadow:0 20px 60px #0005; }
+.momo-picker-header { display:flex; justify-content:space-between; align-items:center; }
+.momo-picker-header button { border:0; border-radius:8px; padding:7px 12px; cursor:pointer; background:#f6a9c7; color:white; }
+.momo-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; margin-top:15px; }
+.momo-picker-grid button { border:1px solid #f0c8d8; border-radius:10px; padding:8px; background:white; cursor:pointer; color:#593a4a; }
+.momo-picker-grid img { width:100%; height:100px; object-fit:contain; }
+.momo-picker-grid small { display:block; }
+
   </style>
 </head>
 
@@ -935,17 +960,19 @@
       <small>선생님들의 반응</small>
     </div>
 
-    <div class="momotalk-body">
-      <p class="momotalk-empty">
-        아직 등록된 콘이 없습니다.
-      </p>
+    <div class="momotalk-body" id="momoMessages" aria-live="polite">
+      <p class="momotalk-empty">아직 등록된 댓글이 없습니다.</p>
     </div>
 
     <div class="momotalk-footer">
-      <button type="button" disabled>
-        🎀 내 콘에서 선택하기
-      </button>
-      <small>이모티콘 기능 준비 중</small>
+      <input id="momoNickname" maxlength="20" placeholder="닉네임 (최대 20자)" aria-label="닉네임">
+      <textarea id="momoText" maxlength="300" placeholder="호시노에게 한마디! (최대 300자)" aria-label="댓글"></textarea>
+      <div class="momo-selected" id="momoSelected" hidden></div>
+      <div class="momotalk-actions">
+        <button type="button" id="momoPickButton">🎀 내 콘 선택</button>
+        <button type="button" id="momoSendButton">등록</button>
+      </div>
+      <small>현재 테스트 버전: 이 브라우저에만 댓글이 저장됩니다.</small>
     </div>
   </aside>
 
@@ -1454,6 +1481,122 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
   event.preventDefault();
   window.location.href = "students.html";
 });
+
+
+// STEP 15: 모모톡 댓글 (브라우저 저장 테스트 버전)
+(() => {
+  const STORAGE_KEY = "gameLibraryMomoTalk:hoshino:v1";
+  const OWNED_KEY = "ownedCons";
+  const messages = document.getElementById("momoMessages");
+  const nickname = document.getElementById("momoNickname");
+  const input = document.getElementById("momoText");
+  const selected = document.getElementById("momoSelected");
+  const picker = document.getElementById("momoPicker");
+  const grid = document.getElementById("momoPickerGrid");
+  let selectedConId = null;
+  function loadArray(key) {
+    try { const v = JSON.parse(localStorage.getItem(key) || "[]"); return Array.isArray(v) ? v : []; }
+    catch { return []; }
+  }
+  function ownedConList() {
+    const owned = loadArray(OWNED_KEY);
+    return (typeof CON_LIST !== "undefined" ? CON_LIST : []).filter(con => owned.includes(con.id));
+  }
+  function renderMessages() {
+    const data = loadArray(STORAGE_KEY);
+    messages.replaceChildren();
+    if (!data.length) {
+      const empty = document.createElement("p");
+      empty.className = "momotalk-empty";
+      empty.textContent = "아직 등록된 댓글이 없습니다.";
+      messages.append(empty);
+      return;
+    }
+    data.forEach(item => {
+      const bubble = document.createElement("div");
+      bubble.className = "momo-message";
+      const author = document.createElement("div");
+      author.className = "momo-author";
+      author.textContent = item.nickname;
+      bubble.append(author);
+      if (item.text) {
+        const body = document.createElement("div");
+        body.className = "momo-text";
+        body.textContent = item.text;
+        bubble.append(body);
+      }
+      if (item.conId) {
+        const con = (typeof CON_LIST !== "undefined" ? CON_LIST : []).find(c => c.id === item.conId);
+        if (con) {
+          const img = document.createElement("img");
+          img.src = con.image;
+          img.alt = con.character + " — " + con.name;
+          img.loading = "lazy";
+          bubble.append(img);
+        }
+      }
+      const time = document.createElement("div");
+      time.className = "momo-time";
+      time.textContent = new Date(item.createdAt).toLocaleString("ko-KR");
+      bubble.append(time);
+      messages.append(bubble);
+    });
+    messages.scrollTop = messages.scrollHeight;
+  }
+  function showSelected() {
+    selected.replaceChildren();
+    if (!selectedConId) { selected.hidden = true; return; }
+    const con = ownedConList().find(c => c.id === selectedConId);
+    if (!con) { selectedConId = null; selected.hidden = true; return; }
+    selected.hidden = false;
+    const img = document.createElement("img"); img.src = con.image; img.alt = con.name;
+    const name = document.createElement("span"); name.textContent = con.name;
+    const remove = document.createElement("button"); remove.type = "button"; remove.textContent = "선택 해제";
+    remove.style.padding = "5px 8px";
+    remove.addEventListener("click", () => { selectedConId = null; showSelected(); });
+    selected.append(img, name, remove);
+  }
+  function closePicker() { picker.classList.remove("open"); }
+  document.getElementById("momoPickButton").addEventListener("click", () => {
+    grid.replaceChildren();
+    const cons = ownedConList();
+    if (!cons.length) {
+      const note = document.createElement("p");
+      note.textContent = "아직 획득한 콘이 없어요. 콘 뽑기에서 먼저 모아보세요!";
+      grid.append(note);
+    }
+    cons.forEach(con => {
+      const button = document.createElement("button"); button.type = "button";
+      const img = document.createElement("img"); img.src = con.image; img.alt = con.name;
+      const label = document.createElement("small"); label.textContent = con.character + " — " + con.name;
+      button.append(img, label);
+      button.addEventListener("click", () => { selectedConId = con.id; showSelected(); closePicker(); });
+      grid.append(button);
+    });
+    picker.classList.add("open");
+  });
+  document.getElementById("momoPickerClose").addEventListener("click", closePicker);
+  picker.addEventListener("click", event => { if (event.target === picker) closePicker(); });
+  document.addEventListener("keydown", event => { if (event.key === "Escape") closePicker(); });
+  document.getElementById("momoSendButton").addEventListener("click", () => {
+    const name = nickname.value.trim();
+    const text = input.value.trim();
+    if (!name) { alert("닉네임을 입력해 줘!"); nickname.focus(); return; }
+    if (!text && !selectedConId) { alert("댓글이나 콘을 선택해 줘!"); input.focus(); return; }
+    if (selectedConId && !ownedConList().some(c => c.id === selectedConId)) {
+      alert("보유하지 않은 콘은 사용할 수 없어!"); selectedConId = null; showSelected(); return;
+    }
+    const data = loadArray(STORAGE_KEY);
+    data.push({ nickname:name.slice(0,20), text:text.slice(0,300), conId:selectedConId, createdAt:Date.now() });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    catch { alert("저장 공간이 부족해 댓글을 저장하지 못했어."); return; }
+    input.value = "";
+    selectedConId = null;
+    showSelected();
+    renderMessages();
+  });
+  renderMessages();
+})();
 
   </script>
 
