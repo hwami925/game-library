@@ -234,6 +234,23 @@ const conGameMap = {
   "명조": "aemes-daughter"
 };
 
+    
+// 획득한 콘 목록 불러오기
+function getOwnedCons() {
+  return JSON.parse(localStorage.getItem("ownedCons") || "[]");
+}
+
+// 획득한 콘 저장하기
+function saveOwnedCon(conId) {
+  const ownedCons = getOwnedCons();
+
+  // 이미 보유한 콘은 중복 저장하지 않음
+  if (!ownedCons.includes(conId)) {
+    ownedCons.push(conId);
+    localStorage.setItem("ownedCons", JSON.stringify(ownedCons));
+  }
+}
+
 function showConResult(game) {
   const conId = conGameMap[game];
   const con = CON_LIST.find(item => item.id === conId);
@@ -243,6 +260,8 @@ function showConResult(game) {
     return;
   }
 
+  saveOwnedCon(con.id);
+  
   resultTitle.textContent = `🎉 ${game} 당첨!`;
   resultImage.src = con.image;
   resultName.textContent = `${con.character} — ${con.name}`;
