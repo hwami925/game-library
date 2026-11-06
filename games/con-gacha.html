@@ -263,7 +263,7 @@
 </div>
 
 
-    <p>🧪 테스트 모드: 현재는 횟수 제한 없이 뽑을 수 있습니다. (하루 1회 기능은 추후 적용)</p>
+    <p id="dailyStatus" aria-live="polite">매일 한국 시간 00:00에 뽑기 기회가 초기화됩니다.</p>
     
 <section class="con-collection">
   <h2>📚 나의 콘 보관함</h2>
@@ -277,6 +277,7 @@
  
 const board = document.getElementById("plinkoBoard");
 const drawButton = document.getElementById("drawButton");
+const dailyStatus = document.getElementById("dailyStatus");
     
 const conResult = document.getElementById("conResult");
 const resultTitle = document.getElementById("resultTitle");
@@ -290,6 +291,38 @@ const conGameMap = {
 };
 
     
+// 한국 시간(KST) 기준 날짜. 컴퓨터의 시간대 설정과 무관하게 날짜를 계산합니다.
+const DAILY_DRAW_KEY = "conGachaLastSuccessfulDrawKST";
+function getKoreanDate() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(new Date());
+  const part = type => parts.find(item => item.type === type).value;
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function hasDrawnToday() {
+  return localStorage.getItem(DAILY_DRAW_KEY) === getKoreanDate();
+}
+
+function updateDailyDrawStatus() {
+  if (animationId !== null) return;
+  const allCollected = CON_LIST.every(con => getOwnedCons().includes(con.id));
+  if (allCollected) {
+    drawButton.disabled = true;
+    drawButton.textContent = "🎉 모든 콘 획득 완료!";
+    dailyStatus.textContent = "모든 콘을 모았어! 새로운 콘이 추가되면 다시 뽑을 수 있어.";
+  } else if (hasDrawnToday()) {
+    drawButton.disabled = true;
+    drawButton.textContent = "🌙 오늘의 뽑기 완료";
+    dailyStatus.textContent = "오늘은 이미 뽑았어! 한국 시간 내일 00:00에 다시 도전해 줘.";
+  } else {
+    drawButton.disabled = false;
+    drawButton.textContent = "뽑기 시작!";
+    dailyStatus.textContent = "오늘의 무료 뽑기 1회 남음 · 한국 시간 00:00 초기화";
+  }
+}
+
 // 획득한 콘 목록 불러오기
 function getOwnedCons() {
   return JSON.parse(localStorage.getItem("ownedCons") || "[]");
@@ -439,6 +472,10 @@ let animationId = null;
 
 drawButton.addEventListener("click", () => {
   if (animationId !== null) return;
+  if (hasDrawnToday()) {
+    updateDailyDrawStatus();
+    return;
+  }
   
 const remainingCons = CON_LIST.filter(
   con => !getOwnedCons().includes(con.id)
@@ -593,6 +630,8 @@ if (peg.special && !peg.triggered) {
       if (getUnownedCons(landedGame).length === 0) {
         drawButton.textContent = "🔒 이미 획득한 게임! 재도전!";
       } else {
+        // 잠기지 않은 칸에 실제로 도착했을 때만 오늘의 기회를 사용합니다.
+        localStorage.setItem(DAILY_DRAW_KEY, getKoreanDate());
         drawButton.textContent = `${landedGame} 당첨!`;
         showConResult(landedGame);
       }
@@ -602,9 +641,7 @@ if (peg.special && !peg.triggered) {
 
       setTimeout(() => {
         ball.remove();
-        drawButton.disabled = false;
-        const allCollected = CON_LIST.every(con => getOwnedCons().includes(con.id));
-        drawButton.textContent = allCollected ? "🎉 모든 콘 획득 완료!" : "다시 테스트하기";
+        updateDailyDrawStatus();
       }, 1800);
 
       return;
@@ -618,6 +655,14 @@ if (peg.special && !peg.triggered) {
 
     renderConCollection();
     updateCategoryLocks();
+    updateDailyDrawStatus();
+
+    // 자정이 지난 뒤 페이지를 열어 둔 상태에서도 버튼을 갱신합니다.
+    setInterval(updateDailyDrawStatus, 15000);
+    window.addEventListener("focus", updateDailyDrawStatus);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) updateDailyDrawStatus();
+    });
 
 </script>
 </body>
