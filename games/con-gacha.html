@@ -293,6 +293,19 @@ const conGameMap = {
 function getOwnedCons() {
   return JSON.parse(localStorage.getItem("ownedCons") || "[]");
 }
+    
+function getUnownedCons(game) {
+  const ownedCons = getOwnedCons();
+
+  return CON_LIST.filter(con => {
+    const gameMatches =
+      (game === "블루 아카이브" && con.id === "shiroko-sparkle") ||
+      (game === "명조" && con.id === "aemes-daughter");
+
+    return gameMatches && !ownedCons.includes(con.id);
+  });
+}
+
 
 // 획득한 콘 저장하기
 function saveOwnedCon(conId) {
@@ -414,6 +427,16 @@ let animationId = null;
 
 drawButton.addEventListener("click", () => {
   if (animationId !== null) return;
+  
+const remainingCons = CON_LIST.filter(
+  con => !getOwnedCons().includes(con.id)
+);
+
+if (remainingCons.length === 0) {
+  alert("🎉 모든 콘을 획득했어! 새로운 콘을 기다려 줘!");
+  return;
+}
+
   // 새 뽑기를 시작할 때 카테고리 초기화
 categories = ["블루 아카이브", "명조"];
 
