@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#202b43">
+  <title>나의 콘 보관함 | 게임창고</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #202b43; color: #fff; font-family: Arial, sans-serif; }
+    .container { max-width: 980px; margin: 0 auto; padding: 32px 20px 70px; }
+    .back { color: #f6b5d1; text-decoration: none; font-weight: bold; }
+    .back:hover { text-decoration: underline; }
+    h1 { margin: 30px 0 10px; color: #f6b5d1; text-align: center; }
+    .subtitle { text-align: center; color: #cbd5e8; }
+    .panel { margin-top: 30px; padding: 26px; border: 2px solid #f6b5d1; border-radius: 20px; background: #2d3952; }
+    .summary { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .summary h2 { margin: 0; color: #f6b5d1; font-size: 21px; }
+    .summary p { margin: 0; }
+    .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .filter { padding: 10px 16px; background: #465674; border: 1px solid #8191af; border-radius: 20px; color: white; cursor: pointer; }
+    .filter.active { background: #f6b5d1; border-color: #f6b5d1; color: #54243c; font-weight: bold; }
+    .con-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 16px; margin-top: 22px; }
+    .con-card { padding: 18px 12px; text-align: center; background: #465674; border-radius: 15px; min-width: 0; }
+    .con-card img { width: 100%; height: 155px; object-fit: contain; }
+    .con-card h3 { margin: 12px 0 5px; font-size: 15px; overflow-wrap: anywhere; }
+    .con-card p { margin: 0; font-size: 13px; color: #d5def0; }
+    .con-card.locked { background: #252e42; color: #9da8bb; }
+    .con-card.locked p { color: #9da8bb; }
+    .locked-art { height: 155px; display: flex; align-items: center; justify-content: center; font-size: 42px; font-weight: bold; }
+    .empty { color: #cbd5e8; text-align: center; padding: 30px; }
+    @media (max-width: 480px) { .panel { padding: 18px; } .con-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .con-card img, .locked-art { height: 115px; } }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <a class="back" href="con-gacha.html">← 콘 뽑기로 돌아가기</a>
+    <h1>📚 나의 콘 보관함</h1>
+    <p class="subtitle">게임창고에서 획득한 콘을 모아 보는 도감</p>
+    <section class="panel">
+      <div class="summary">
+        <h2>콘 컬렉션</h2>
+        <p id="collectionCount" aria-live="polite">획득한 콘 확인 중...</p>
+      </div>
+      <div class="filters" id="filters" aria-label="게임별 필터">
+        <button class="filter active" data-game="all" type="button">전체</button>
+        <button class="filter" data-game="블루 아카이브" type="button">블루 아카이브</button>
+        <button class="filter" data-game="명조" type="button">명조</button>
+      </div>
+      <div class="con-grid" id="conGrid"></div>
+    </section>
+  </main>
+  <script src="cons.js"></script>
+  <script>
+    // 기존 콘 뽑기와 같은 GitHub Pages 주소의 localStorage를 공유합니다.
+    const OWNED_KEY = "ownedCons";
+    const gameByConId = {
+      "shiroko-sparkle": "블루 아카이브",
+      "aemes-daughter": "명조"
+    };
+    let selectedGame = "all";
+
+    function getOwnedCons() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(OWNED_KEY) || "[]");
+        return Array.isArray(stored) ? stored : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function renderCollection() {
+      const owned = getOwnedCons();
+      const ownedSet = new Set(owned);
+      const grid = document.getElementById("conGrid");
+      const totalOwned = CON_LIST.filter(con => ownedSet.has(con.id)).length;
+      document.getElementById("collectionCount").textContent =
+        `획득한 콘 ${totalOwned} / ${CON_LIST.length}`;
+      grid.replaceChildren();
+
+      const visibleCons = CON_LIST.filter(con =>
+        selectedGame === "all" || gameByConId[con.id] === selectedGame
+      );
+      if (!visibleCons.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "아직 등록된 콘이 없어!";
+        grid.appendChild(empty);
+        return;
+      }
+
+      visibleCons.forEach(con => {
+        const isOwned = ownedSet.has(con.id);
+        const card = document.createElement("article");
+        card.className = isOwned ? "con-card" : "con-card locked";
+        if (isOwned) {
+          const img = document.createElement("img");
+          img.src = con.image;
+          img.alt = `${con.character} — ${con.name}`;
+          img.loading = "lazy";
+          card.appendChild(img);
+        } else {
+          const placeholder = document.createElement("div");
+          placeholder.className = "locked-art";
+          placeholder.textContent = "???";
+          card.appendChild(placeholder);
+        }
+        const name = document.createElement("h3");
+        name.textContent = isOwned ? `${con.character} — ${con.name}` : "미획득";
+        card.appendChild(name);
+        const game = document.createElement("p");
+        game.textContent = gameByConId[con.id] || "기타";
+        card.appendChild(game);
+        grid.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll(".filter").forEach(button => {
+      button.addEventListener("click", () => {
+        selectedGame = button.dataset.game;
+        document.querySelectorAll(".filter").forEach(item => {
+          const active = item === button;
+          item.classList.toggle("active", active);
+          item.setAttribute("aria-pressed", String(active));
+        });
+        renderCollection();
+      });
+      button.setAttribute("aria-pressed", String(button.dataset.game === "all"));
+    });
+    renderCollection();
+    window.addEventListener("pageshow", renderCollection);
+    window.addEventListener("storage", renderCollection);
+  </script>
+</body>
+</html>
