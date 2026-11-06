@@ -129,10 +129,7 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-    .plinko-ball {
-  /* 기존 공 디자인 코드 */
-}
-
+   
 /* 여기부터 당첨 결과창 CSS 추가 */
 
 /* 당첨 결과창 */
@@ -186,9 +183,6 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
- {
-  /* 애니메이션 코드 */
-}
     
 /* 콘 보관함 */
 .con-collection {
@@ -236,6 +230,13 @@
   font-weight: bold;
 }
 
+/* 모든 콘을 획득한 카테고리 */
+.category.completed {
+  background: #252e42;
+  color: #9da8bb;
+  border-color: #758097;
+}
+
 </style>
 </head>
 <body>
@@ -262,7 +263,7 @@
 </div>
 
 
-    <p>매일 00:00에 뽑기 기회가 초기화됩니다.</p>
+    <p>🧪 테스트 모드: 현재는 횟수 제한 없이 뽑을 수 있습니다. (하루 1회 기능은 추후 적용)</p>
     
 <section class="con-collection">
   <h2>📚 나의 콘 보관함</h2>
@@ -303,6 +304,16 @@ function getUnownedCons(game) {
       (game === "명조" && con.id === "aemes-daughter");
 
     return gameMatches && !ownedCons.includes(con.id);
+  });
+}
+
+function updateCategoryLocks() {
+  document.querySelectorAll(".category").forEach((element, index) => {
+    const game = categories[index];
+    const completed = getUnownedCons(game).length === 0;
+
+    element.classList.toggle("completed", completed);
+    element.textContent = completed ? `🔒 ${game}` : game;
   });
 }
 
@@ -370,7 +381,8 @@ function showConResult(game) {
   saveOwnedCon(con.id);
 
   renderConCollection();
-  
+  updateCategoryLocks();
+
   resultTitle.textContent = `🎉 ${game} 당첨!`;
   resultImage.src = con.image;
   resultName.textContent = `${con.character} — ${con.name}`;
@@ -443,6 +455,7 @@ categories = ["블루 아카이브", "명조"];
 categoryElements.forEach((element, index) => {
   element.textContent = categories[index];
 });
+updateCategoryLocks();
 
   drawButton.disabled = true;
   drawButton.textContent = "공이 내려가는 중...";
@@ -474,19 +487,21 @@ categoryElements.forEach((element, index) => {
 }));
 
 
+
 function shuffleCategories() {
-  // 카테고리 위치 교환
   categories.reverse();
 
   categoryElements.forEach((element, index) => {
     element.textContent = categories[index];
 
-    // 연속으로 셔플해도 애니메이션 재실행
     element.classList.remove("shuffle-effect");
     void element.offsetWidth;
     element.classList.add("shuffle-effect");
   });
+
+  updateCategoryLocks();
 }
+
 
 
   function animate(time) {
@@ -574,8 +589,13 @@ if (peg.special && !peg.triggered) {
         Math.floor(x / (width / categories.length))
       );
 
-      drawButton.textContent = `${categories[index]} 당첨!`;
-      showConResult(categories[index]);
+      const landedGame = categories[index];
+      if (getUnownedCons(landedGame).length === 0) {
+        drawButton.textContent = "🔒 이미 획득한 게임! 재도전!";
+      } else {
+        drawButton.textContent = `${landedGame} 당첨!`;
+        showConResult(landedGame);
+      }
 
       cancelAnimationFrame(animationId);
       animationId = null;
@@ -583,7 +603,8 @@ if (peg.special && !peg.triggered) {
       setTimeout(() => {
         ball.remove();
         drawButton.disabled = false;
-        drawButton.textContent = "다시 테스트하기";
+        const allCollected = CON_LIST.every(con => getOwnedCons().includes(con.id));
+        drawButton.textContent = allCollected ? "🎉 모든 콘 획득 완료!" : "다시 테스트하기";
       }, 1800);
 
       return;
@@ -596,6 +617,7 @@ if (peg.special && !peg.triggered) {
 });
 
     renderConCollection();
+    updateCategoryLocks();
 
 </script>
 </body>
