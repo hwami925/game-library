@@ -261,7 +261,8 @@
 
   </main>
   <script src="cons.js"></script>
-  <script>
+  <script type="module">
+  import {kstDate,waitForGoogle,migrateOnce,loadCloud,cacheState,claimCon} from "./con-cloud.js";
  
 const board = document.getElementById("plinkoBoard");
 const drawButton = document.getElementById("drawButton");
@@ -281,40 +282,21 @@ const conGameMap = {
 
     
 // 한국 시간(KST) 기준 날짜. 컴퓨터의 시간대 설정과 무관하게 날짜를 계산합니다.
-const DAILY_DRAW_KEY = "conGachaLastSuccessfulDrawKST";
-function getKoreanDate() {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit"
-  }).formatToParts(new Date());
-  const part = type => parts.find(item => item.type === type).value;
-  return `${part("year")}-${part("month")}-${part("day")}`;
+const DAILY_DRAW_KEY = 'conGachaLastSuccessfulDrawKST';
+let cloudUser = null, cloudState = {ownedCons:[],lastDrawKST:''}, cloudReady = false, saving = false;
+const getKoreanDate = kstDate;
+function hasDrawnToday(){return cloudState.lastDrawKST === getKoreanDate();}
+function updateDailyDrawStatus(){
+  if(animationId !== null || saving)return;
+  if(!cloudReady){drawButton.disabled=true;drawButton.textContent='로그인 확인 중...';return;}
+  const allCollected=CON_LIST.every(c=>getOwnedCons().includes(c.id));
+  if(allCollected){drawButton.disabled=true;drawButton.textContent='🎉 모든 콘 획득 완료!';dailyStatus.textContent='모든 콘을 모았어!';}
+  else if(hasDrawnToday()){drawButton.disabled=true;drawButton.textContent='🌙 오늘의 뽑기 완료';dailyStatus.textContent='한국 시간 내일 00:00에 다시 도전해 줘.';}
+  else{drawButton.disabled=false;drawButton.textContent='뽑기 시작!';dailyStatus.textContent='오늘의 무료 뽑기 1회 남음 · 한국 시간 00:00 초기화';}
 }
-
-function hasDrawnToday() {
-  return localStorage.getItem(DAILY_DRAW_KEY) === getKoreanDate();
-}
-
-function updateDailyDrawStatus() {
-  if (animationId !== null) return;
-  const allCollected = CON_LIST.every(con => getOwnedCons().includes(con.id));
-  if (allCollected) {
-    drawButton.disabled = true;
-    drawButton.textContent = "🎉 모든 콘 획득 완료!";
-    dailyStatus.textContent = "모든 콘을 모았어! 새로운 콘이 추가되면 다시 뽑을 수 있어.";
-  } else if (hasDrawnToday()) {
-    drawButton.disabled = true;
-    drawButton.textContent = "🌙 오늘의 뽑기 완료";
-    dailyStatus.textContent = "오늘은 이미 뽑았어! 한국 시간 내일 00:00에 다시 도전해 줘.";
-  } else {
-    drawButton.disabled = false;
-    drawButton.textContent = "뽑기 시작!";
-    dailyStatus.textContent = "오늘의 무료 뽑기 1회 남음 · 한국 시간 00:00 초기화";
-  }
-}
-
 // 획득한 콘 목록 불러오기
 function getOwnedCons() {
-  return JSON.parse(localStorage.getItem("ownedCons") || "[]");
+  return cloudState.ownedCons;
 }
     
 function getUnownedCons(game) {
@@ -341,36 +323,12 @@ function updateCategoryLocks() {
 }
 
 
-// 획득한 콘 저장하기
-function saveOwnedCon(conId) {
-  const ownedCons = getOwnedCons();
-
-  // 이미 보유한 콘은 중복 저장하지 않음
-  if (!ownedCons.includes(conId)) {
-    ownedCons.push(conId);
-    localStorage.setItem("ownedCons", JSON.stringify(ownedCons));
-  }
+function showConResult(game, con){
+  resultTitle.textContent=`🎉 ${game} 당첨!`;
+  resultImage.src=con.image;
+  resultName.textContent=`${con.character} — ${con.name}`;
+  conResult.classList.add('show');
 }
-
-function showConResult(game) {
-  const conId = conGameMap[game];
-  const con = CON_LIST.find(item => item.id === conId);
-
-  if (!con) {
-    alert("등록된 콘을 찾을 수 없어!");
-    return;
-  }
-
-  saveOwnedCon(con.id);
-
-  updateCategoryLocks();
-
-  resultTitle.textContent = `🎉 ${game} 당첨!`;
-  resultImage.src = con.image;
-  resultName.textContent = `${con.character} — ${con.name}`;
-  conResult.classList.add("show");
-}
-
 closeResult.addEventListener("click", () => {
   conResult.classList.remove("show");
 });
@@ -420,6 +378,7 @@ const categoryElements = [...document.querySelectorAll(".category")];
 let animationId = null;
 
 drawButton.addEventListener("click", () => {
+  if(!cloudReady)return;
   if (animationId !== null) return;
   if (hasDrawnToday()) {
     updateDailyDrawStatus();
@@ -579,16 +538,23 @@ if (peg.special && !peg.triggered) {
       );
 
       const landedGame = categories[index];
-      if (getUnownedCons(landedGame).length === 0) {
-        drawButton.textContent = "🔒 이미 획득한 게임! 재도전!";
-      } else {
-        // 잠기지 않은 칸에 실제로 도착했을 때만 오늘의 기회를 사용합니다.
-        localStorage.setItem(DAILY_DRAW_KEY, getKoreanDate());
-        drawButton.textContent = `${landedGame} 당첨!`;
-        showConResult(landedGame);
-      }
+             if(getUnownedCons(landedGame).length===0){
+         drawButton.textContent='🔒 이미 획득한 게임! 재도전!';
+       }else{
+         // 애니메이션은 여기서 종료하고, 서버 저장이 성공한 뒤에만 당첨 표시
+         const conId=conGameMap[landedGame];
+         const con=CON_LIST.find(c=>c.id===conId);
+         drawButton.textContent='당첨 기록 저장 중...';
+         saving=true;drawButton.disabled=true;
+         claimCon(cloudUser,conId).then(result=>{
+           if(result.ok){cloudState=result.state;showConResult(landedGame,con);updateCategoryLocks();}
+           else if(result.reason==='today')alert('다른 기기에서 이미 오늘 뽑기를 완료했어!');
+           else alert('이미 획득한 콘이야.');
+         }).catch(err=>{console.error(err);alert('Firebase 저장에 실패했어. 다시 시도해 줘.');})
+           .finally(async()=>{try{cloudState=await loadCloud(cloudUser);cacheState(cloudState);}catch(e){console.error(e);}saving=false;updateCategoryLocks();updateDailyDrawStatus();});
+       }
 
-      cancelAnimationFrame(animationId);
+cancelAnimationFrame(animationId);
       animationId = null;
 
       setTimeout(() => {
@@ -605,8 +571,14 @@ if (peg.special && !peg.triggered) {
   animationId = requestAnimationFrame(animate);
 });
 
-      updateCategoryLocks();
-    updateDailyDrawStatus();
+async function initCloud(){
+  drawButton.disabled=true;dailyStatus.textContent='Google 계정 확인 중...';
+  cloudUser=await waitForGoogle();
+  if(!cloudUser){dailyStatus.textContent='콘을 뽑으려면 게임창고 메인에서 Google 로그인을 해 줘.';drawButton.textContent='로그인 필요';return;}
+  try{cloudState=await migrateOnce(cloudUser);cloudReady=true;updateCategoryLocks();updateDailyDrawStatus();}
+  catch(err){console.error(err);dailyStatus.textContent='계정 동기화 실패: '+err.message;drawButton.textContent='동기화 실패';}
+}
+initCloud();
 
     // 자정이 지난 뒤 페이지를 열어 둔 상태에서도 버튼을 갱신합니다.
     setInterval(updateDailyDrawStatus, 15000);
