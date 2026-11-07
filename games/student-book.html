@@ -959,7 +959,7 @@
     </div>
     <div class="momotalk-footer">
       <button type="button" id="momoPickButton">🎀 콘 보내기</button>
-      <small>익명 콘 전용 · 온라인 모모톡 · 보유한 콘만 선택할 수 있습니다.</small>
+      <small>익명 콘 전용 · 구글 로그인 후 Firebase 보유 콘 전송 가능</small>
     </div>
   </aside>
 
@@ -1481,10 +1481,10 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
   </script>
 
   <script type="module">
-    // STEP 18: Firebase 온라인 모모톡 (호시노 전용)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-    import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    // STEP 21: Firebase 계정 보관함과 연결한 온라인 모모톡
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getFirestore, collection, doc, getDoc, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB0iHUdxg0dCv-TjvusjJjOt_scngwLZE8",
@@ -1495,18 +1495,17 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
       appId: "1:780822464752:web:6c1306decb5db7e9669a35",
       measurementId: "G-7E9DK299B9"
     };
-
-    const app = initializeApp(firebaseConfig);
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const ROOM_ID = "hoshino"; // 다른 학생 페이지에서는 고유한 학생 ID로 변경
-    const OWNED_KEY = "ownedCons";
+    const ROOM_ID = "hoshino";
     const messages = document.getElementById("momoMessages");
     const picker = document.getElementById("momoPicker");
     const grid = document.getElementById("momoPickerGrid");
     const pickButton = document.getElementById("momoPickButton");
     const messageCollection = collection(db, "momotalk_rooms", ROOM_ID, "messages");
     let user = null;
+    let unsubscribeMessages = null;
     let lastSendAt = 0;
     let sending = false;
 
@@ -1518,12 +1517,6 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
       messages.append(note);
     }
     function allCons() { return typeof CON_LIST !== "undefined" ? CON_LIST : []; }
-    function ownedCons() {
-      let ids = [];
-      try { ids = JSON.parse(localStorage.getItem(OWNED_KEY) || "[]"); } catch {}
-      if (!Array.isArray(ids)) return [];
-      return allCons().filter(con => ids.includes(con.id));
-    }
     function closePicker() { picker.classList.remove("open"); }
     function formatTime(timestamp) {
       const date = timestamp?.toDate?.();
@@ -1532,10 +1525,10 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
     function renderSnapshot(snapshot) {
       messages.replaceChildren();
       if (snapshot.empty) { status("아직 등록된 콘이 없습니다."); return; }
-      snapshot.forEach(doc => {
-        const item = doc.data();
+      for (const messageDoc of [...snapshot.docs].reverse()) {
+        const item = messageDoc.data();
         const con = allCons().find(c => c.id === item.conId);
-        if (!con) return;
+        if (!con) continue;
         const bubble = document.createElement("div");
         bubble.className = "momo-message" + (item.uid === user?.uid ? " mine" : "");
         const img = document.createElement("img");
@@ -1547,42 +1540,71 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
         time.textContent = formatTime(item.createdAt);
         bubble.append(img, time);
         messages.append(bubble);
-      });
+      }
       if (!messages.children.length) status("표시할 수 있는 콘이 없습니다.");
       messages.scrollTop = messages.scrollHeight;
     }
 
+    // 콘 소유 여부는 Google 계정의 Firestore users 문서를 기준으로 확인.
+    async function ownedConsFromCloud() {
+      if (!user || user.isAnonymous) return [];
+      const uid = user.uid;
+      const snapshot = await getDoc(doc(db, "users", uid));
+      if (auth.currentUser?.uid !== uid) return [];
+      const ids = snapshot.exists() && Array.isArray(snapshot.data().ownedCons)
+        ? snapshot.data().ownedCons : [];
+      return allCons().filter(con => ids.includes(con.id));
+    }
+
     pickButton.disabled = true;
     status("온라인 모모톡에 연결 중...");
-    onAuthStateChanged(auth, current => {
+    onAuthStateChanged(auth, async current => {
       user = current;
-      pickButton.disabled = !current;
-      if (!current) return;
+      closePicker();
+      if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
+      pickButton.disabled = !current || current.isAnonymous;
+      if (!current) {
+        status("모모톡 연결 중...");
+        try { await signInAnonymously(auth); }
+        catch (error) {
+          console.error("Anonymous auth error", error);
+          status("모모톡 연결에 실패했어요. Firebase 인증 설정을 확인해 주세요.");
+        }
+        return;
+      }
       const q = query(messageCollection, orderBy("createdAt", "desc"), limit(100));
-      onSnapshot(q, snapshot => {
-        // 최신 100개를 오래된 순으로 보여주기
-        const docs = snapshot.docs.slice().reverse();
-        renderSnapshot({ empty:docs.length===0, forEach:fn=>docs.forEach(fn) });
-      }, error => {
+      unsubscribeMessages = onSnapshot(q, renderSnapshot, error => {
         console.error("MomoTalk read error", error);
         status("메시지를 불러오지 못했어요. Firestore 규칙을 확인해 주세요.");
       });
     });
-    signInAnonymously(auth).catch(error => {
-      console.error("Anonymous auth error", error);
-      status("익명 로그인에 실패했어요. Firebase 인증 설정을 확인해 주세요.");
-    });
 
-    pickButton.addEventListener("click", () => {
-      if (!user) return;
-      grid.replaceChildren();
-      const cons = ownedCons();
-      if (!cons.length) {
-        const note = document.createElement("p");
-        note.textContent = "아직 획득한 콘이 없어요. 콘 뽑기에서 먼저 모아보세요!";
-        grid.append(note);
+    pickButton.addEventListener("click", async () => {
+      if (!user || user.isAnonymous) {
+        alert("콘을 보내려면 게임창고 메인에서 구글 로그인해 줘!");
+        return;
       }
-      cons.forEach(con => {
+      const openingUid = user.uid;
+      grid.replaceChildren();
+      const note = document.createElement("p");
+      note.textContent = "Firebase 보관함을 확인하는 중...";
+      grid.append(note);
+      picker.classList.add("open");
+      let cons;
+      try { cons = await ownedConsFromCloud(); }
+      catch (error) {
+        console.error("MomoTalk inventory error", error);
+        note.textContent = "콘 보관함을 불러오지 못했어. 잠시 후 다시 시도해 줘.";
+        return;
+      }
+      if (!user || user.uid !== openingUid || !picker.classList.contains("open")) return;
+      grid.replaceChildren();
+      if (!cons.length) {
+        const empty = document.createElement("p");
+        empty.textContent = "보유한 콘이 없어! 콘 뽑기에서 먼저 모아봐.";
+        grid.append(empty);
+      }
+      for (const con of cons) {
         const button = document.createElement("button");
         button.type = "button";
         const img = document.createElement("img");
@@ -1593,22 +1615,30 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
         button.append(img, label);
         button.addEventListener("click", async () => {
           if (sending) return;
-          if (!user || !ownedCons().some(c => c.id === con.id)) { alert("보유한 콘만 전송할 수 있어!"); return; }
-          if (Date.now() - lastSendAt < 10000) { alert("콘은 10초 간격으로 보낼 수 있어!"); return; }
+          if (!user || user.isAnonymous || user.uid !== openingUid) {
+            alert("구글 로그인을 확인해 줘!"); return;
+          }
+          if (Date.now() - lastSendAt < 10000) {
+            alert("콘은 10초 간격으로 보낼 수 있어!"); return;
+          }
           sending = true;
           button.disabled = true;
           try {
-            await addDoc(messageCollection, { uid:user.uid, conId:con.id, createdAt:serverTimestamp() });
+            const fresh = await ownedConsFromCloud();
+            if (!fresh.some(item => item.id === con.id)) throw new Error("콘 보유 기록이 없어.");
+            if (auth.currentUser?.uid !== openingUid) throw new Error("로그인 계정이 바뀌었어.");
+            await addDoc(messageCollection, {
+              uid: openingUid, conId: con.id, createdAt: serverTimestamp()
+            });
             lastSendAt = Date.now();
             closePicker();
           } catch (error) {
             console.error("MomoTalk send error", error);
-            alert("콘 전송에 실패했어. Firebase 보안 규칙을 확인해 줘!");
+            alert("콘 전송에 실패했어. 로그인과 Firebase 연결을 확인해 줘!");
           } finally { sending = false; button.disabled = false; }
         });
         grid.append(button);
-      });
-      picker.classList.add("open");
+      }
     });
     document.getElementById("momoPickerClose").addEventListener("click", closePicker);
     picker.addEventListener("click", event => { if (event.target === picker) closePicker(); });
