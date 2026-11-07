@@ -53,6 +53,8 @@
       border: 2px solid #fff;
       background: #526583;
       font-weight: bold;
+      font-size: clamp(10px, 2.2vw, 14px);
+      overflow-wrap: anywhere;
     }
     
 .category.shuffle-effect {
@@ -216,6 +218,7 @@
       <div class="category-area">
         <div class="category">블루 아카이브</div>
         <div class="category">명조</div>
+        <div class="category">트릭컬</div>
       </div>
     </div>
 
@@ -251,7 +254,8 @@ const closeResult = document.getElementById("closeResult");
 
 const conGameMap = {
   "블루 아카이브": "shiroko-sparkle",
-  "명조": "aemes-daughter"
+  "명조": "aemes-daughter",
+  "트릭컬": "butter-kkojiri"
 };
 
     
@@ -298,7 +302,8 @@ function getUnownedCons(game) {
   return CON_LIST.filter(con => {
     const gameMatches =
       (game === "블루 아카이브" && con.id === "shiroko-sparkle") ||
-      (game === "명조" && con.id === "aemes-daughter");
+      (game === "명조" && con.id === "aemes-daughter") ||
+      (game === "트릭컬" && con.id === "butter-kkojiri");
 
     return gameMatches && !ownedCons.includes(con.id);
   });
@@ -389,7 +394,7 @@ if (specialPins.some(([r, c]) => r === row && c === col)) {
   }
 }
 
-let categories = ["블루 아카이브", "명조"];
+let categories = ["블루 아카이브", "명조", "트릭컬"];
 const categoryElements = [...document.querySelectorAll(".category")];
 let animationId = null;
 
@@ -410,7 +415,7 @@ if (remainingCons.length === 0) {
 }
 
   // 새 뽑기를 시작할 때 카테고리 초기화
-categories = ["블루 아카이브", "명조"];
+categories = ["블루 아카이브", "명조", "트릭컬"];
 
 categoryElements.forEach((element, index) => {
   element.textContent = categories[index];
@@ -449,7 +454,15 @@ updateCategoryLocks();
 
 
 function shuffleCategories() {
-  categories.reverse();
+  // 세 게임 이상에서도 실제 카테고리 순서를 무작위로 섞습니다.
+  const previous = categories.join("|");
+  for (let i = categories.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [categories[i], categories[j]] = [categories[j], categories[i]];
+  }
+  if (categories.join("|") === previous) {
+    [categories[0], categories[1]] = [categories[1], categories[0]];
+  }
 
   categoryElements.forEach((element, index) => {
     element.textContent = categories[index];
@@ -514,24 +527,19 @@ if (peg.special && !peg.triggered) {
       }
     }
 
-    // 게임 카테고리 중앙 칸막이 충돌
-    const dividerX = width / 2;
+    // 세 카테고리의 두 칸막이와 공 충돌 처리
     const categoryTop = height - 85;
-
-    // 가운데 칸막이의 두께
     const dividerHalfWidth = 2;
-
     if (y + radius > categoryTop && y - radius < height) {
-      const distanceX = x - dividerX;
-      const minDistance = radius + dividerHalfWidth;
-
-      if (Math.abs(distanceX) < minDistance) {
-        // 공이 왼쪽에 있으면 왼쪽으로,
-        // 오른쪽에 있으면 오른쪽으로 튕김
-        const direction = distanceX < 0 ? -1 : 1;
-
-        x = dividerX + direction * minDistance;
-        vx = direction * Math.max(Math.abs(vx) * 0.7, 1.5);
+      for (let dividerIndex = 1; dividerIndex < categories.length; dividerIndex++) {
+        const dividerX = width * dividerIndex / categories.length;
+        const distanceX = x - dividerX;
+        const minDistance = radius + dividerHalfWidth;
+        if (Math.abs(distanceX) < minDistance) {
+          const direction = distanceX < 0 ? -1 : 1;
+          x = dividerX + direction * minDistance;
+          vx = direction * Math.max(Math.abs(vx) * 0.7, 1.5);
+        }
       }
     }
 
