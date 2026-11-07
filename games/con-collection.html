@@ -46,31 +46,29 @@
         <button class="filter active" data-game="all" type="button">전체</button>
         <button class="filter" data-game="블루 아카이브" type="button">블루 아카이브</button>
         <button class="filter" data-game="명조" type="button">명조</button>
-        <button class="filter" data-game="트릭컬" type="button">트릭컬</button>
       </div>
       <div class="con-grid" id="conGrid"></div>
     </section>
   </main>
   <script src="cons.js"></script>
-  <script>
-    // 기존 콘 뽑기와 같은 GitHub Pages 주소의 localStorage를 공유합니다.
+  <script type="module">
+    import {waitForGoogle,migrateOnce,loadCloud,cacheState} from "./con-cloud.js";
+    // 로그인 계정의 Firebase 콘 보관함을 표시합니다.
     const OWNED_KEY = "ownedCons";
     const gameByConId = {
       "shiroko-sparkle": "블루 아카이브",
-      "aemes-daughter": "명조",
-      "butter-kkojiri": "트릭컬"
+      "aemes-daughter": "명조"
     };
     let selectedGame = "all";
+    let cloudOwned=[];
 
-    function getOwnedCons() {
-      try {
-        const stored = JSON.parse(localStorage.getItem(OWNED_KEY) || "[]");
-        return Array.isArray(stored) ? stored : [];
-      } catch (error) {
-        return [];
-      }
+    function getOwnedCons(){return cloudOwned;}
+    async function refreshCloud(){
+      const user=await waitForGoogle();
+      if(!user){document.getElementById('collectionCount').textContent='Google 로그인 필요';document.getElementById('conGrid').innerHTML='<p class="empty">게임창고 메인에서 Google 로그인 후 다시 접속해 줘.</p>';return;}
+      try{const state=await migrateOnce(user);cloudOwned=state.ownedCons;cacheState(state);renderCollection();}
+      catch(err){console.error(err);document.getElementById('collectionCount').textContent='동기화 실패';document.getElementById('conGrid').textContent='Firebase 저장 내용을 불러오지 못했어: '+err.message;}
     }
-
     function renderCollection() {
       const owned = getOwnedCons();
       const ownedSet = new Set(owned);
@@ -129,9 +127,9 @@
       });
       button.setAttribute("aria-pressed", String(button.dataset.game === "all"));
     });
-    renderCollection();
-    window.addEventListener("pageshow", renderCollection);
-    window.addEventListener("storage", renderCollection);
+    refreshCloud();
+    window.addEventListener("pageshow", event => {if(event.persisted)refreshCloud();});
+    window.addEventListener("focus", refreshCloud);
   </script>
 </body>
 </html>
