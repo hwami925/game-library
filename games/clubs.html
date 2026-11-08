@@ -258,6 +258,14 @@
       font-size: 29px;
     }
 
+    .club-icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 5px;
+      object-fit: contain;
+    }
+
     .club-text {
       flex: 1;
       min-width: 0;
@@ -539,8 +547,12 @@ additionalSchools.forEach(([slug, name, english]) => {
       const button = document.createElement("button");
       button.className = "club-card";
 
+      const iconContent = /\.(png|jpg|jpeg|webp|svg)(?:\?.*)?$/i.test(club.icon)
+        ? `<img src="${club.icon}" alt="${club.name} 로고">`
+        : club.icon;
+
       button.innerHTML = `
-        <div class="club-icon">${club.icon}</div>
+        <div class="club-icon">${iconContent}</div>
 
         <div class="club-text">
           <div class="club-name">${club.name}</div>
