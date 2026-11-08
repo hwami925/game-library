@@ -69,7 +69,7 @@ window.STUDENT_DATABASE = {
         name: "마코토", label: "DEFAULT", image: "../images/bluearchive/variants/makoto/default.png",
         memorialImage: "../images/bluearchive/memorial/makoto/default.png", memorialVideo: "oYy19ROA9-s",
         weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "유아독존", weaponType: "SR",
-        role: "딜러 · SPECIAL · BACK", attackType: "관통", defenseType: "특수장갑",
+        role: "딜러 · SPECIAL", attackType: "관통", defenseType: "특수장갑",
         equipment: ["../images/bluearchive/equipment/gloves.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/watch.png"],
         exVideo: "../images/bluearchive/skills/makoto/default-ex.mp4", // 기본 의상 EX 영상 파일명이 확인되면 경로 입력
         skills: {
