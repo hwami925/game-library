@@ -68,7 +68,7 @@ window.STUDENT_DATABASE = {
       default: {
         name: "마코토", label: "DEFAULT", image: "../images/bluearchive/variants/makoto/default.png",
         memorialImage: "../images/bluearchive/memorial/makoto/default.png", memorialVideo: "",
-        weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "마코토 전용 저격총", weaponType: "SR",
+        weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "유아독존", weaponType: "SR",
         role: "딜러 · SPECIAL · BACK", attackType: "관통", defenseType: "특수장갑",
         equipment: ["../images/bluearchive/equipment/gloves.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/watch.png"],
         exVideo: "", // 기본 의상 EX 영상 파일명이 확인되면 경로 입력
@@ -82,7 +82,7 @@ window.STUDENT_DATABASE = {
       swimsuit: {
         name: "마코토(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/makoto/swimsuit.png",
         memorialImage: "../images/bluearchive/memorial/makoto/swimsuit.png", memorialVideo: "bqd3crd66XU",
-        weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "마코토 전용 저격총", weaponType: "SR",
+        weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "유아독존", weaponType: "SR",
         role: "딜러 · STRIKER · BACK", attackType: "신비", defenseType: "중장갑",
         equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/watch.png"],
         exVideo: "", // 수영복 EX 영상 파일명이 확인되면 경로 입력
