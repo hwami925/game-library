@@ -1595,7 +1595,21 @@ function updateSkillLevel() {
       sub.textContent = `아군의 관통 특효 ${skills.sub[skillLevel-1]}% 증가`;
     }
     if (costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]}` + (v.exVideo ? " · 클릭하면 영상 재생" : " · EX 영상 준비 중");
-  } else if (studentId === "hoshino" && currentVariantKey === "armed") {
+     } else if (studentId === "satsuki") {
+     const e = skills.ex;
+     if (currentVariantKey === "swimsuit") {
+       ex.textContent = `자신을 제외한 아군 1인에게 치유력 ${e.ally[exLevel-1]}% 회복 / 자신은 치유력 ${e.self[exLevel-1]}% 회복. 선크림 1개 획득 (최대 3개 중첩)`;
+       basic.textContent = `30초마다 적 1인의 방어력 ${skills.basic.defense[skillLevel-1]}% 감소 (26초간), 공격력 ${skills.basic.damage[skillLevel-1]}% 대미지. 선크림 1개 획득 (최대 3개 중첩)`;
+       enhanced.textContent = `치유력 ${skills.enhanced[skillLevel-1]}% 증가`;
+       sub.textContent = `선크림 3개 획득 시 자신을 제외한 스트라이커 아군에게 치유력 ${skills.sub.heal[skillLevel-1]}% 회복, UV차단 부여 (30초간). UV차단은 공격력 ${skills.sub.attack[skillLevel-1]}% 증가. 선크림 초기화`;
+     } else {
+       ex.textContent = `EX 스킬 사용 시 방어 관통 수치 ${e.pierce[exLevel-1]} 증가 (7초간). 적 1인에게 공격력 ${e.damage[exLevel-1]}% 대미지. 최대 3코스트를 더 소모할 수 있으며, 추가 소모 1코스트당 대미지 35% 증가 (코스트 증가 스킬 효과는 기본 코스트 기준)`;
+       basic.textContent = `35초마다 적 1인의 치명 대미지 저항률 ${skills.basic[skillLevel-1]}% 감소 (25초간)`;
+       enhanced.textContent = `치명 대미지 ${skills.enhanced[skillLevel-1]}% 증가`;
+       sub.textContent = `아군의 공격력 ${skills.sub[skillLevel-1]}% 증가`;
+     }
+     if (costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]}` + (v.exVideo ? " · 클릭하면 영상 재생" : " · EX 영상 준비 중");
+} else if (studentId === "hoshino" && currentVariantKey === "armed") {
     const e = skills.ex;
     if (armedMode === "defense") {
       ex.textContent = `지정한 위치로 이동 후 엄폐물 역할의 방패를 설치. 엄폐 상태 아군의 공격력 ${e.attack[exLevel-1]}%, 최대 체력 ${e.hp[exLevel-1]}% 증가 (40초간). 호시노(무장) 최대 체력의 30%를 엄폐물로 가짐. 엄폐물 방어 타입: 호시노(무장)과 동일`;
@@ -1743,7 +1757,7 @@ document.getElementById("record-close")
 // 학생 명부로 돌아가기
 document.getElementById("back-to-list").addEventListener("click", (event) => {
   event.preventDefault();
-  window.location.href = ["makoto", "iroha", "ibuki"].includes(studentId) ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
+  window.location.href = ["makoto", "iroha", "ibuki", "satsuki"].includes(studentId) ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
 });
 
 
