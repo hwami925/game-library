@@ -594,8 +594,8 @@
 
         
 card.addEventListener("click", () => {
-  if (student.slug === "hoshino") {
-    window.location.href = "student-book.html?student=hoshino";
+  if (student.slug === "hoshino" || student.slug === "makoto") {
+    window.location.href = `student-book.html?student=${student.slug}`;
   } else {
     alert(`${student.name}의 학생기록부는 준비 중이야!`);
   }
