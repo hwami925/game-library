@@ -1051,6 +1051,13 @@
             <button type="button" data-iroha-mode="tank" aria-pressed="false" style="flex:1;padding:9px;border-radius:9px;border:1px solid #8cb5d7;cursor:pointer;">토라마루 탑승</button>
           </div>
         </div>
+        <div id="ibuki-ex-switch" hidden style="margin:0 0 14px;padding:12px;border:1px solid #b8d6ee;border-radius:12px;background:#f1f8ff;">
+          <strong style="display:block;margin-bottom:8px;color:#1c507e;">이부키 EX 스킬 · 전투 상태</strong>
+          <div style="display:flex;gap:8px;">
+            <button type="button" data-ibuki-mode="normal" aria-pressed="true" style="flex:1;padding:9px;border-radius:9px;border:1px solid #8cb5d7;cursor:pointer;">미탑승</button>
+            <button type="button" data-ibuki-mode="tank" aria-pressed="false" style="flex:1;padding:9px;border-radius:9px;border:1px solid #8cb5d7;cursor:pointer;">토라마루 탑승</button>
+          </div>
+        </div>
         <h3>전투 정보</h3>
 
 <div class="record-stats">
@@ -1100,6 +1107,12 @@
   <p id="skill-ex"></p>
   <span>COST 4 · 클릭하면 영상 재생</span>
 </div>
+
+  <div class="record-skill ex-skill-card" id="ex-skill-card-2" role="button" tabindex="0" aria-label="두 번째 EX 스킬 영상 보기" hidden>
+    <strong>EX 스킬 ② 🎬</strong>
+    <p id="skill-ex-2"></p>
+    <span id="ex-cost-2"></span>
+  </div>
 
   <div class="record-skill">
     <strong>기본 스킬</strong>
@@ -1261,9 +1274,40 @@
          updateSkillLevel();
        });
      });
+     let ibukiExMode = "normal";
+     const ibukiSwitch = document.getElementById("ibuki-ex-switch");
+     function updateIbukiButtons() {
+       ibukiSwitch.hidden = !(studentId === "ibuki" && currentVariantKey === "default");
+       ibukiSwitch.querySelectorAll("[data-ibuki-mode]").forEach(button => {
+         const active = button.dataset.ibukiMode === ibukiExMode;
+         button.setAttribute("aria-pressed", String(active));
+         button.style.background = active ? "#187ad2" : "white";
+         button.style.color = active ? "white" : "#23445e";
+       });
+     }
+     ibukiSwitch.querySelectorAll("[data-ibuki-mode]").forEach(button => button.addEventListener("click", () => {
+       ibukiExMode = button.dataset.ibukiMode;
+       updateIbukiButtons();
+       updateSkillLevel();
+       syncIbukiExVideo();
+     }));
+     function currentExVideo(second = false) {
+       const v = displayedVariant();
+       if (studentId !== "ibuki") return v.exVideo || "";
+       if (currentVariantKey === "swimsuit") return second ? v.exVideos?.second || "" : v.exVideos?.first || "";
+       return ibukiExMode === "tank" ? v.exVideos?.tank || "" : v.exVideos?.normal || "";
+     }
+     function syncIbukiExVideo(second = false) {
+       const player = document.getElementById("ex-skill-video");
+       const source = player.querySelector("source");
+       const path = currentExVideo(second);
+       if (source.getAttribute("src") !== path) { source.setAttribute("src", path); player.load(); }
+     }
     function applyVariantDetails(key, resetMode = true) {
       if (key === "armed" && currentVariantKey !== "armed" && resetMode) armedMode = "defense";
       currentVariantKey = key;
+      if (resetMode) ibukiExMode = "normal";
+      updateIbukiButtons();
       skillLevel = 1;
        updateArmedButtons();
        if (resetMode) irohaTankMode = "normal";
@@ -1482,18 +1526,43 @@ function updateSkillLevel() {
   const enhanced = document.getElementById("skill-enhanced");
   const sub = document.getElementById("skill-sub");
   const cards = document.querySelectorAll(".record-skills .record-skill");
-  // 스킬 제목은 의상과 관계없이 공통 명칭으로 유지.
-  ["EX 스킬", "기본 스킬", "강화 스킬", "서브 스킬"].forEach((name, i) => {
+  // 스킬 이름 대신 공통 명칭만 표시.
+  const secondExCard = document.getElementById("ex-skill-card-2");
+  const isSwimsuitIbuki = studentId === "ibuki" && currentVariantKey === "swimsuit";
+  secondExCard.hidden = !isSwimsuitIbuki;
+  ["EX 스킬", "EX 스킬 ②", "기본 스킬", "강화 스킬", "서브 스킬"].forEach((name, i) => {
     const title = cards[i]?.querySelector("strong");
-    if (title) title.textContent = name + (i === 0 && v.exVideo ? " 🎬" : "");
+    if (title) title.textContent = name + (i < 2 && (i === 0 || isSwimsuitIbuki) ? " 🎬" : "");
   });
+  cards[0].querySelector("strong").textContent = isSwimsuitIbuki ? "EX 스킬 ① 🎬" : "EX 스킬 🎬";
   const costLabel = document.querySelector("#ex-skill-card span");
   if (!skills || v.detailsReady === false) {
     [ex,basic,enhanced,sub].forEach(el=>el.textContent="스킬 정보 준비 중");
     if(costLabel) costLabel.textContent="";
     return;
   }
-   if (studentId === "iroha") {
+   if (studentId === "ibuki") {
+     const e = skills.ex;
+     if (currentVariantKey === "swimsuit") {
+       ex.textContent = "편성한 아군 스트라이커 학생 2인을 짝꿍으로 지정. 이번 전투 동안 '예쁘게 예쁘게~' 스킬 변경. EX 스킬 즉시 1회 드로우. 이부키(수영복)는 짝꿍이 코스트 소모 시 조개바늘 3개 획득, 12개가 되면 모두 소모해 조개 해바라기 획득 (이후 획득 불가).";
+       document.getElementById("skill-ex-2").textContent = `짝꿍에게 치명 대미지 ${e.damage[exLevel-1]}% 증가 (28초간). 조개 해바라기 보유 시 치명 대미지 증가 효과 0.2배 가산`;
+       document.getElementById("ex-cost-2").textContent = `COST ${e.secondCost[exLevel-1]} · 클릭하면 영상 재생`;
+       const b = skills.basic;
+       basic.textContent = `'오늘은 이부키랑 짝꿍!' 사용 후 30초마다 짝꿍에게 각자의 역할에 따라 효과 부여 (20초간). 탱커: 방어력 ${b.tank[skillLevel-1]}% 증가 / 딜러: 치명 대미지 ${b.dealer[skillLevel-1]}% 증가 / 서포터: 치유력 ${b.support[skillLevel-1]}% 지속 회복 / 힐러: 치유력 ${b.tank[skillLevel-1]}% 증가. 두 짝꿍의 역할이 같으면 효과 2배. 조개 해바라기 보유 시 스킬 강화 효과 지속시간 25초로 증가`;
+       enhanced.textContent = `치유력 ${skills.enhanced[skillLevel-1]}% 증가`;
+       sub.textContent = `아군의 코스트 회복력 ${skills.sub[skillLevel-1]}% 증가`;
+       if (costLabel) costLabel.textContent = `COST ${e.firstCost[exLevel-1]} · 클릭하면 영상 재생`;
+     } else {
+       const inTank = ibukiExMode === "tank";
+       ex.textContent = inTank
+         ? `이로하의 토라마루에 탑승 시 원형 범위 내 적에게 공격력 ${e.tank[exLevel-1]}% 대미지`
+         : `자신을 제외한 원형 범위 내 아군에게 공격력 ${e.normal[exLevel-1]}% 증가 (35초간)`;
+       basic.textContent = `30초마다 적 1인에게 공격력 ${skills.basic.damage[skillLevel-1]}% 대미지 / 공격력 ${skills.basic.attackDown[skillLevel-1]}% 감소 (20초간)`;
+       enhanced.textContent = `최대 체력 ${skills.enhanced[skillLevel-1]}% 증가`;
+       sub.textContent = `EX 스킬 사용 시작 시 자신에게 치유력 ${skills.sub[skillLevel-1]}% 회복`;
+       if (costLabel) costLabel.textContent = `COST ${(inTank ? e.tankCost : e.normalCost)[exLevel-1]} · 클릭하면 영상 재생`;
+     }
+   } else if (studentId === "iroha") {
      const e = skills.ex;
      if (currentVariantKey === "swimsuit") {
        ex.textContent = `적 1인에게 공격력 ${e.damage[exLevel-1]}% 확정 치명 대미지, 여행 가방 부여 (15초). 동료가 여행 가방 보유 적에게 입힌 피해의 150%를 저장. 지속시간 종료 또는 이로하(수영복) EX 사용 시 저장된 대미지 폭발 (여행 가방 부여 시 가한 대미지의 최대 120%까지)`;
@@ -1632,6 +1701,20 @@ function closeExVideo() {
   exSkillVideo.currentTime = 0;
 }
 
+// 이부키(수영복)의 두 번째 EX 영상은 같은 팝업에서 별도 파일 재생
+const secondExSkillCard = document.getElementById("ex-skill-card-2");
+function openSecondExVideo() {
+  if (secondExSkillCard.hidden) return;
+  if (!currentExVideo(true)) { alert("두 번째 EX 스킬 영상 준비 중이야!"); return; }
+  openExVideo();
+  syncIbukiExVideo(true);
+  exSkillVideo.currentTime = 0;
+  exSkillVideo.play().catch(() => {});
+}
+secondExSkillCard.addEventListener("click", openSecondExVideo);
+secondExSkillCard.addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openSecondExVideo(); }
+});
 // EX 스킬 카드 클릭
 exSkillCard.addEventListener("click", openExVideo);
 
@@ -1660,7 +1743,7 @@ document.getElementById("record-close")
 // 학생 명부로 돌아가기
 document.getElementById("back-to-list").addEventListener("click", (event) => {
   event.preventDefault();
-  window.location.href = ["makoto", "iroha"].includes(studentId) ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
+  window.location.href = ["makoto", "iroha", "ibuki"].includes(studentId) ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
 });
 
 
