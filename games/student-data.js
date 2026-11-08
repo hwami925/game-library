@@ -45,7 +45,7 @@ window.STUDENT_DATABASE = {
           },
           attack: {
             role: "딜러", weaponImage: "../images/bluearchive/weapons/hoshino/armed-attack.png",
-            weaponName: "호시노(무장) 공격형 전용무기", 
+            weaponName: "호루스의 눈 + 보조 권총", 
             exVideo: "../images/bluearchive/skills/hoshino/armed-attack-ex.mp4",
             skills: {
               ex: {single:[78.5,90.3,113,125,149], area:[264,304,383,423,503], cost:[6,6,6,6,6]},
