@@ -1609,7 +1609,21 @@ function updateSkillLevel() {
        sub.textContent = `아군의 공격력 ${skills.sub[skillLevel-1]}% 증가`;
      }
      if (costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]}` + (v.exVideo ? " · 클릭하면 영상 재생" : " · EX 영상 준비 중");
-} else if (studentId === "hoshino" && currentVariantKey === "armed") {
+} else if (studentId === "chiaki") {
+      const e = skills.ex;
+      if (currentVariantKey === "swimsuit") {
+        ex.textContent = `가장 가까운 적에게 탄환 2발 발사. 첫 번째 탄환은 공격력 ${e.first[exLevel-1]}%, 두 번째 탄환은 공격력 ${e.second[exLevel-1]}% 대미지. 두 공격 모두 적의 보호막을 관통`;
+        basic.textContent = `35초마다 적 1인의 치명 대미지 저항률 ${skills.basic[skillLevel-1]}% 감소 (27초간)`;
+        enhanced.textContent = `공격력 ${skills.enhanced[skillLevel-1]}% 증가`;
+        sub.textContent = `아군의 관통 특효 ${skills.sub[skillLevel-1]}% 가산`;
+      } else {
+        ex.textContent = `적 1인에게 공격력 ${e.damage[exLevel-1]}% 대미지 (치명 공격이 발생하지 않음)`;
+        basic.textContent = `30초마다 진동 특효 ${skills.basic[skillLevel-1]}% 가산 (${skillLevel === 10 ? 25 : 20}초간)`;
+        enhanced.textContent = `공격력 ${skills.enhanced[skillLevel-1]}% 증가`;
+        sub.textContent = `EX 스킬 발동과 동시에 주는 EX 스킬 대미지 ${skills.sub[skillLevel-1]}% 증가 (7초간)`;
+      }
+      if (costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]}` + (v.exVideo ? " · 클릭하면 영상 재생" : " · EX 영상 준비 중");
+    } else if (studentId === "hoshino" && currentVariantKey === "armed") {
     const e = skills.ex;
     if (armedMode === "defense") {
       ex.textContent = `지정한 위치로 이동 후 엄폐물 역할의 방패를 설치. 엄폐 상태 아군의 공격력 ${e.attack[exLevel-1]}%, 최대 체력 ${e.hp[exLevel-1]}% 증가 (40초간). 호시노(무장) 최대 체력의 30%를 엄폐물로 가짐. 엄폐물 방어 타입: 호시노(무장)과 동일`;
@@ -1757,7 +1771,7 @@ document.getElementById("record-close")
 // 학생 명부로 돌아가기
 document.getElementById("back-to-list").addEventListener("click", (event) => {
   event.preventDefault();
-  window.location.href = ["makoto", "iroha", "ibuki", "satsuki"].includes(studentId) ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
+  window.location.href = ["makoto", "iroha", "ibuki", "satsuki", "chiaki"].includes(studentId) ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
 });
 
 
