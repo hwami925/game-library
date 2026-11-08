@@ -26,7 +26,36 @@ window.STUDENT_DATABASE = {
           sub: [360,378,396,468,486,504,576,594,612,684]
         }
       },
-      armed: { name: "호시노(무장)", label: "ARMED", image: "../images/bluearchive/variants/hoshino/armed.png", memorialImage: null, memorialVideo: "", detailsReady: false }
+      armed: {
+        name: "호시노(무장)", label: "ARMED", image: "../images/bluearchive/variants/hoshino/armed.png",
+        memorialImage: "../images/bluearchive/memorial/hoshino/armed.png", memorialVideo: "ZgMRJAkPYwo", detailsReady: true,
+        weaponType: "SG", attackType: "신비", defenseType: "중장갑",
+        equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/watch.png"],
+        modes: {
+          defense: {
+            role: "탱커", weaponImage: "../images/bluearchive/weapons/hoshino/default.png",
+            weaponName: "호루스의 눈 + 진압 방패 '아이언 호루스'",
+            exVideo: "../images/bluearchive/skills/hoshino/armed-defense-ex.mp4",
+            skills: {
+              ex: {attack:[82.5,94.9,119,132,156], hp:[39.5,42.4,54.3,57.2,69.1], cost:[4,4,4,4,4]},
+              basic:[12.7,13.3,13.9,16.5,17.1,17.8,20.3,20.9,21.6,24.1],
+              enhanced:[11.2,11.4,11.7,12.8,13.1,13.4,14.5,14.8,15.1,16.2],
+              sub:[10.1,10.6,11.1,13.2,13.7,14.2,16.2,16.7,17.2,19.3]
+            }
+          },
+          attack: {
+            role: "딜러", weaponImage: "../images/bluearchive/weapons/hoshino/armed-attack.png",
+            weaponName: "호시노(무장) 공격형 전용무기", 
+            exVideo: "../images/bluearchive/skills/hoshino/armed-attack-ex.mp4",
+            skills: {
+              ex: {single:[78.5,90.3,113,125,149], area:[264,304,383,423,503], cost:[6,6,6,6,6]},
+              basic:[211,221,232,274,284,295,337,348,358,400],
+              enhanced:[11.2,11.7,12.3,14.5,15.1,15.6,17.9,18.4,19,21.2],
+              sub: {ignore:[60,60,60,60,60,60,60,60,60,85], attack:[7.4,7.7,8.1,9.6,9.9,10.3,11.8,12.2,12.5,14], damage:[79,83,86.9,102,106,110,126,130,134,150]}
+            }
+          }
+        }
+      }
     }
   }
 };
