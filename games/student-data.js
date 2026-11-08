@@ -110,7 +110,7 @@ window.STUDENT_DATABASE = {
         weaponImage: "../images/bluearchive/weapons/iroha/default.png", weaponName: "만마전 제식 권총", weaponType: "HG",
         role: "딜러 · SPECIAL", attackType: "신비", defenseType: "중장갑",
         equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/badge.png", "../images/bluearchive/equipment/watch.png", "../images/bluearchive/equipment/favorite/iroha.png"],
-        exVideo: "",
+        exVideo: "../images/bluearchive/skills/iroha/default-ex.mp4",
         skills: {
           ex: {attack:[11.2,15.5,22.9,28.8,38.5], cost:[8,8,7,7,6]},
           basic:[43.8,46,48.3,57,59.2,61.4,70.2,72.3,74.6,83.3],
@@ -125,7 +125,7 @@ window.STUDENT_DATABASE = {
         weaponImage: "../images/bluearchive/weapons/iroha/default.png", weaponName: "만마전 제식 권총", weaponType: "HG",
         role: "딜러 · STRIKER", attackType: "폭발", defenseType: "특수장갑",
         equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/badge.png", "../images/bluearchive/equipment/watch.png"],
-        exVideo: "",
+        exVideo: "../images/bluearchive/skills/iroha/swimsuit-ex.mp4",
         skills: {
           ex: {damage:[881,1013,1278,1410,1674], cost:[4,4,4,4,4]},
           basic:[13.7,14.4,15.1,17.9,18.6,19.3,22,22.7,23.4,26.1],
