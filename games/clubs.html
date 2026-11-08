@@ -461,13 +461,26 @@ const schools = {
         icon: "🏜️"
       }
     ]
+  },
+
+  gehenna: {
+    name: "게헨나",
+    english: "GEHENNA",
+    emblem: "gehenna.png",
+    description: "게헨나 학원의 소속 동아리와 학생 기록을 열람하는 서류철입니다.",
+    clubs: [
+      {
+        name: "만마전",
+        english: "PANDEMONIUM SOCIETY",
+        icon: "👑"
+      }
+    ]
   }
 };
 
 // 나머지 학교는 동아리 데이터를 나중에 추가할 예정
 const additionalSchools = [
   ["general-student-council", "총학생회", "GENERAL STUDENT COUNCIL"],
-  ["gehenna", "게헨나", "GEHENNA"],
   ["millennium", "밀레니엄", "MILLENNIUM"],
   ["trinity", "트리니티", "TRINITY"],
   ["hyakkiyako", "백귀야행", "HYAKKIYAKO"],
@@ -539,7 +552,9 @@ additionalSchools.forEach(([slug, name, english]) => {
 
 button.addEventListener("click", () => {
   if (schoolId === "abydos" && club.name === "대책위원회") {
-    window.location.href = "students.html";
+    window.location.href = "students.html?school=abydos";
+  } else if (schoolId === "gehenna" && club.name === "만마전") {
+    window.location.href = "students.html?school=gehenna";
   } else {
     alert("이 동아리의 학생 명부는 아직 준비 중이야!");
   }
