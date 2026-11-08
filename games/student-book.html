@@ -1148,7 +1148,64 @@
   </div>
 
   <script src="cons.js"></script>
+  <script src="student-data.js"></script>
   <script>
+    // STEP 22: URL의 ?student=아이디 로 학생 선택. 기본값은 호시노.
+    const studentId = new URLSearchParams(location.search).get("student") || "hoshino";
+    const student = window.STUDENT_DATABASE?.[studentId];
+    if (!student) {
+      alert("등록되지 않은 학생이야. 학생 명부로 돌아갈게!");
+      location.replace("students.html");
+      throw new Error("Unknown student: " + studentId);
+    }
+    document.title = `${student.shortName} | 샬레 학생 기록부`;
+    const left = document.querySelector(".profile-left");
+    left.querySelector("h2").textContent = student.shortName;
+    left.querySelector("p").textContent = `${student.school} / ${student.club}`;
+    const right = document.querySelector(".profile-right");
+    right.replaceChildren();
+    const profileTitle = document.createElement("h2");
+    profileTitle.textContent = "학생 프로필";
+    right.append(profileTitle);
+    for (const [label, value] of [["이름",student.name],["소속",`${student.school} (${student.grade})`],["동아리",student.club],["나이",student.age],["신장",student.height],["생일",student.birthday],["취미",student.hobby]]) {
+      const line = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = label + ": ";
+      line.append(strong, document.createTextNode(value || "준비 중"));
+      right.append(line);
+    }
+    const introTitle = document.createElement("h3");
+    introTitle.textContent = "학생 소개";
+    right.append(introTitle);
+    for (const paragraph of student.introduction || []) {
+      const line = document.createElement("p"); line.textContent = paragraph; right.append(line);
+    }
+    document.querySelector("#slide-outfits h2").textContent = `${student.shortName} / 의상 기록`;
+    const outfitGrid = document.querySelector(".outfit-grid");
+    outfitGrid.replaceChildren();
+    for (const [key, variant] of Object.entries(student.variants)) {
+      const button = document.createElement("button"); button.className="outfit-character"; button.dataset.variant=key;
+      const img=document.createElement("img"); img.src=variant.image; img.alt=variant.name;
+      const strong=document.createElement("strong"); strong.textContent=variant.name;
+      const label=document.createElement("span"); label.textContent=variant.label || key.toUpperCase();
+      button.append(img,strong,label); outfitGrid.append(button);
+    }
+    const baseVariant = student.variants.default || Object.values(student.variants)[0];
+    const activeVariantData = key => ({...baseVariant, ...student.variants[key]});
+    function applyVariantDetails(key) {
+      const v=activeVariantData(key);
+      const weapon=document.getElementById("weapon-image"); if(v.weaponImage) weapon.src=v.weaponImage;
+      document.querySelector(".weapon-info h4").textContent=v.weaponName || "준비 중";
+      document.querySelector(".weapon-type strong").textContent=v.weaponType || "-";
+      const stats=document.querySelectorAll(".record-stats strong");
+      [v.role,v.attackType,v.defenseType].forEach((value,i)=>{if(stats[i])stats[i].textContent=value||"준비 중";});
+      document.querySelectorAll(".record-equipment img").forEach((img,i)=>{if(v.equipment?.[i])img.src=v.equipment[i];});
+      const video=document.querySelector("#ex-skill-video source");
+      if(video && v.exVideo && video.getAttribute("src")!==v.exVideo){video.src=v.exVideo;document.getElementById("ex-skill-video").load();}
+      if(v.skills) Object.assign(hoshinoSkills, v.skills);
+      document.querySelector(".record-right .skill-title span").textContent = v.detailsReady === false ? "스킬 정보 (준비 중)" : "스킬 정보";
+      if(typeof updateSkillLevel === "function") updateSkillLevel();
+    }
     const slides = document.querySelectorAll(".slide");
     const prevButton = document.getElementById("prev");
     const nextButton = document.getElementById("next");
@@ -1177,7 +1234,7 @@
 
     // SD 일러스트가 존재하면 자동 표시
     const sdImage = new Image();
-   sdImage.src = "../images/bluearchive/profiles/hoshino.png";
+   sdImage.src = student.sdImage || "";
     sdImage.alt = "호시노 SD 일러스트";
 
     sdImage.onload = () => {
@@ -1190,21 +1247,14 @@
 const recordOverlay = document.getElementById("record-overlay");
 const recordClose = document.getElementById("record-close");
 
-const variantNames = {
-  default: "호시노",
-  swimsuit: "호시노(수영복)",
-  armed: "호시노(무장)"
-};
+const variantNames = Object.fromEntries(Object.entries(student.variants).map(([id,v])=>[id,v.name]));
 
-    const memorialImages = {
-  default: "../images/bluearchive/memorial/hoshino/default.png",
-  swimsuit: null,
-  armed: null
-};
+    const memorialImages = Object.fromEntries(Object.entries(student.variants).map(([id,v])=>[id,v.memorialImage || null]));
 
 document.querySelectorAll(".outfit-character").forEach(button => {
   button.addEventListener("click", () => {
     const variant = button.dataset.variant;
+    applyVariantDetails(variant);
 
     document.getElementById("record-title").textContent =
   variantNames[variant] || "호시노";
@@ -1257,11 +1307,7 @@ const memorialVideo = document.getElementById("memorial-video");
 const memorialArea = document.getElementById("record-memorial");
 
 // 의상별 유튜브 영상 ID
-const memorialVideos = {
-  default: "fcR8KYVzjpg",
-  swimsuit: "",
-  armed: ""
-};
+const memorialVideos = Object.fromEntries(Object.entries(student.variants).map(([id,v])=>[id,v.memorialVideo || ""]));
 
 let selectedVariant = "default";
 
@@ -1310,26 +1356,7 @@ document.addEventListener("keydown", event => {
   }
 });
     // 호시노(기본) 스킬 레벨별 데이터
-const hoshinoSkills = {
-  ex: [
-    435, 501, 566, 632, 697
-  ],
-
-  basic: [
-    100, 105, 110, 130, 135,
-    140, 160, 165, 171, 191
-  ],
-
-  enhanced: [
-    14, 14.7, 15.4, 18.2, 18.9,
-    19.6, 22.4, 23.1, 23.8, 26.6
-  ],
-
-  sub: [
-    108, 113, 118, 140, 145,
-    151, 172, 178, 183, 205
-  ]
-};
+const hoshinoSkills = structuredClone(baseVariant.skills || {ex:[0],basic:[0],enhanced:[0],sub:[0]});
     // 스킬 레벨 조절
 let skillLevel = 1;
 
@@ -1388,6 +1415,7 @@ skillLevelUp.addEventListener("click", () => {
 });
 
 updateSkillLevel();
+applyVariantDetails("default");
     // EX 스킬 영상 플레이어
 const exSkillCard = document.getElementById("ex-skill-card");
 const exVideoPopup = document.getElementById("ex-video-popup");
@@ -1498,7 +1526,7 @@ document.getElementById("back-to-list").addEventListener("click", (event) => {
     const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const ROOM_ID = "hoshino";
+    const ROOM_ID = new URLSearchParams(location.search).get("student") || "hoshino";
     const messages = document.getElementById("momoMessages");
     const picker = document.getElementById("momoPicker");
     const grid = document.getElementById("momoPickerGrid");
