@@ -609,7 +609,17 @@
 .record-stats .type-yellow strong {
   color: #9b7414;
 }
-    /* 스킬 정보 제목과 레벨 버튼 */
+    /* 공격/방어 타입별 색상 */
+.record-stats .type-red { background:#ffe9e8; border:1px solid #f4b8b5; }
+.record-stats .type-red small { color:#bb5752; }
+.record-stats .type-red strong { color:#a63833; }
+.record-stats .type-blue { background:#e5f1ff; border:1px solid #a9cffa; }
+.record-stats .type-blue small { color:#4e85bc; }
+.record-stats .type-blue strong { color:#2767aa; }
+.record-stats .type-purple { background:#f1e8ff; border:1px solid #d0b5f4; }
+.record-stats .type-purple small { color:#9162bc; }
+.record-stats .type-purple strong { color:#7844a6; }
+/* 스킬 정보 제목과 레벨 버튼 */
 .record-right .skill-title {
   display: flex;
   align-items: center;
@@ -1242,6 +1252,20 @@
       document.querySelector(".weapon-type strong").textContent = v.weaponType || "-";
       const stats = document.querySelectorAll(".record-stats strong");
       [v.role,v.attackType,v.defenseType].forEach((value,i)=>{if(stats[i])stats[i].textContent=value||"준비 중";});
+      // 공격/방어 타입에 따라 카드 색상 자동 변경
+      const typeColors = {
+        "폭발":"type-red", "일반장갑":"type-red",
+        "관통":"type-yellow", "중장갑":"type-yellow",
+        "신비":"type-blue", "특수장갑":"type-blue",
+        "진동":"type-purple", "탄력장갑":"type-purple"
+      };
+      const statCards = document.querySelectorAll(".record-stats > div");
+      [v.attackType, v.defenseType].forEach((type, index) => {
+        const card = statCards[index + 1];
+        if (!card) return;
+        card.classList.remove("type-red", "type-yellow", "type-blue", "type-purple");
+        if (typeColors[type]) card.classList.add(typeColors[type]);
+      });
       const eq = document.querySelector(".record-equipment");
       eq.replaceChildren();
       for (const [i,src] of (v.equipment || []).entries()) {
