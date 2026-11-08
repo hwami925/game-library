@@ -408,7 +408,7 @@
 
   <header>
     <a href="../index.html" class="brand">📦 게임창고</a>
-    <a class="back-button" href="clubs.html?school=abydos">
+    <a class="back-button" href="clubs.html?school=abydos" id="clubsBackLink">
       ← 동아리 선택
     </a>
   </header>
@@ -417,7 +417,7 @@
 
     <div class="eyebrow">SCHALE STUDENT DATABASE</div>
     <h1>학생 명부</h1>
-    <p class="description">
+    <p class="description" id="rosterDescription">
       아비도스 고등학교 · 대책위원회 소속 학생들의 기록입니다.
     </p>
 
@@ -426,19 +426,19 @@
       <!-- 왼쪽 학교 정보 -->
       <section class="paper school-info">
 
-        <div class="file-label">STUDENT FILE / ABYDOS</div>
+        <div class="file-label" id="fileLabel">STUDENT FILE / ABYDOS</div>
 
         <div class="emblem-frame">
   <img
-    src="../images/bluearchive/schools/abydos-group.png"
+    src="../images/bluearchive/schools/abydos-group.png" id="clubGroupImage"
     alt="아비도스 대책위원회 단체 일러스트"
   >
 </div>
 
-        <div class="school-name">ABYDOS</div>
-        <div class="club-name">대책위원회</div>
+        <div class="school-name" id="schoolName">ABYDOS</div>
+        <div class="club-name" id="clubName">대책위원회</div>
 
-        <div class="info-box">
+        <div class="info-box" id="clubInfo">
           <strong>소속 학교</strong><br>
           아비도스 고등학교<br><br>
 
@@ -484,7 +484,7 @@
     </div>
 
     <div class="bottom-nav">
-      <a href="clubs.html?school=abydos">
+      <a href="clubs.html?school=abydos" id="bottomBackLink">
         ← 대책위원회 목록으로
       </a>
     </div>
@@ -492,33 +492,51 @@
   </main>
 
   <script>
-    const students = [
-      {
-        name: "시로코",
-        english: "SHIROKO",
-        slug: "shiroko"
+    // 학교/동아리별 학생 명부. 기존 아비도스 URL은 그대로 유지합니다.
+    const rosters = {
+      abydos: {
+        school: "ABYDOS", schoolKo: "아비도스 고등학교", club: "대책위원회",
+        image: "../images/bluearchive/schools/abydos-group.png",
+        students: [
+          { name: "시로코", english: "SHIROKO", slug: "shiroko" },
+          { name: "호시노", english: "HOSHINO", slug: "hoshino" },
+          { name: "세리카", english: "SERIKA", slug: "serika" },
+          { name: "노노미", english: "NONOMI", slug: "nonomi" },
+          { name: "아야네", english: "AYANE", slug: "ayane" }
+        ]
       },
-      {
-        name: "호시노",
-        english: "HOSHINO",
-        slug: "hoshino"
-      },
-      {
-        name: "세리카",
-        english: "SERIKA",
-        slug: "serika"
-      },
-      {
-        name: "노노미",
-        english: "NONOMI",
-        slug: "nonomi"
-      },
-      {
-        name: "아야네",
-        english: "AYANE",
-        slug: "ayane"
+      gehenna: {
+        school: "GEHENNA", schoolKo: "게헨나 학원", club: "만마전",
+        image: "../images/bluearchive/schools/gehenna-pandemonium.png",
+        students: [
+          { name: "마코토", english: "MAKOTO", slug: "makoto" },
+          { name: "이로하", english: "IROHA", slug: "iroha" },
+          { name: "이부키", english: "IBUKI", slug: "ibuki" },
+          { name: "사츠키", english: "SATSUKI", slug: "satsuki" },
+          { name: "치아키", english: "CHIAKI", slug: "chiaki" }
+        ]
       }
-    ];
+    };
+    const params = new URLSearchParams(location.search);
+    const requestedSchool = (params.get("school") || "abydos").toLowerCase();
+    const schoolKey = requestedSchool === "gehenna" ? "gehenna" : "abydos";
+    const roster = rosters[schoolKey];
+    const students = roster.students;
+    document.getElementById("fileLabel").textContent = `STUDENT FILE / ${roster.school}`;
+    document.getElementById("schoolName").textContent = roster.school;
+    document.getElementById("clubName").textContent = roster.club;
+    document.getElementById("rosterDescription").textContent = `${roster.schoolKo} · ${roster.club} 소속 학생들의 기록입니다.`;
+    const groupImage = document.getElementById("clubGroupImage");
+    groupImage.src = roster.image;
+    groupImage.alt = `${roster.club} 단체 일러스트`;
+    document.getElementById("clubInfo").innerHTML = `
+      <strong>소속 학교</strong><br>${roster.schoolKo}<br><br>
+      <strong>소속 동아리</strong><br>${roster.club}<br><br>
+      <strong>등록 학생</strong><br>${students.length}명`;
+    document.getElementById("clubsBackLink").href = `clubs.html?school=${schoolKey}`;
+    const bottomBackLink = document.getElementById("bottomBackLink");
+    bottomBackLink.href = `clubs.html?school=${schoolKey}`;
+    bottomBackLink.textContent = `← ${roster.club} 목록으로`;
 
     const studentGrid = document.getElementById("studentGrid");
     const studentSearch = document.getElementById("studentSearch");
@@ -546,10 +564,9 @@
         const card = document.createElement("button");
         card.className = "student-card";
 
-        const imagePath =
-          student.slug === "hoshino"
-  ? "../images/bluearchive/profiles/hoshino.png"
-  : `../images/bluearchive/students/abydos/${student.slug}.png`;
+        const imagePath = student.slug === "hoshino" && schoolKey === "abydos"
+          ? "../images/bluearchive/profiles/hoshino.png"
+          : `../images/bluearchive/students/${schoolKey}/${student.slug}.png`;
 
         card.innerHTML = `
        <div class="photo-frame">
@@ -571,16 +588,16 @@
           <div class="student-en">${student.english}</div>
 
           <div class="student-id">
-            ABYDOS / ${String(index + 1).padStart(3, "0")}
+            ${roster.school} / ${String(index + 1).padStart(3, "0")}
           </div>
         `;
 
         
 card.addEventListener("click", () => {
   if (student.slug === "hoshino") {
-    window.location.href = "student-book.html";
+    window.location.href = "student-book.html?student=hoshino";
   } else {
-    alert(`${student.name}의 이격 선택 화면은 다음 단계에서 제작할 예정이야!`);
+    alert(`${student.name}의 학생기록부는 준비 중이야!`);
   }
 });
 
