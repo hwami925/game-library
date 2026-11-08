@@ -1205,12 +1205,12 @@
     let armedMode = "defense";
     function displayedVariant() {
       const v = activeVariantData(currentVariantKey);
-      return currentVariantKey === "armed" ? {...v, ...v.modes[armedMode]} : v;
+      return currentVariantKey === "armed" && v.modes ? {...v, ...v.modes[armedMode]} : v;
     }
     const armedSwitch = document.getElementById("armed-mode-switch");
     const armedButtons = [...document.querySelectorAll("[data-armed-mode]")];
     function updateArmedButtons() {
-      armedSwitch.hidden = currentVariantKey !== "armed";
+      armedSwitch.hidden = !(studentId === "hoshino" && currentVariantKey === "armed");
       armedButtons.forEach(button => {
         const active = button.dataset.armedMode === armedMode;
         button.setAttribute("aria-pressed", String(active));
@@ -1288,9 +1288,10 @@
     // SD 일러스트가 존재하면 자동 표시
     const sdImage = new Image();
    sdImage.src = student.sdImage || "";
-    sdImage.alt = "호시노 SD 일러스트";
+    sdImage.alt = `${student.shortName} SD 일러스트`;
 
-    sdImage.onload = () => {
+    document.getElementById("sd-preview").textContent = `${student.shortName} SD 일러스트 준비 중`;
+     sdImage.onload = () => {
       const preview = document.getElementById("sd-preview");
       preview.textContent = "";
       preview.appendChild(sdImage);
@@ -1310,7 +1311,7 @@ document.querySelectorAll(".outfit-character").forEach(button => {
     applyVariantDetails(variant);
 
     document.getElementById("record-title").textContent =
-  variantNames[variant] || "호시노";
+  variantNames[variant] || student.shortName;
 
 const memorial = document.getElementById("record-memorial");
 const memorialPath = memorialImages[variant];
@@ -1321,6 +1322,7 @@ if (memorialPath) {
   const img = document.createElement("img");
   img.src = memorialPath;
   img.alt = `${variantNames[variant]} 메모리얼`;
+   img.onerror = () => { memorial.textContent = "메모리얼 일러스트 준비 중"; };
 
   memorial.appendChild(img);
 } else {
@@ -1571,7 +1573,7 @@ document.getElementById("record-close")
 // 학생 명부로 돌아가기
 document.getElementById("back-to-list").addEventListener("click", (event) => {
   event.preventDefault();
-  window.location.href = "students.html";
+  window.location.href = studentId === "makoto" ? "students.html?school=gehenna&club=pandemonium" : "students.html?school=abydos";
 });
 
 
