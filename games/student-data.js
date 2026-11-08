@@ -94,5 +94,45 @@ window.STUDENT_DATABASE = {
         }
       }
     }
+  }  ,iroha: {
+    id: "iroha", name: "나츠메 이로하", shortName: "이로하",
+    school: "게헨나 학원", club: "만마전", grade: "2학년",
+    age: "16살", height: "151cm", birthday: "11월 16일", hobby: "독서, 땡땡이 치기",
+    introduction: [
+      "무능한 상사인 마코토와는 다르게 현실을 직시하며 이성적인 대응을 하는, 비교적 유능한 부하로서 고생하는 모습을 보여준다.",
+      "귀차니즘으로 가득한 이로하이지만, 게헨나와 학생회장 마코토가 일으키는 말썽 때문에 매일 불평과 한숨을 내쉬면서 업무를 해결해 나간다."
+    ],
+    sdImage: "../images/bluearchive/profiles/iroha.png",
+    variants: {
+      default: {
+        name: "이로하", label: "DEFAULT", image: "../images/bluearchive/variants/iroha/default.png",
+        memorialImage: "../images/bluearchive/memorial/iroha/default.png", memorialVideo: "K7He_Ci-OY4",
+        weaponImage: "../images/bluearchive/weapons/iroha/default.png", weaponName: "만마전 제식 권총", weaponType: "HG",
+        role: "딜러 · SPECIAL", attackType: "신비", defenseType: "중장갑",
+        equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/badge.png", "../images/bluearchive/equipment/watch.png", "../images/bluearchive/equipment/favorite/iroha.png"],
+        exVideo: "",
+        skills: {
+          ex: {attack:[11.2,15.5,22.9,28.8,38.5], cost:[8,8,7,7,6]},
+          basic:[43.8,46,48.3,57,59.2,61.4,70.2,72.3,74.6,83.3],
+          tankBasic:[279,293,307,363,377],
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[9.1,9.5,10,11.8,12.3,12.7,14.5,15,15.5,17.3]
+        }
+      },
+      swimsuit: {
+        name: "이로하(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/iroha/swimsuit.png",
+        memorialImage: "../images/bluearchive/memorial/iroha/swimsuit.png", memorialVideo: "wgRuYUZV_zw",
+        weaponImage: "../images/bluearchive/weapons/iroha/default.png", weaponName: "만마전 제식 권총", weaponType: "HG",
+        role: "딜러 · STRIKER", attackType: "폭발", defenseType: "특수장갑",
+        equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/badge.png", "../images/bluearchive/equipment/watch.png"],
+        exVideo: "",
+        skills: {
+          ex: {damage:[881,1013,1278,1410,1674], cost:[4,4,4,4,4]},
+          basic:[13.7,14.4,15.1,17.9,18.6,19.3,22,22.7,23.4,26.1],
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[13.2,13.9,14.6,17.2,17.9,18.5,21.2,21.9,22.5,25.2]
+        }
+      }
+    }
   }
 };
