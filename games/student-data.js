@@ -67,11 +67,11 @@ window.STUDENT_DATABASE = {
     variants: {
       default: {
         name: "마코토", label: "DEFAULT", image: "../images/bluearchive/variants/makoto/default.png",
-        memorialImage: "../images/bluearchive/memorial/makoto/default.png", memorialVideo: "",
+        memorialImage: "../images/bluearchive/memorial/makoto/default.png", memorialVideo: "oYy19ROA9-s",
         weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "유아독존", weaponType: "SR",
         role: "딜러 · SPECIAL · BACK", attackType: "관통", defenseType: "특수장갑",
         equipment: ["../images/bluearchive/equipment/gloves.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/watch.png"],
-        exVideo: "", // 기본 의상 EX 영상 파일명이 확인되면 경로 입력
+        exVideo: "../images/bluearchive/skills/makoto/default-ex.mp4", // 기본 의상 EX 영상 파일명이 확인되면 경로 입력
         skills: {
           ex: {few:[155,179,226,249,296], mid:[311,358,451,498,592], many:[519,597,753,831,987], cost:[6,6,6,6,6]},
           basic:[8.3,8.7,9.2,10.8,11.2,11.7,13.3,13.8,14.2,15.8],
@@ -85,7 +85,7 @@ window.STUDENT_DATABASE = {
         weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "유아독존", weaponType: "SR",
         role: "딜러 · STRIKER · BACK", attackType: "신비", defenseType: "중장갑",
         equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/watch.png"],
-        exVideo: "", // 수영복 EX 영상 파일명이 확인되면 경로 입력
+        exVideo: "../images/bluearchive/skills/makoto/swimsuit-ex.mp4", // 수영복 EX 영상 파일명이 확인되면 경로 입력
         skills: {
           ex: {single:[145,166,210,232,275], few:[169,194,245,270,321], many:[401,461,581,642,762], cost:[6,6,6,6,6]},
           basic:[17.5,18.3,19.2,22.7,23.6,24.5,28,28.9,29.7,33.2],
