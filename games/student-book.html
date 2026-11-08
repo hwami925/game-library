@@ -6,6 +6,7 @@
   <title>샬레 학생 기록부 | SCHALE</title>
 
   <style>
+    [hidden] { display: none !important; }
     * { box-sizing: border-box; }
 
     body {
@@ -1191,20 +1192,40 @@
       button.append(img,strong,label); outfitGrid.append(button);
     }
     const baseVariant = student.variants.default || Object.values(student.variants)[0];
-    const activeVariantData = key => ({...baseVariant, ...student.variants[key]});
+    const activeVariantData = key => student.variants[key];
+    let currentVariantKey = "default";
     function applyVariantDetails(key) {
-      const v=activeVariantData(key);
-      const weapon=document.getElementById("weapon-image"); if(v.weaponImage) weapon.src=v.weaponImage;
-      document.querySelector(".weapon-info h4").textContent=v.weaponName || "준비 중";
-      document.querySelector(".weapon-type strong").textContent=v.weaponType || "-";
-      const stats=document.querySelectorAll(".record-stats strong");
+      currentVariantKey = key;
+      skillLevel = 1;
+      const v = activeVariantData(key);
+      const weapon = document.getElementById("weapon-image");
+      const weaponBox = weapon.parentElement;
+      weapon.hidden = !v.weaponImage;
+      if (v.weaponImage) weapon.src = v.weaponImage;
+      let missingWeapon = weaponBox.querySelector(".weapon-placeholder");
+      if (!missingWeapon) { missingWeapon = document.createElement("span"); missingWeapon.className="weapon-placeholder"; weaponBox.append(missingWeapon); }
+      missingWeapon.hidden = !!v.weaponImage;
+      missingWeapon.textContent = "전용무기 이미지 준비 중";
+      document.querySelector(".weapon-info h4").textContent = v.weaponName || "준비 중";
+      document.querySelector(".weapon-type strong").textContent = v.weaponType || "-";
+      const stats = document.querySelectorAll(".record-stats strong");
       [v.role,v.attackType,v.defenseType].forEach((value,i)=>{if(stats[i])stats[i].textContent=value||"준비 중";});
-      document.querySelectorAll(".record-equipment img").forEach((img,i)=>{if(v.equipment?.[i])img.src=v.equipment[i];});
-      const video=document.querySelector("#ex-skill-video source");
-      if(video && v.exVideo && video.getAttribute("src")!==v.exVideo){video.src=v.exVideo;document.getElementById("ex-skill-video").load();}
-      if(v.skills) Object.assign(hoshinoSkills, v.skills);
+      const eq = document.querySelector(".record-equipment");
+      eq.replaceChildren();
+      for (const [i,src] of (v.equipment || []).entries()) {
+        const card = document.createElement("div");
+        card.className = "equipment-item" + (i===3 ? " favorite-item" : "");
+        const img = document.createElement("img"); img.src = src; img.alt = "장비 " + (i+1);
+        card.append(img); eq.append(card);
+      }
+      const video = document.querySelector("#ex-skill-video source");
+      const player = document.getElementById("ex-skill-video");
+      const nextSrc = v.exVideo || "";
+      if (video && video.getAttribute("src") !== nextSrc) { video.setAttribute("src", nextSrc); player.load(); }
+      const exCard = document.getElementById("ex-skill-card");
+      exCard.style.cursor = nextSrc ? "pointer" : "default";
       document.querySelector(".record-right .skill-title span").textContent = v.detailsReady === false ? "스킬 정보 (준비 중)" : "스킬 정보";
-      if(typeof updateSkillLevel === "function") updateSkillLevel();
+      updateSkillLevel();
     }
     const slides = document.querySelectorAll(".slide");
     const prevButton = document.getElementById("prev");
@@ -1330,7 +1351,7 @@ memorialArea.addEventListener("click", () => {
   document.getElementById("video-title").textContent = "MEMORIAL";
 
   memorialVideo.src =
-  `https://www.youtube.com/embed/${videoId}?start=629&end=677&autoplay=1&rel=0`;
+  `https://www.youtube.com/embed/${videoId}?${selectedVariant === "default" ? "start=629&end=677&" : ""}autoplay=1&rel=0`;
 
   videoOverlay.classList.add("open");
   videoClose.focus();
@@ -1356,48 +1377,49 @@ document.addEventListener("keydown", event => {
   }
 });
     // 호시노(기본) 스킬 레벨별 데이터
-const hoshinoSkills = structuredClone(baseVariant.skills || {ex:[0],basic:[0],enhanced:[0],sub:[0]});
-    // 스킬 레벨 조절
+// 의상별 스킬 데이터를 개별적으로 사용한다. 기본 호시노 수치는 원본 유지.
 let skillLevel = 1;
-
 const skillLevelText = document.getElementById("skill-level-text");
 const skillLevelDown = document.getElementById("skill-level-down");
 const skillLevelUp = document.getElementById("skill-level-up");
-
 function updateSkillLevel() {
+  const v = activeVariantData(currentVariantKey);
+  const skills = v.skills;
   skillLevelText.textContent = `LEVEL ${skillLevel}`;
-
   skillLevelDown.disabled = skillLevel === 1;
   skillLevelUp.disabled = skillLevel === 10;
-
-  // EX 스킬은 최대 5레벨
   const exLevel = Math.min(skillLevel, 5);
-
-  const exDamage = hoshinoSkills.ex[exLevel - 1];
-  const basicHeal = hoshinoSkills.basic[skillLevel - 1];
-  const enhancedDefense = hoshinoSkills.enhanced[skillLevel - 1];
-  const subShield = hoshinoSkills.sub[skillLevel - 1];
-
-  // EX 스킬
-  const stunTime =
-    exLevel >= 5 ? "1.4초" :
-    exLevel >= 3 ? "1초" : "";
-
-  document.getElementById("skill-ex").textContent =
-    `부채꼴 범위 내 적에게 공격력 ${exDamage}% 대미지` +
-    (stunTime ? ` / 기절 (${stunTime})` : "");
-
-  // 기본 스킬
-  document.getElementById("skill-basic").textContent =
-    `체력 30% 이하 시 치유력 ${basicHeal}% 지속 회복 (20초, 전투 당 1회)`;
-
-  // 강화 스킬
-  document.getElementById("skill-enhanced").textContent =
-    `방어력 ${enhancedDefense}% 증가`;
-
-  // 서브 스킬
-  document.getElementById("skill-sub").textContent =
-    `EX 스킬 사용 중 치유력 ${subShield}% 보호막`;
+  const ex = document.getElementById("skill-ex");
+  const basic = document.getElementById("skill-basic");
+  const enhanced = document.getElementById("skill-enhanced");
+  const sub = document.getElementById("skill-sub");
+  const cards = document.querySelectorAll(".record-skills .record-skill");
+  // 스킬 제목은 의상과 관계없이 공통 명칭으로 유지.
+  ["EX 스킬", "기본 스킬", "강화 스킬", "서브 스킬"].forEach((name, i) => {
+    const title = cards[i]?.querySelector("strong");
+    if (title) title.textContent = name + (i === 0 && v.exVideo ? " 🎬" : "");
+  });
+  const costLabel = document.querySelector("#ex-skill-card span");
+  if (!skills || v.detailsReady === false) {
+    [ex,basic,enhanced,sub].forEach(el=>el.textContent="스킬 정보 준비 중");
+    if(costLabel) costLabel.textContent="";
+    return;
+  }
+  if (currentVariantKey === "swimsuit") {
+    const e = skills.ex;
+    ex.textContent = `자신을 중심으로 원형 범위 내 아군의 공격력 ${e.attack[exLevel-1]}% 증가, 폭발 특효 ${e.explosive[exLevel-1]}% 가산 (50초간)`;
+    basic.textContent = `40초마다 적 1인에게 공격력 ${skills.basic.damage[skillLevel-1]}% 대미지 / 치유력 ${skills.basic.heal[skillLevel-1]}% 만큼 자신 회복`;
+    enhanced.textContent = `방어력 ${skills.enhanced[skillLevel-1]}%, 공격력 ${skills.enhanced[skillLevel-1]}% 증가`;
+    sub.textContent = `EX 스킬이 지속되는 동안 코스트 회복력 ${skills.sub[skillLevel-1]} 증가`;
+    if(costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]} · EX 영상 준비 중`;
+  } else {
+    const stunTime = exLevel >= 5 ? "1.4초" : exLevel >= 3 ? "1초" : "";
+    ex.textContent = `부채꼴 범위 내 적에게 공격력 ${skills.ex[exLevel-1]}% 대미지` + (stunTime ? ` / 기절 (${stunTime})` : "");
+    basic.textContent = `체력 30% 이하 시 치유력 ${skills.basic[skillLevel-1]}% 지속 회복 (20초, 전투 당 1회)`;
+    enhanced.textContent = `방어력 ${skills.enhanced[skillLevel-1]}% 증가`;
+    sub.textContent = `EX 스킬 사용 중 치유력 ${skills.sub[skillLevel-1]}% 보호막`;
+    if(costLabel) costLabel.textContent = `COST 4 · 클릭하면 영상 재생`;
+  }
 }
 
 skillLevelDown.addEventListener("click", () => {
@@ -1423,6 +1445,7 @@ const exSkillVideo = document.getElementById("ex-skill-video");
 const exVideoClose = document.getElementById("ex-video-close");
 
 function openExVideo() {
+  if (!activeVariantData(currentVariantKey).exVideo) { alert("EX 스킬 영상 준비 중이야!"); return; }
   exVideoPopup.classList.add("open");
 
   // EX 스킬 카드 위치 확인
