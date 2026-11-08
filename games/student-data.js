@@ -215,4 +215,45 @@ window.STUDENT_DATABASE = {
       }
     }
   }
+  ,chiaki: {
+    id: "chiaki", name: "모토미야 치아키", shortName: "치아키",
+    school: "게헨나 학원", club: "만마전", grade: "2학년",
+    age: "16살", height: "167cm", birthday: "9월 22일", hobby: "주간지 발행, 친구 사귀기",
+    introduction: [
+      "게헨나 학생회 만마전의 의뢰이자 잡책을 맡고 있는 서기.",
+      "마코토의 행각을 한심하게 바라보는 이로하와 달리 마코토의 모습을 보면서 재미있어하며 좋아하는 타입.",
+      "서기라는 포지션 때문에 마코토가 말을 하다가 도중에 끼어들기도 하며, 사진기를 휴대하고 다니면서 사건을 기록한다."
+    ],
+    sdImage: "../images/bluearchive/profiles/chiaki.png",
+    variants: {
+      default: {
+        name: "치아키", label: "DEFAULT", image: "../images/bluearchive/variants/chiaki/default.png",
+        memorialImage: "../images/bluearchive/memorial/chiaki/default.png", memorialVideo: "rFt2PfTdXJo",
+        weaponImage: "../images/bluearchive/weapons/chiaki/default.png", weaponName: "돌격소총", weaponType: "AR",
+        role: "딜러 · STRIKER", attackType: "진동", defenseType: "특수장갑",
+        equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/charm.png"],
+        exVideo: "../images/bluearchive/skills/chiaki/default-ex.mp4",
+        skills: {
+          ex: {damage:[1459,1677,2115,2334,2772], cost:[6,6,6,6,6]},
+          basic:[32.9,34.6,36.2,42.8,44.5,46.1,52.7,54.3,56,63.1],
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[24.7,25.9,27.2,32.1,33.3,34.6,39.5,40.8,42,46.9]
+        }
+      },
+      swimsuit: {
+        name: "치아키(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/chiaki/swimsuit.png",
+        memorialImage: "../images/bluearchive/memorial/chiaki/swimsuit.png", memorialVideo: "7AezlUJkQGc",
+        weaponImage: "../images/bluearchive/weapons/chiaki/default.png", weaponName: "돌격소총", weaponType: "AR",
+        role: "딜러 · SPECIAL", attackType: "관통", defenseType: "중장갑",
+        equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/watch.png"],
+        exVideo: "../images/bluearchive/skills/chiaki/swimsuit-ex.mp4",
+        skills: {
+          ex: {first:[530,610,769,849,1008], second:[267,307,387,427,508], cost:[4,4,4,4,4]},
+          basic:[14,14.7,15.4,18.2,19,19.7,22.5,23.2,23.9,26.7],
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[15.9,16.7,17.5,20.7,21.5,22.3,25.5,26.3,27,30.2]
+        }
+      }
+    }
+  }
 };
