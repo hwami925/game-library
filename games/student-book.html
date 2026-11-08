@@ -1248,6 +1248,7 @@
         const card = document.createElement("div");
         card.className = "equipment-item" + (i===3 ? " favorite-item" : "");
         const img = document.createElement("img"); img.src = src; img.alt = "장비 " + (i+1);
+        img.onerror = () => { img.remove(); const note = document.createElement("span"); note.textContent = src.includes("gloves") ? "장갑" : src.includes("hairpin") ? "헤어핀" : "장비 준비 중"; note.style.fontSize = "12px"; card.append(note); };
         card.append(img); eq.append(card);
       }
       const video = document.querySelector("#ex-skill-video source");
@@ -1439,7 +1440,21 @@ function updateSkillLevel() {
     if(costLabel) costLabel.textContent="";
     return;
   }
-  if (currentVariantKey === "armed") {
+  if (studentId === "makoto") {
+    const e = skills.ex;
+    if (currentVariantKey === "swimsuit") {
+      ex.textContent = `적 1인에게 공격력 ${e.single[exLevel-1]}% 대미지 / 원형 범위 내 적에게 공격력 ${e.few[exLevel-1]}% 대미지 (대상 2명 이하), ${e.many[exLevel-1]}% 대미지 (대상 3명 이상)`;
+      basic.textContent = `전투 시작 시 및 이후 30초마다 자신의 공격력 ${skills.basic[skillLevel-1]}% 증가 (25초간), 카리스마 상태 부여`;
+      enhanced.textContent = `공격력 ${skills.enhanced[skillLevel-1]}% 증가`;
+      sub.textContent = `치명 수치 ${skills.sub.crit[skillLevel-1]}% 증가 / 카리스마 상태에서 EX 스킬 명중 시 적 방어력 ${skills.sub.defense[skillLevel-1]}% 감소 (21초간), 이후 카리스마 상태 해제`;
+    } else {
+      ex.textContent = `원형 범위 내 적에게 공격력 ${e.few[exLevel-1]}% 대미지 (대상 4명 이하), ${e.mid[exLevel-1]}% 대미지 (5~9명), ${e.many[exLevel-1]}% 대미지 (10명 이상)`;
+      basic.textContent = `55초마다 원형 범위 내 적의 방어력 ${skills.basic[skillLevel-1]}% 감소 (35초간)`;
+      enhanced.textContent = `공격력 ${skills.enhanced[skillLevel-1]}% 증가`;
+      sub.textContent = `아군의 관통 특효 ${skills.sub[skillLevel-1]}% 증가`;
+    }
+    if (costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]}` + (v.exVideo ? " · 클릭하면 영상 재생" : " · EX 영상 준비 중");
+  } else if (studentId === "hoshino" && currentVariantKey === "armed") {
     const e = skills.ex;
     if (armedMode === "defense") {
       ex.textContent = `지정한 위치로 이동 후 엄폐물 역할의 방패를 설치. 엄폐 상태 아군의 공격력 ${e.attack[exLevel-1]}%, 최대 체력 ${e.hp[exLevel-1]}% 증가 (40초간). 호시노(무장) 최대 체력의 30%를 엄폐물로 가짐. 엄폐물 방어 타입: 호시노(무장)과 동일`;
