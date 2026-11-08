@@ -83,7 +83,7 @@ window.STUDENT_DATABASE = {
         name: "마코토(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/makoto/swimsuit.png",
         memorialImage: "../images/bluearchive/memorial/makoto/swimsuit.png", memorialVideo: "bqd3crd66XU",
         weaponImage: "../images/bluearchive/weapons/makoto/default.png", weaponName: "유아독존", weaponType: "SR",
-        role: "딜러 · STRIKER · BACK", attackType: "신비", defenseType: "중장갑",
+        role: "딜러 · STRIKER", attackType: "신비", defenseType: "중장갑",
         equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/watch.png"],
         exVideo: "../images/bluearchive/skills/makoto/swimsuit-ex.mp4", // 수영복 EX 영상 파일명이 확인되면 경로 입력
         skills: {
@@ -131,6 +131,45 @@ window.STUDENT_DATABASE = {
           basic:[13.7,14.4,15.1,17.9,18.6,19.3,22,22.7,23.4,26.1],
           enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
           sub:[13.2,13.9,14.6,17.2,17.9,18.5,21.2,21.9,22.5,25.2]
+        }
+      }
+    }
+  }
+  ,ibuki: {
+    id: "ibuki", name: "탄가 이부키", shortName: "이부키",
+    school: "게헨나 학원", club: "만마전", grade: "1학년",
+    age: "11살", height: "128cm", birthday: "4월 14일", hobby: "예술과 복습, 인형 모으기",
+    introduction: ["굉장히 어리고 귀여운 외모에 행동조차 어린애 같아 마코토와 이로하를 비롯한 만마전의 부원들에게 굉장히 과보호를 받고 있다."],
+    sdImage: "../images/bluearchive/profiles/ibuki.png",
+    variants: {
+      default: {
+        name: "이부키", label: "DEFAULT", image: "../images/bluearchive/variants/ibuki/default.png",
+        memorialImage: "../images/bluearchive/memorial/ibuki/default.png", memorialVideo: "jgmHxdVy2JI",
+        weaponImage: "../images/bluearchive/weapons/ibuki/default.png", weaponName: "빵야빵야! 쨩", weaponType: "AR",
+        role: "서포터 · STRIKER", attackType: "신비", defenseType: "중장갑",
+        equipment: ["../images/bluearchive/equipment/gloves.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/charm.png"],
+        exVideo: "../images/bluearchive/skills/ibuki/default-ex.mp4",
+        exVideos: {normal:"../images/bluearchive/skills/ibuki/default-ex.mp4",tank:"../images/bluearchive/skills/ibuki/default-tank-ex.mp4"},
+        skills: {
+          ex: {normal:[26.4,30.4,38.3,42.3,50.2], tank:[246,256,274,283,302], normalCost:[3,3,3,3,3],tankCost:[5,5,5,5,5]},
+          basic: {damage:[204,214,225,266,276,286,327,337,347,388], attackDown:[18.6,18.6,18.6,20.4,20.4,20.4,22.3,22.3,22.3,24.1]},
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[90,94.5,99,117,121,126,144,148,153,171]
+        }
+      },
+      swimsuit: {
+        name: "이부키(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/ibuki/swimsuit.png",
+        memorialImage: "../images/bluearchive/memorial/ibuki/swimsuit.png", memorialVideo: "vIANe8IrueE",
+        weaponImage: "../images/bluearchive/weapons/ibuki/default.png", weaponName: "빵야빵야! 쨩", weaponType: "AR",
+        role: "서포터 · SPECIAL", attackType: "폭발", defenseType: "특수장갑",
+        equipment: ["../images/bluearchive/equipment/shoes.png", "../images/bluearchive/equipment/badge.png", "../images/bluearchive/equipment/charm.png"],
+        exVideo: "../images/bluearchive/skills/ibuki/swimsuit-ex1.mp4",
+        exVideos: {first:"../images/bluearchive/skills/ibuki/swimsuit-ex1.mp4",second:"../images/bluearchive/skills/ibuki/swimsuit-ex2.mp4"},
+        skills: {
+          ex: {damage:[31.9,36.7,46.3,51.1,60.7], firstCost:[0,0,0,0,0],secondCost:[3,3,3,3,3]},
+          basic: {tank:[7.9,8.3,8.7,10.3,10.7,11.1,12.7,13.1,13.5,15.1],dealer:[7.9,8.3,8.7,10.3,10.7,11.1,12.7,13.1,13.5,15.1],support:[7.5,7.9,8.3,9.8,10.2,10.5,12,12.4,12.8,14.3]},
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[10.6,11.2,11.7,13.8,14.4,14.9,17,17.6,18.1,20.2]
         }
       }
     }
