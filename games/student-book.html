@@ -858,7 +858,8 @@
 
   .momo-message.mine { align-self:flex-end; align-items:flex-end; background:#ffe0ed; border-color:#f6b5d0; border-radius:15px 15px 4px 15px; }
   .momotalk-status { font-size:11px; color:#9c6d85; text-align:center; }
-  </style>
+  #armed-mode-switch[hidden] { display:none !important; }
+</style>
 </head>
 
 <body>
@@ -1026,6 +1027,13 @@
       <!-- 오른쪽: 전투 정보 및 스킬 -->
       <div class="record-right">
 
+        <div id="armed-mode-switch" hidden style="margin:0 0 14px;padding:12px;border:1px solid #b8d6ee;border-radius:12px;background:#f1f8ff;">
+          <strong style="display:block;margin-bottom:8px;color:#1c507e;">호시노(무장) 전투 모드</strong>
+          <div style="display:flex;gap:8px;">
+            <button type="button" data-armed-mode="defense" aria-pressed="true" style="flex:1;padding:9px;border-radius:9px;border:1px solid #8cb5d7;cursor:pointer;">🛡️ 방어형</button>
+            <button type="button" data-armed-mode="attack" aria-pressed="false" style="flex:1;padding:9px;border-radius:9px;border:1px solid #8cb5d7;cursor:pointer;">⚔️ 공격형</button>
+          </div>
+        </div>
         <h3>전투 정보</h3>
 
 <div class="record-stats">
@@ -1194,10 +1202,34 @@
     const baseVariant = student.variants.default || Object.values(student.variants)[0];
     const activeVariantData = key => student.variants[key];
     let currentVariantKey = "default";
-    function applyVariantDetails(key) {
+    let armedMode = "defense";
+    function displayedVariant() {
+      const v = activeVariantData(currentVariantKey);
+      return currentVariantKey === "armed" ? {...v, ...v.modes[armedMode]} : v;
+    }
+    const armedSwitch = document.getElementById("armed-mode-switch");
+    const armedButtons = [...document.querySelectorAll("[data-armed-mode]")];
+    function updateArmedButtons() {
+      armedSwitch.hidden = currentVariantKey !== "armed";
+      armedButtons.forEach(button => {
+        const active = button.dataset.armedMode === armedMode;
+        button.setAttribute("aria-pressed", String(active));
+        button.style.background = active ? "#187ad2" : "white";
+        button.style.color = active ? "white" : "#23445e";
+        button.style.fontWeight = active ? "700" : "400";
+      });
+    }
+    armedButtons.forEach(button => button.addEventListener("click", () => {
+      if (currentVariantKey !== "armed") return;
+      armedMode = button.dataset.armedMode;
+      applyVariantDetails("armed", false);
+    }));
+    function applyVariantDetails(key, resetMode = true) {
+      if (key === "armed" && currentVariantKey !== "armed" && resetMode) armedMode = "defense";
       currentVariantKey = key;
       skillLevel = 1;
-      const v = activeVariantData(key);
+      updateArmedButtons();
+      const v = displayedVariant();
       const weapon = document.getElementById("weapon-image");
       const weaponBox = weapon.parentElement;
       weapon.hidden = !v.weaponImage;
@@ -1383,7 +1415,7 @@ const skillLevelText = document.getElementById("skill-level-text");
 const skillLevelDown = document.getElementById("skill-level-down");
 const skillLevelUp = document.getElementById("skill-level-up");
 function updateSkillLevel() {
-  const v = activeVariantData(currentVariantKey);
+  const v = displayedVariant();
   const skills = v.skills;
   skillLevelText.textContent = `LEVEL ${skillLevel}`;
   skillLevelDown.disabled = skillLevel === 1;
@@ -1405,13 +1437,27 @@ function updateSkillLevel() {
     if(costLabel) costLabel.textContent="";
     return;
   }
-  if (currentVariantKey === "swimsuit") {
+  if (currentVariantKey === "armed") {
+    const e = skills.ex;
+    if (armedMode === "defense") {
+      ex.textContent = `지정한 위치로 이동 후 엄폐물 역할의 방패를 설치. 엄폐 상태 아군의 공격력 ${e.attack[exLevel-1]}%, 최대 체력 ${e.hp[exLevel-1]}% 증가 (40초간). 호시노(무장) 최대 체력의 30%를 엄폐물로 가짐. 엄폐물 방어 타입: 호시노(무장)과 동일`;
+      basic.textContent = `40초마다 방탄 플레이트를 장착하여 받는 대미지 ${skills.basic[skillLevel-1]}% 감소 (25회 피격 시 해제)`;
+      enhanced.textContent = `공격력 ${skills.enhanced[skillLevel-1]}%, 최대 체력 ${skills.enhanced[skillLevel-1]}% 증가`;
+      sub.textContent = `공격 시 20% 확률로 적의 방어력 ${skills.sub[skillLevel-1]}% 감소 (20초간, 쿨타임 5초)`;
+    } else {
+      ex.textContent = `적 1인에게 공격력 ${e.single[exLevel-1]}% 대미지 / 원형 범위 내 적에게 공격력 ${e.area[exLevel-1]}% 대미지`;
+      basic.textContent = `패스트 로딩 용 탄창 수가 0이 될 시 적 1인에게 공격력 ${skills.basic[skillLevel-1]}% 대미지`;
+      enhanced.textContent = `일반 공격 사거리 300, 치명 대미지 ${skills.enhanced[skillLevel-1]}% 증가`;
+      sub.textContent = `모든 공격이 적의 방어력을 ${skills.sub.ignore[skillLevel-1]}% 무시 / 공격력 ${skills.sub.attack[skillLevel-1]}% 증가 / EX 스킬 및 기본 스킬 사용 시 즉시 재장전 후 최초 일반 공격은 부채꼴 범위 내 적에게 공격력 ${skills.sub.damage[skillLevel-1]}% 대미지`;
+    }
+    if(costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]} · 클릭하면 영상 재생`;
+  } else if (currentVariantKey === "swimsuit") {
     const e = skills.ex;
     ex.textContent = `자신을 중심으로 원형 범위 내 아군의 공격력 ${e.attack[exLevel-1]}% 증가, 폭발 특효 ${e.explosive[exLevel-1]}% 가산 (50초간)`;
     basic.textContent = `40초마다 적 1인에게 공격력 ${skills.basic.damage[skillLevel-1]}% 대미지 / 치유력 ${skills.basic.heal[skillLevel-1]}% 만큼 자신 회복`;
     enhanced.textContent = `방어력 ${skills.enhanced[skillLevel-1]}%, 공격력 ${skills.enhanced[skillLevel-1]}% 증가`;
     sub.textContent = `EX 스킬이 지속되는 동안 코스트 회복력 ${skills.sub[skillLevel-1]} 증가`;
-    if(costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]} · EX 영상 준비 중`;
+    if(costLabel) costLabel.textContent = `COST ${e.cost[exLevel-1]} · 클릭하면 영상 재생`;
   } else {
     const stunTime = exLevel >= 5 ? "1.4초" : exLevel >= 3 ? "1초" : "";
     ex.textContent = `부채꼴 범위 내 적에게 공격력 ${skills.ex[exLevel-1]}% 대미지` + (stunTime ? ` / 기절 (${stunTime})` : "");
@@ -1445,7 +1491,7 @@ const exSkillVideo = document.getElementById("ex-skill-video");
 const exVideoClose = document.getElementById("ex-video-close");
 
 function openExVideo() {
-  if (!activeVariantData(currentVariantKey).exVideo) { alert("EX 스킬 영상 준비 중이야!"); return; }
+  if (!displayedVariant().exVideo) { alert("EX 스킬 영상 준비 중이야!"); return; }
   exVideoPopup.classList.add("open");
 
   // EX 스킬 카드 위치 확인
