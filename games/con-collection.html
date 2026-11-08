@@ -46,6 +46,7 @@
         <button class="filter active" data-game="all" type="button">전체</button>
         <button class="filter" data-game="블루 아카이브" type="button">블루 아카이브</button>
         <button class="filter" data-game="명조" type="button">명조</button>
+        <button class="filter" data-game="트릭컬 리바이브" type="button">트릭컬 리바이브</button>
       </div>
       <div class="con-grid" id="conGrid"></div>
     </section>
@@ -53,34 +54,58 @@
   <script src="cons.js"></script>
   <script type="module">
     import {waitForGoogle,migrateOnce,loadCloud,cacheState} from "./con-cloud.js";
-    // 로그인 계정의 Firebase 콘 보관함을 표시합니다.
-    const OWNED_KEY = "ownedCons";
+    // Firebase 보유 기록은 그대로 읽으며 게임별 표시만 보완합니다.
     const gameByConId = {
       "shiroko-sparkle": "블루 아카이브",
       "aemes-daughter": "명조"
     };
+    const normalizeGame = value => {
+      const text = String(value || "").trim();
+      if (/트릭컬|trickcal/i.test(text)) return "트릭컬 리바이브";
+      if (/블루\s*아카이브|blue\s*archive/i.test(text)) return "블루 아카이브";
+      if (/명조|wuthering\s*waves/i.test(text)) return "명조";
+      return text;
+    };
+    function getConGame(con) {
+      // cons.js에 게임 정보가 있다면 우선 사용합니다.
+      const fromData = normalizeGame(con.game || con.gameName || con.category || con.series);
+      if (fromData && fromData !== "기타") return fromData;
+      if (gameByConId[con.id]) return gameByConId[con.id];
+      // 기존 버터 콘은 ID가 제공되지 않아 캐릭터명/콘 이름으로 분류합니다.
+      const hint = `${con.id || ""} ${con.character || ""} ${con.name || ""}`;
+      if (/버터|butter|트릭컬|trickcal/i.test(hint)) return "트릭컬 리바이브";
+      return "기타";
+    }
     let selectedGame = "all";
-    let cloudOwned=[];
+    let cloudOwned = [];
 
-    function getOwnedCons(){return cloudOwned;}
-    async function refreshCloud(){
-      const user=await waitForGoogle();
-      if(!user){document.getElementById('collectionCount').textContent='Google 로그인 필요';document.getElementById('conGrid').innerHTML='<p class="empty">게임창고 메인에서 Google 로그인 후 다시 접속해 줘.</p>';return;}
-      try{const state=await migrateOnce(user);cloudOwned=state.ownedCons;cacheState(state);renderCollection();}
-      catch(err){console.error(err);document.getElementById('collectionCount').textContent='동기화 실패';document.getElementById('conGrid').textContent='Firebase 저장 내용을 불러오지 못했어: '+err.message;}
+    function getOwnedCons() { return cloudOwned; }
+    async function refreshCloud() {
+      const user = await waitForGoogle();
+      if (!user) {
+        document.getElementById("collectionCount").textContent = "Google 로그인 필요";
+        document.getElementById("conGrid").innerHTML = '<p class="empty">게임창고 메인에서 Google 로그인 후 다시 접속해 줘.</p>';
+        return;
+      }
+      try {
+        const state = await migrateOnce(user);
+        cloudOwned = state.ownedCons;
+        cacheState(state);
+        renderCollection();
+      } catch (err) {
+        console.error(err);
+        document.getElementById("collectionCount").textContent = "동기화 실패";
+        document.getElementById("conGrid").textContent = "Firebase 저장 내용을 불러오지 못했어: " + err.message;
+      }
     }
     function renderCollection() {
-      const owned = getOwnedCons();
-      const ownedSet = new Set(owned);
+      const ownedSet = new Set(getOwnedCons());
       const grid = document.getElementById("conGrid");
       const totalOwned = CON_LIST.filter(con => ownedSet.has(con.id)).length;
-      document.getElementById("collectionCount").textContent =
-        `획득한 콘 ${totalOwned} / ${CON_LIST.length}`;
+      document.getElementById("collectionCount").textContent = `획득한 콘 ${totalOwned} / ${CON_LIST.length}`;
       grid.replaceChildren();
 
-      const visibleCons = CON_LIST.filter(con =>
-        selectedGame === "all" || gameByConId[con.id] === selectedGame
-      );
+      const visibleCons = CON_LIST.filter(con => selectedGame === "all" || getConGame(con) === selectedGame);
       if (!visibleCons.length) {
         const empty = document.createElement("p");
         empty.className = "empty";
@@ -109,7 +134,7 @@
         name.textContent = isOwned ? `${con.character} — ${con.name}` : "미획득";
         card.appendChild(name);
         const game = document.createElement("p");
-        game.textContent = gameByConId[con.id] || "기타";
+        game.textContent = getConGame(con);
         card.appendChild(game);
         grid.appendChild(card);
       });
@@ -128,7 +153,7 @@
       button.setAttribute("aria-pressed", String(button.dataset.game === "all"));
     });
     refreshCloud();
-    window.addEventListener("pageshow", event => {if(event.persisted)refreshCloud();});
+    window.addEventListener("pageshow", event => { if (event.persisted) refreshCloud(); });
     window.addEventListener("focus", refreshCloud);
   </script>
 </body>
