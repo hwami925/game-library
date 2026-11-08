@@ -174,4 +174,45 @@ window.STUDENT_DATABASE = {
       }
     }
   }
+  ,satsuki: {
+    id: "satsuki", name: "쿄고쿠 사츠키", shortName: "사츠키",
+    school: "게헨나 학원", club: "만마전", grade: "3학년",
+    age: "17살", height: "172cm", birthday: "4월 10일", hobby: "마인드컨트롤 연구, 쇼핑",
+    introduction: [
+      "만마전의 정보부장 직위를 맡고 있다.",
+      "타인을 조종하는 것에 관심이 많은지 세뇌 프로그램이나 최면술 등을 신봉하고 있다.",
+      "야심찬 계획을 세우지만 실제로 성공한 사례는 드물다."
+    ],
+    sdImage: "../images/bluearchive/profiles/satsuki.png",
+    variants: {
+      default: {
+        name: "사츠키", label: "DEFAULT", image: "../images/bluearchive/variants/satsuki/default.png",
+        memorialImage: "../images/bluearchive/memorial/satsuki/default.png", memorialVideo: "G2uP3HGnHgU",
+        weaponImage: "../images/bluearchive/weapons/satsuki/default.png", weaponName: "NK 델타", weaponType: "HG",
+        role: "딜러 · SPECIAL", attackType: "폭발", defenseType: "중장갑",
+        equipment: ["../images/bluearchive/equipment/hat.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/watch.png"],
+        exVideo: "../images/bluearchive/skills/satsuki/default-ex.mp4",
+        skills: {
+          ex: {pierce:[366,421,531,586,696], damage:[870,1000,1261,1392,1653], cost:[3,3,3,3,3]},
+          basic:[14.3,15,15.7,18.6,19.3,20,22.9,23.6,24.3,27.2],
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub:[9.1,9.5,10,11.8,12.3,12.7,14.5,15,15.5,17.3]
+        }
+      },
+      swimsuit: {
+        name: "사츠키(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/satsuki/swimsuit.png",
+        memorialImage: "../images/bluearchive/memorial/satsuki/swimsuit.png", memorialVideo: "Y8Abx6xcdL4",
+        weaponImage: "../images/bluearchive/weapons/satsuki/default.png", weaponName: "NK 델타", weaponType: "HG",
+        role: "힐러 · STRIKER", attackType: "진동", defenseType: "탄력장갑",
+        equipment: ["../images/bluearchive/equipment/gloves.png", "../images/bluearchive/equipment/hairpin.png", "../images/bluearchive/equipment/necklace.png"],
+        exVideo: "../images/bluearchive/skills/satsuki/swimsuit-ex.mp4",
+        skills: {
+          ex: {ally:[164,189,238,263,312], self:[115,115,132,132,150], cost:[2,2,2,2,2]},
+          basic: {defense:[20.3,20.3,20.3,22.3,22.3,22.3,24.4,24.4,24.4,26.4], damage:[197,207,217,236,246,256,275,285,295,315]},
+          enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6],
+          sub: {heal:[48.6,51,53.5,63.2,65.6,68,77.8,80.2,82.6,92.3], attack:[10.3,10.8,11.3,13.4,13.9,14.4,16.5,17,17.5,19.6]}
+        }
+      }
+    }
+  }
 };
