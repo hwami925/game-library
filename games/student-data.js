@@ -14,11 +14,11 @@ window.STUDENT_DATABASE = {
       default: { name: "호시노", label: "DEFAULT", image: "../images/bluearchive/variants/hoshino/default.png", memorialImage: "../images/bluearchive/memorial/hoshino/default.png", memorialVideo: "fcR8KYVzjpg", weaponImage: "../images/bluearchive/weapons/hoshino/default.png", weaponName: "호루스의 눈 + 진압 방패 '아이언 호루스'", weaponType: "SG", role: "탱커", attackType: "관통", defenseType: "중장갑", equipment: ["../images/bluearchive/equipment/shoes.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/charm.png", "../images/bluearchive/equipment/favorite/hoshino.png"], exVideo: "../images/bluearchive/skills/hoshino/defalult-ex.mp4", skills: { ex:[435,501,566,632,697], basic:[100,105,110,130,135,140,160,165,171,191], enhanced:[14,14.7,15.4,18.2,18.9,19.6,22.4,23.1,23.8,26.6], sub:[108,113,118,140,145,151,172,178,183,205] } },
       swimsuit: {
         name: "호시노(수영복)", label: "SWIMSUIT", image: "../images/bluearchive/variants/hoshino/swimsuit.png",
-        memorialImage: null, memorialVideo: "", detailsReady: true,
-        weaponImage: null, weaponName: "무기 이름 준비 중", weaponType: "SG",
+        memorialImage: "../images/bluearchive/memorial/hoshino/swimsuit.png", memorialVideo: "_mms5xHEql0", detailsReady: true,
+        weaponImage: "../images/bluearchive/weapons/hoshino/default.png", weaponName: "호루스의 눈 + 진압 방패 '아이언 호루스'", weaponType: "SG",
         role: "서포터", attackType: "폭발", defenseType: "특수장갑",
         equipment: ["../images/bluearchive/equipment/shoes.png", "../images/bluearchive/equipment/bag.png", "../images/bluearchive/equipment/charm.png"],
-        exVideo: null,
+        exVideo: "../images/bluearchive/skills/hoshino/swimsuit-ex.mp4",
         skills: {
           ex: { attack: [26.5,28.5,32.5,34.5,38.5], explosive: [68.3,73.4,83.6,88.8,99], cost: [6,6,6,6,5] },
           basic: { damage: [283,297,312,340,354,368,397,411,425,454], heal: [75,75,75,82.6,82.6,82.6,90.1,90.1,90.1,97.6] },
